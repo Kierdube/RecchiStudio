@@ -1,4 +1,4 @@
-# Recchi Studio
+# Recchi Studios
 
 Next.js shop and marketing site with Prisma, Stripe checkout, admin tools, and optional Resend for contact notifications.
 
