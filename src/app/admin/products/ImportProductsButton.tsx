@@ -41,7 +41,7 @@ export function ImportProductsButton() {
         disabled={pending}
         className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-900 hover:bg-zinc-50 disabled:opacity-60"
       >
-        {pending ? "Importing…" : "Import from Google Sheet"}
+        {pending ? "Importing…" : "Import from CSV"}
       </button>
 
       {result ? (

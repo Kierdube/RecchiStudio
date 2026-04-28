@@ -3,10 +3,15 @@ import { z } from "zod";
 
 import { prisma } from "@/lib/prisma";
 import { assertAdminSession } from "@/lib/verify-admin-session";
-import { readSheetValues } from "@/lib/google-sheets";
 import { serializeImageUrls } from "@/lib/product-images";
 import { parseSizesFromSheet, serializeSizesJson } from "@/lib/product-sizes";
 import { sanitizeProductDescriptionHtml } from "@/lib/sanitize-product-description";
+
+function requiredEnv(name: string): string {
+  const v = process.env[name];
+  if (!v) throw new Error(`Missing ${name}`);
+  return v;
+}
 
 const RowSchema = z.object({
   name: z.string().trim().min(1, "Products is required").max(200),
@@ -82,6 +87,78 @@ function escapeHtml(text: string): string {
     .replace(/'/g, "&#39;");
 }
 
+function parseCsv(text: string): string[][] {
+  const rows: string[][] = [];
+  let row: string[] = [];
+  let field = "";
+  let inQuotes = false;
+
+  const pushField = () => {
+    row.push(field);
+    field = "";
+  };
+  const pushRow = () => {
+    // Drop trailing completely-empty rows.
+    if (row.length === 1 && row[0] === "" && rows.length > 0) {
+      row = [];
+      return;
+    }
+    rows.push(row);
+    row = [];
+  };
+
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i]!;
+
+    if (inQuotes) {
+      if (ch === '"') {
+        const next = text[i + 1];
+        if (next === '"') {
+          field += '"';
+          i++;
+        } else {
+          inQuotes = false;
+        }
+      } else {
+        field += ch;
+      }
+      continue;
+    }
+
+    if (ch === '"') {
+      inQuotes = true;
+      continue;
+    }
+
+    if (ch === ",") {
+      pushField();
+      continue;
+    }
+
+    if (ch === "\n") {
+      pushField();
+      pushRow();
+      continue;
+    }
+
+    if (ch === "\r") {
+      // Handle CRLF
+      const next = text[i + 1];
+      if (next === "\n") i++;
+      pushField();
+      pushRow();
+      continue;
+    }
+
+    field += ch;
+  }
+
+  pushField();
+  pushRow();
+
+  return rows;
+}
+
 export async function POST() {
   try {
     await assertAdminSession();
@@ -89,17 +166,20 @@ export async function POST() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const range = process.env.GOOGLE_SHEETS_PRODUCTS_RANGE || "Sheet1!A1:Z";
-
-  let values: string[][];
+  let csvText: string;
   try {
-    values = await readSheetValues(range);
+    const url = requiredEnv("PRODUCTS_CSV_URL");
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error(`CSV fetch failed (${res.status})`);
+    csvText = await res.text();
   } catch (e) {
     return NextResponse.json(
-      { error: e instanceof Error ? e.message : "Failed to read Google Sheet" },
+      { error: e instanceof Error ? e.message : "Failed to fetch CSV" },
       { status: 500 },
     );
   }
+
+  const values = parseCsv(csvText).map((r) => r.map((c) => String(c ?? "")));
 
   if (values.length < 2) {
     return NextResponse.json({ ok: true, created: 0, updated: 0, skipped: 0, errors: [] });
@@ -139,7 +219,7 @@ export async function POST() {
       image1: readCell(row, header, normalizeHeaderKey("Image 1")) || undefined,
       image2: readCell(row, header, normalizeHeaderKey("Image 2")) || undefined,
       image3: readCell(row, header, normalizeHeaderKey("Image 3")) || undefined,
-      sizeOption: readCell(row, header, normalizeHeaderKey("Size Option")) || undefined,
+      sizeOption: readCell(row, header, normalizeHeaderKey("Size Options")) || undefined,
     };
 
     const parsed = RowSchema.safeParse(raw);
