@@ -7,14 +7,14 @@ export function parseSizesFromSheet(raw: unknown): string[] {
 
   // Allow comma-separated or newline-separated values.
   const parts = s
-    .split(/[,\\n\\r\\t]+/g)
+    .split(/[,\n\r\t]+/g)
     .map((p) => p.trim())
     .filter(Boolean);
 
   const seen = new Set<string>();
   const out: string[] = [];
   for (const part of parts) {
-    const normalized = part.replace(/\\s+/g, " ");
+    const normalized = part.replace(/\s+/g, " ");
     if (!normalized) continue;
     if (seen.has(normalized)) continue;
     seen.add(normalized);
