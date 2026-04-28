@@ -19,6 +19,8 @@ export default async function ContactPage() {
   const copy = await getSiteCopyRecord();
   const emailDisplay = siteCopyGet(copy, "contact.sidebar.email_display");
   const emailHref = siteCopyGet(copy, "contact.sidebar.email_href");
+  const noteHtmlRaw = siteCopyGet(copy, "contact.sidebar.note_html");
+  const noteHtml = /replace this address with yours/i.test(noteHtmlRaw) ? "" : noteHtmlRaw;
 
   return (
     <MarketingShell>
@@ -45,10 +47,12 @@ export default async function ContactPage() {
               {emailDisplay}
             </a>
           </p>
-          <SiteCopyHtml
-            html={siteCopyGet(copy, "contact.sidebar.note_html")}
-            className="text-sm text-[#19371E]/60 [&_code]:rounded [&_code]:bg-[#19371E]/10 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-xs"
-          />
+          {noteHtml ? (
+            <SiteCopyHtml
+              html={noteHtml}
+              className="text-sm text-[#19371E]/60 [&_code]:rounded [&_code]:bg-[#19371E]/10 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:text-xs"
+            />
+          ) : null}
         </div>
 
         <div className="rounded-2xl border border-[#19371E]/10 bg-[#F4F9EF]/60 p-6 ring-1 ring-[#19371E]/5 sm:p-8 lg:col-span-3">

@@ -89,11 +89,7 @@ export function ContactForm() {
       >
         {pending ? "Sending…" : "Send message"}
       </button>
-      <p className="text-center text-xs text-[#19371E]/50">
-        Submissions are stored in your database. Optional: set{" "}
-        <code className="rounded bg-[#19371E]/10 px-1">RESEND_API_KEY</code> and{" "}
-        <code className="rounded bg-[#19371E]/10 px-1">CONTACT_TO_EMAIL</code> for email alerts.
-      </p>
+      <p className="text-center text-xs text-[#19371E]/50">We usually reply within 1-2 business days.</p>
     </form>
   );
 }

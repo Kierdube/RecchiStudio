@@ -17,9 +17,17 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ShippingPage() {
   const copy = await getSiteCopyRecord();
   const fromDb = siteCopyGet(copy, "legal.shipping_mdx").trim();
-  const { content } = fromDb
-    ? await compileMdxFromString(fromDb)
-    : await loadMdxFromRoot("content/shipping.mdx");
+  let content: Awaited<ReturnType<typeof compileMdxFromString>>["content"];
+  if (fromDb) {
+    try {
+      content = (await compileMdxFromString(fromDb)).content;
+    } catch {
+      // If saved MDX is invalid, fall back to the checked-in content page.
+      content = (await loadMdxFromRoot("content/shipping.mdx")).content;
+    }
+  } else {
+    content = (await loadMdxFromRoot("content/shipping.mdx")).content;
+  }
 
   return (
     <MarketingShell wide>
