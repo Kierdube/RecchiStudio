@@ -1,0 +1,47 @@
+generator client {
+  provider      = "prisma-client-js"
+  // Vercel serverless runs on Linux (rhel); native is for local dev.
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ContactSubmission {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  name      String
+  email     String
+  message   String
+}
+
+/// Editable marketing / legal copy (see `/admin/site-copy`).
+model SiteCopyBlock {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  label     String
+  /// plain | html | mdx
+  format    String   @default("plain")
+  value     String   @default("")
+  updatedAt DateTime @updatedAt
+}
+
+model Product {
+  id           String   @id @default(cuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  name         String
+  slug         String   @unique
+  description  String?
+  priceCents   Int
+  /// JSON array of HTTPS image URLs (stored as text); first is used for cards / checkout.
+  imageUrls    String   @default("[]")
+  published    Boolean  @default(false)
+  /// birds | flamingos | cats | abstract | other — shop filters
+  categorySlug String   @default("other")
+
+  @@index([published, categorySlug])
+  @@index([published, priceCents])
+}
