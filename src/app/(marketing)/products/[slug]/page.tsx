@@ -15,6 +15,7 @@ import {
 import { ProductImageGallery } from "@/components/ProductImageGallery";
 import { primaryProductImage } from "@/lib/product-images";
 import { prisma } from "@/lib/prisma";
+import { parseSizesJson } from "@/lib/product-sizes";
 import {
   plainTextFromProductDescriptionHtml,
   sanitizeProductDescriptionHtml,
@@ -76,6 +77,7 @@ export default async function ProductPage({ params }: Props) {
     category: categorySlugForFilter,
     page: 1,
   });
+  const sizes = parseSizesJson(product.sizesJson);
 
   return (
     <main className="border-b border-[#19371E]/8 bg-gradient-to-b from-[#FDFCF8] via-white/30 to-[#F4F9EF]/45">
@@ -126,6 +128,24 @@ export default async function ProductPage({ params }: Props) {
             ) : (
               <p className="mt-8 text-sm text-[#19371E]/50">Description coming soon.</p>
             )}
+
+            {sizes.length ? (
+              <div className="mt-8 rounded-2xl border border-[#19371E]/10 bg-white/70 px-5 py-4 shadow-sm">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2d5a36]/80">
+                  Available sizes
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {sizes.map((s) => (
+                    <span
+                      key={s}
+                      className="inline-flex items-center rounded-full border border-[#19371E]/12 bg-white px-3 py-1 text-xs font-semibold text-[#19371E]/80"
+                    >
+                      {s}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ) : null}
 
             <div className="mt-10">
               <BuyButton productId={product.id} />
