@@ -131,19 +131,24 @@ export default async function ProductPage({ params }: Props) {
 
             {sizes.length ? (
               <div className="mt-8 rounded-2xl border border-[#19371E]/10 bg-white/70 px-5 py-4 shadow-sm">
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2d5a36]/80">
-                  Available sizes
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
+                <label
+                  htmlFor="size-select"
+                  className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2d5a36]/80"
+                >
+                  Size
+                </label>
+                <select
+                  id="size-select"
+                  name="size"
+                  defaultValue={sizes[0]}
+                  className="mt-3 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-white px-3 py-2 text-sm font-semibold text-[#19371E] shadow-sm outline-none transition focus:border-[#19371E]/25 focus:ring-2 focus:ring-[#C5E6A6]/80"
+                >
                   {sizes.map((s) => (
-                    <span
-                      key={s}
-                      className="inline-flex items-center rounded-full border border-[#19371E]/12 bg-white px-3 py-1 text-xs font-semibold text-[#19371E]/80"
-                    >
+                    <option key={s} value={s}>
                       {s}
-                    </span>
+                    </option>
                   ))}
-                </div>
+                </select>
               </div>
             ) : null}
 
