@@ -22,6 +22,7 @@
     "@tiptap/extension-placeholder": "^3.22.4",
     "@tiptap/react": "^3.22.4",
     "@tiptap/starter-kit": "^3.22.4",
+    "googleapis": "^156.0.0",
     "jose": "^6.2.3",
     "lucide-react": "^1.11.0",
     "next": "16.2.4",

@@ -38,6 +38,8 @@ model Product {
   priceCents   Int
   /// JSON array of HTTPS image URLs (stored as text); first is used for cards / checkout.
   imageUrls    String   @default("[]")
+  /// JSON array of size labels (stored as text), e.g. ["XS","S","M","L","XL"].
+  sizesJson    String   @default("[]")
   published    Boolean  @default(false)
   /// birds | flamingos | cats | abstract | other — shop filters
   categorySlug String   @default("other")

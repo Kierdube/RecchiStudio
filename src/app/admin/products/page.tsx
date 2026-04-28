@@ -5,6 +5,7 @@ import { primaryProductImage } from "@/lib/product-images";
 import { prisma } from "@/lib/prisma";
 
 import { DeleteProductForm } from "./DeleteProductForm";
+import { ImportProductsButton } from "./ImportProductsButton";
 
 function formatPrice(cents: number) {
   return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
@@ -25,12 +26,15 @@ export default async function AdminProductsPage() {
             product, with previews on the edit screen.
           </p>
         </div>
-        <Link
-          href="/admin/products/new"
-          className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white hover:bg-zinc-800"
-        >
-          New product
-        </Link>
+        <div className="flex flex-wrap items-center gap-3">
+          <ImportProductsButton />
+          <Link
+            href="/admin/products/new"
+            className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white hover:bg-zinc-800"
+          >
+            New product
+          </Link>
+        </div>
       </div>
 
       <div className="mt-8 overflow-x-auto rounded-xl border border-zinc-200 bg-white shadow-sm [-webkit-overflow-scrolling:touch]">
