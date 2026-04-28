@@ -1,4 +1,4 @@
-import { jwtVerify } from "jose";
+import { SignJWT, jwtVerify } from "jose";
 import { NextResponse, type NextRequest } from "next/server";
 
 import { COOKIE_NAME } from "@/lib/auth-constants";
@@ -15,6 +15,29 @@ export async function middleware(request: NextRequest) {
   const secret = process.env.AUTH_SECRET;
   if (!secret || secret.length < 32) {
     return NextResponse.redirect(new URL("/admin/login", request.url));
+  }
+
+  // Temporary dev-only "auto login" shortcut: /admin?creds=true
+  // This sets the admin session cookie and redirects to the same path without the query param.
+  if (process.env.NODE_ENV !== "production" && request.nextUrl.searchParams.get("creds") === "true") {
+    const token = await new SignJWT({ admin: true })
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setExpirationTime("7d")
+      .sign(new TextEncoder().encode(secret));
+
+    const url = request.nextUrl.clone();
+    url.searchParams.delete("creds");
+
+    const res = NextResponse.redirect(url);
+    res.cookies.set(COOKIE_NAME, token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+    });
+    return res;
   }
 
   const token = request.cookies.get(COOKIE_NAME)?.value;
