@@ -26,6 +26,11 @@ export default async function HomePage() {
   const heroImageUrl = siteCopyGet(copy, "home.hero.image_url").trim();
   const heroImageAlt = siteCopyGet(copy, "home.hero.image_alt");
   const showHeroImage = /^https?:\/\//i.test(heroImageUrl);
+  const homeCollectionEmptyHtmlRaw = siteCopyGet(copy, "home.collection.empty_html");
+  const homeCollectionEmptyHtml =
+    /sign in to the admin|npm run db:seed|prisma studio/i.test(homeCollectionEmptyHtmlRaw)
+      ? "<p>No products are available right now. Please check back soon.</p>"
+      : homeCollectionEmptyHtmlRaw;
 
   return (
     <main>
@@ -105,7 +110,7 @@ export default async function HomePage() {
         <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {products.length === 0 ? (
             <SiteCopyHtml
-              html={siteCopyGet(copy, "home.collection.empty_html")}
+              html={homeCollectionEmptyHtml}
               className="text-[#19371E]/70 sm:col-span-2 lg:col-span-3 [&_code]:rounded-md [&_code]:bg-[#19371E]/10 [&_code]:px-2 [&_code]:py-1 [&_code]:text-sm"
             />
           ) : (

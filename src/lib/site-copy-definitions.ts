@@ -104,8 +104,7 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
     key: "home.collection.empty_html",
     label: "Empty state (when no products; HTML ok)",
     format: "html",
-    defaultValue:
-      "<p>No products yet. Sign in to the admin and publish items, or run <code>npm run db:seed</code>.</p>",
+    defaultValue: "<p>No products are available right now. Please check back soon.</p>",
   },
 
   // —— Home banner ——
@@ -517,8 +516,7 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
     key: "contact.intro.description",
     label: "Intro paragraph",
     format: "plain",
-    defaultValue:
-      "Send a message below — it is saved to your database. Add Resend if you want inbox notifications.",
+    defaultValue: "Send a message below and we will get back to you as soon as we can.",
   },
   {
     group: "Contact page",
@@ -553,8 +551,7 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
     key: "contact.sidebar.note_html",
     label: "Sidebar note (HTML)",
     format: "html",
-    defaultValue:
-      "<p>Replace this address with yours, or read messages from <code>ContactSubmission</code> in Prisma Studio.</p>",
+    defaultValue: "",
   },
   {
     group: "Contact page",

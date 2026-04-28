@@ -13,7 +13,7 @@ export function CurrencySwitcher({
 }) {
   const ctx = useOptionalCurrency();
   if (!ctx) return null;
-  const { currency, setCurrency, ratesAsOf, refreshRates } = ctx;
+  const { currency, setCurrency } = ctx;
 
   return (
     <div
@@ -34,14 +34,6 @@ export function CurrencySwitcher({
           </option>
         ))}
       </select>
-      <button
-        type="button"
-        onClick={() => void refreshRates()}
-        className={`rounded-full border border-transparent px-2 py-2 text-xs font-medium text-[#2d5a36]/70 underline-offset-2 hover:text-[#19371E] hover:underline sm:py-1 sm:text-[11px] ${layout === "stacked" ? "min-h-11 w-full text-left" : ""}`}
-        title={ratesAsOf === "unavailable" ? "Rates unavailable; using estimates" : `Rates: ${ratesAsOf}`}
-      >
-        Update rates
-      </button>
     </div>
   );
 }

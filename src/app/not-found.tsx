@@ -24,8 +24,7 @@ export default async function RootNotFound() {
               Page not found
             </h1>
             <p className="mx-auto mt-4 max-w-md text-[#19371E]/72">
-              That URL does not exist on this site. If you were looking for the storefront, head to
-              the catalog; for admin tools, open the dashboard.
+              That URL does not exist on this site. Try going back home or heading to the catalog.
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-3">
               <Link
@@ -39,12 +38,6 @@ export default async function RootNotFound() {
                 className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-[#19371E]/18 bg-white px-7 text-sm font-semibold text-[#19371E] transition hover:bg-[#F4F9EF]"
               >
                 Catalog
-              </Link>
-              <Link
-                href="/admin"
-                className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-[#19371E]/18 bg-white px-7 text-sm font-semibold text-[#19371E] transition hover:bg-[#F4F9EF]"
-              >
-                Admin
               </Link>
             </div>
           </div>

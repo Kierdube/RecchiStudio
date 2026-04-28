@@ -124,7 +124,7 @@ export default async function ProductPage({ params }: Props) {
                 }}
               />
             ) : (
-              <p className="mt-8 text-sm text-[#19371E]/50">No description yet — add one in the admin.</p>
+              <p className="mt-8 text-sm text-[#19371E]/50">Description coming soon.</p>
             )}
 
             <div className="mt-10">
