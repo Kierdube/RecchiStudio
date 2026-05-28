@@ -1,11 +1,16 @@
-import Link from "next/link";
+"use client";
 
+import Link from "next/link";
+import { useEffect } from "react";
+
+import { useCurrency } from "@/contexts/CurrencyContext";
 import {
   SHOP_CATEGORIES,
   SHOP_SORTS,
   shopHref,
   type ShopSearchState,
 } from "@/lib/catalog";
+import { priceFilterLabel, priceFilterMaxLabel } from "@/lib/currency";
 
 function Pill({
   href,
@@ -39,7 +44,16 @@ type ToolbarProps = ShopSearchState & {
 
 export function ShopToolbar(props: ToolbarProps) {
   const { resultCount, totalMatching, toolbarEyebrow = "Browse", searchPlaceholder, ...state } = props;
+  const { currency, setCurrency } = useCurrency();
+  const filterState = { ...state, displayCurrency: currency };
   const placeholder = searchPlaceholder ?? "Search by name or description…";
+
+  useEffect(() => {
+    if (state.displayCurrency !== currency) {
+      setCurrency(state.displayCurrency);
+    }
+  }, [state.displayCurrency, currency, setCurrency]);
+
   return (
     <div className="space-y-8">
       <div>
@@ -52,13 +66,13 @@ export function ShopToolbar(props: ToolbarProps) {
             : `Showing ${resultCount} of ${totalMatching} product${totalMatching === 1 ? "" : "s"}.`}
         </p>
         <div className="mt-4 flex flex-wrap gap-2">
-          <Pill href={shopHref(state, { category: undefined, page: 1 })} active={!state.category}>
+          <Pill href={shopHref(filterState, { category: undefined, page: 1 })} active={!state.category}>
             All
           </Pill>
           {SHOP_CATEGORIES.map((c) => (
             <Pill
               key={c.slug}
-              href={shopHref(state, { category: c.slug, page: 1 })}
+              href={shopHref(filterState, { category: c.slug, page: 1 })}
               active={state.category === c.slug}
             >
               {c.label}
@@ -73,6 +87,7 @@ export function ShopToolbar(props: ToolbarProps) {
         className="grid min-w-0 gap-4 rounded-2xl border border-[#19371E]/10 bg-white/90 p-4 shadow-sm ring-1 ring-black/[0.02] sm:p-5 sm:grid-cols-2 lg:grid-cols-12 lg:items-end"
       >
         <input type="hidden" name="page" value="1" />
+        <input type="hidden" name="currency" value={currency} />
         <div className="sm:col-span-2 lg:col-span-4">
           <label htmlFor="shop-q" className="block text-xs font-semibold uppercase tracking-wide text-[#19371E]/55">
             Search
@@ -123,7 +138,7 @@ export function ShopToolbar(props: ToolbarProps) {
         </div>
         <div className="lg:col-span-2">
           <label htmlFor="shop-min" className="block text-xs font-semibold uppercase tracking-wide text-[#19371E]/55">
-            Min (USD $)
+            {priceFilterLabel(currency)}
           </label>
           <input
             id="shop-min"
@@ -138,7 +153,7 @@ export function ShopToolbar(props: ToolbarProps) {
         </div>
         <div className="lg:col-span-2">
           <label htmlFor="shop-max" className="block text-xs font-semibold uppercase tracking-wide text-[#19371E]/55">
-            Max (USD $)
+            {priceFilterMaxLabel(currency)}
           </label>
           <input
             id="shop-max"

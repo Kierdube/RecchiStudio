@@ -11,6 +11,7 @@ import {
 import { primaryProductImage } from "@/lib/product-images";
 import { prisma } from "@/lib/prisma";
 import { getSiteCopyRecord, siteCopyGet } from "@/lib/site-copy";
+import { fetchUsdExchangeRates } from "@/lib/exchange-rates";
 
 import { ShopPagination } from "./ShopPagination";
 import { ShopToolbar } from "./ShopToolbar";
@@ -30,7 +31,8 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function CatalogPage({ searchParams }: Props) {
   const raw = await searchParams;
   const state = parseShopSearchParams(raw);
-  const where = shopWhereFromState(state);
+  const { rates } = await fetchUsdExchangeRates("static");
+  const where = shopWhereFromState(state, rates);
   const orderBy = shopOrderByFromState(state);
   const copy = await getSiteCopyRecord();
 

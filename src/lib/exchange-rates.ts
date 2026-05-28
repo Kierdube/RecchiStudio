@@ -51,6 +51,19 @@ export function convertUsdCents(usdCents: number, target: DisplayCurrencyCode, r
   return Math.round(usdCents * r);
 }
 
+/** Display currency dollars (e.g. catalog min/max filter) → USD catalog cents. */
+export function convertDisplayDollarsToUsdCents(
+  displayDollars: number,
+  source: DisplayCurrencyCode,
+  rates: Record<string, number>,
+): number {
+  const displayMinor = Math.round(displayDollars * 100);
+  if (source === "USD") return displayMinor;
+  const r = rates[source] ?? FALLBACK_USD_RATES[source as Exclude<DisplayCurrencyCode, "USD">];
+  if (!r || !Number.isFinite(r)) return displayMinor;
+  return Math.round(displayMinor / r);
+}
+
 export function formatMinorUnits(minor: number, currency: DisplayCurrencyCode): string {
   return new Intl.NumberFormat(localeForCurrency(currency), {
     style: "currency",

@@ -20,6 +20,14 @@ export function isDisplayCurrency(code: string | undefined): code is DisplayCurr
   return code !== undefined && DISPLAY_SET.has(code);
 }
 
+export function priceFilterLabel(code: DisplayCurrencyCode): string {
+  return `Min (${code} $)`;
+}
+
+export function priceFilterMaxLabel(code: DisplayCurrencyCode): string {
+  return `Max (${code} $)`;
+}
+
 export function localeForCurrency(code: DisplayCurrencyCode): string {
   switch (code) {
     case "CAD":

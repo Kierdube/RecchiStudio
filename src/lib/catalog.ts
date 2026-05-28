@@ -1,5 +1,12 @@
 import { Prisma } from "@prisma/client";
 
+import {
+  DEFAULT_DISPLAY_CURRENCY,
+  isDisplayCurrency,
+  type DisplayCurrencyCode,
+} from "@/lib/currency";
+import { convertDisplayDollarsToUsdCents } from "@/lib/exchange-rates";
+
 export const SHOP_CATEGORIES = [
   { slug: "birds", label: "Birds" },
   { slug: "flamingos", label: "Flamingos" },
@@ -38,11 +45,17 @@ export type ShopSearchState = {
   sort: ShopSort;
   minDollars?: number;
   maxDollars?: number;
+  /** Currency used for min/max filter values in the URL. */
+  displayCurrency: DisplayCurrencyCode;
   page: number;
 };
 
 /** Baseline for building `/catalog` links from other parts of the site */
-export const shopDefaultState = (): ShopSearchState => ({ sort: "newest", page: 1 });
+export const shopDefaultState = (): ShopSearchState => ({
+  sort: "newest",
+  page: 1,
+  displayCurrency: DEFAULT_DISPLAY_CURRENCY,
+});
 
 function first(v: string | string[] | undefined): string | undefined {
   if (Array.isArray(v)) return v[0];
@@ -88,21 +101,26 @@ export function parseShopSearchParams(
 
   const page = parsePositiveInt(first(raw.page), 1, 10_000);
 
+  const currencyRaw = first(raw.currency);
+  const displayCurrency = isDisplayCurrency(currencyRaw)
+    ? currencyRaw
+    : DEFAULT_DISPLAY_CURRENCY;
+
   return {
     q,
     category,
     sort,
     minDollars,
     maxDollars,
+    displayCurrency,
     page,
   };
 }
 
-function dollarsToCents(d: number) {
-  return Math.round(d * 100);
-}
-
-export function shopWhereFromState(state: ShopSearchState): Prisma.ProductWhereInput {
+export function shopWhereFromState(
+  state: ShopSearchState,
+  rates: Record<string, number>,
+): Prisma.ProductWhereInput {
   const clauses: Prisma.ProductWhereInput[] = [{ published: true }];
 
   if (state.category) {
@@ -120,9 +138,13 @@ export function shopWhereFromState(state: ShopSearchState): Prisma.ProductWhereI
   }
 
   const minC =
-    state.minDollars !== undefined ? dollarsToCents(state.minDollars) : undefined;
+    state.minDollars !== undefined
+      ? convertDisplayDollarsToUsdCents(state.minDollars, state.displayCurrency, rates)
+      : undefined;
   const maxC =
-    state.maxDollars !== undefined ? dollarsToCents(state.maxDollars) : undefined;
+    state.maxDollars !== undefined
+      ? convertDisplayDollarsToUsdCents(state.maxDollars, state.displayCurrency, rates)
+      : undefined;
 
   if (minC !== undefined || maxC !== undefined) {
     const price: Prisma.IntFilter = {};
@@ -163,6 +185,9 @@ export function shopStateToQuery(state: ShopSearchState, overrides?: Partial<Sho
   }
   if (merged.maxDollars !== undefined && merged.maxDollars > 0) {
     sp.set("max", String(merged.maxDollars));
+  }
+  if (merged.displayCurrency !== DEFAULT_DISPLAY_CURRENCY) {
+    sp.set("currency", merged.displayCurrency);
   }
   if (merged.page > 1) sp.set("page", String(merged.page));
 
