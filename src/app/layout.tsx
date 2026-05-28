@@ -23,6 +23,10 @@ export const metadata: Metadata = {
   },
   description:
     "Cute, nature-inspired patterns — express yourself with what you wear. Browse the catalog for tees, crop tops, and more.",
+  icons: {
+    icon: [{ url: "/favicon.ico", sizes: "any" }, { url: "/icon.png", type: "image/png", sizes: "48x48" }],
+    apple: [{ url: "/apple-icon.png", type: "image/png", sizes: "180x180" }],
+  },
 };
 
 export default function RootLayout({
