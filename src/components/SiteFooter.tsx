@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { SiteLogo } from "@/components/SiteLogo";
 import { shopDefaultState, shopHref } from "@/lib/catalog";
 import { siteCopyGet } from "@/lib/site-copy";
 
@@ -33,12 +34,7 @@ export function SiteFooter({ copy }: { copy: Record<string, string> }) {
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-1">
-            <div className="flex items-center gap-2">
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#C5E6A6] text-xs font-bold text-[#19371E]">
-                RS
-              </span>
-              <p className="text-lg font-semibold text-white">{brandTitle}</p>
-            </div>
+            <SiteLogo alt={brandTitle} onDark />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-[#C5E6A6]/85">{brandBlurb}</p>
           </div>
           <div>

@@ -53,13 +53,6 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
   },
   {
     group: "Home — hero",
-    key: "home.hero.cta_about",
-    label: "Secondary button (about)",
-    format: "plain",
-    defaultValue: "About the studio",
-  },
-  {
-    group: "Home — hero",
     key: "home.hero.image_url",
     label: "Hero image link",
     format: "plain",

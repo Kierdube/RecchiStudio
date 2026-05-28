@@ -61,18 +61,12 @@ export default async function HomePage() {
                 html={siteCopyGet(copy, "home.hero.body_html")}
                 className="mt-8 max-w-xl text-lg leading-relaxed text-[#19371E]/82 [&_p]:m-0"
               />
-              <div className="mt-10 flex flex-wrap gap-3 sm:gap-4">
+              <div className="mt-10">
                 <Link
                   href="/catalog"
                   className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-[#19371E] px-7 text-sm font-semibold text-[#C5E6A6] shadow-md shadow-[#19371E]/20 transition hover:bg-[#2d5a36] hover:shadow-lg"
                 >
                   {siteCopyGet(copy, "home.hero.cta_catalog")}
-                </Link>
-                <Link
-                  href="/about"
-                  className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-[#19371E]/18 bg-white/90 px-7 text-sm font-semibold text-[#19371E] shadow-sm backdrop-blur-sm transition hover:border-[#19371E]/28 hover:bg-white"
-                >
-                  {siteCopyGet(copy, "home.hero.cta_about")}
                 </Link>
               </div>
             </div>
