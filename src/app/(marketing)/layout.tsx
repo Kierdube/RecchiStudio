@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 
 import { SiteFooter } from "@/components/SiteFooter";
+import { GlobalTypographyStyles } from "@/components/GlobalTypographyStyles";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getSiteCopyRecord } from "@/lib/site-copy";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
@@ -32,8 +33,11 @@ export default async function MarketingLayout({
       ratesAsOf={ratesPayload.asOf}
       initialCurrency={initialCurrency}
     >
+      <GlobalTypographyStyles copy={copy} />
       <SiteHeader copy={copy} />
-      <div className="min-w-0 flex-1">{children}</div>
+      <div data-recchi-content className="min-w-0 flex-1 bg-background">
+        {children}
+      </div>
       <SiteFooter copy={copy} />
     </CurrencyProvider>
   );

@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { BuyButton } from "@/components/BuyButton";
-import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CheckoutCurrencyNote } from "@/components/CheckoutCurrencyNote";
 import { DisplayPrice } from "@/components/DisplayPrice";
 import { ProductCard } from "@/components/ProductCard";
@@ -80,17 +79,9 @@ export default async function ProductPage({ params }: Props) {
   const sizes = parseSizesJson(product.sizesJson);
 
   return (
-    <main className="border-b border-[#19371E]/8 bg-gradient-to-b from-[#FDFCF8] via-white/30 to-[#F4F9EF]/45">
+    <main className="border-b border-[#19371E]/8">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
-        <Breadcrumbs
-          items={[
-            { label: "Home", href: "/" },
-            { label: "Catalog", href: "/catalog" },
-            { label: product.name },
-          ]}
-        />
-
-        <div className="mt-2 grid gap-12 lg:grid-cols-2 lg:items-start lg:gap-16">
+        <div className="grid gap-12 lg:grid-cols-2 lg:items-start lg:gap-16">
           <div className="relative">
             <div className="overflow-hidden rounded-[2rem] bg-gradient-to-b from-[#F4F9EF] to-[#E8F0DD] shadow-[0_28px_80px_-40px_rgba(25,55,30,0.45)] ring-1 ring-[#19371E]/10">
               <ProductImageGallery name={product.name} imageUrlsJson={product.imageUrls} />

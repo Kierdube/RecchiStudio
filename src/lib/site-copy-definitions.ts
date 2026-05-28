@@ -1,4 +1,6 @@
-export type SiteCopyFormat = "plain" | "html" | "mdx";
+import { globalTypographyDefinitions } from "@/lib/global-typography";
+
+export type SiteCopyFormat = "plain" | "html" | "mdx" | "choice";
 
 export type SiteCopyDefinition = {
   key: string;
@@ -6,6 +8,8 @@ export type SiteCopyDefinition = {
   group: string;
   format: SiteCopyFormat;
   defaultValue: string;
+  /** For `format: "choice"` (global typography dropdowns). */
+  choices?: { value: string; label: string }[];
 };
 
 /** Central list: keys, labels, groups, formats, and built-in defaults (DB overrides on save). */
@@ -57,7 +61,7 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
   {
     group: "Home — hero",
     key: "home.hero.image_url",
-    label: "Hero image URL (right column on large screens)",
+    label: "Hero image link",
     format: "plain",
     defaultValue:
       "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&w=1100&q=80",
@@ -102,7 +106,7 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
   {
     group: "Home — collection",
     key: "home.collection.empty_html",
-    label: "Empty state (when no products; HTML ok)",
+    label: "Message when no products are listed",
     format: "html",
     defaultValue: "<p>No products are available right now. Please check back soon.</p>",
   },
@@ -111,7 +115,7 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
   {
     group: "Home — banner",
     key: "home.banner.image_url",
-    label: "Banner image URL",
+    label: "Banner image link",
     format: "plain",
     defaultValue:
       "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=2400&q=80",
@@ -176,24 +180,38 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
   ]),
   {
     group: "Home — closing",
-    key: "home.closing",
-    label: "Closing line (full width)",
+    key: "home.closing.image_url",
+    label: "Closing image link",
     format: "plain",
-    defaultValue: "We want to thank you for showing interest in our small business!",
+    defaultValue: "/images/home-closing.png",
+  },
+  {
+    group: "Home — closing",
+    key: "home.closing.image_alt",
+    label: "Closing image description",
+    format: "plain",
+    defaultValue: "Person in a green field wearing Recchi Studio",
+  },
+  {
+    group: "Home — closing",
+    key: "home.closing",
+    label: "Closing message",
+    format: "plain",
+    defaultValue: "Thank you for showing an interest in my small business!",
   },
 
   // —— Catalog ——
   {
     group: "Catalog",
     key: "catalog.meta_title",
-    label: "Browser tab title",
+    label: "Page title (browser tab)",
     format: "plain",
     defaultValue: "Catalog",
   },
   {
     group: "Catalog",
     key: "catalog.meta_description",
-    label: "Meta description (SEO)",
+    label: "Short page description",
     format: "plain",
     defaultValue:
       "Browse Recchi Studio — filter by collection, search, sort by price, and page through the catalog.",
@@ -405,14 +423,14 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
   {
     group: "About page",
     key: "about.meta_title",
-    label: "Browser tab title",
+    label: "Page title (browser tab)",
     format: "plain",
     defaultValue: "About",
   },
   {
     group: "About page",
     key: "about.meta_description",
-    label: "Meta description (SEO)",
+    label: "Short page description",
     format: "plain",
     defaultValue:
       "Recchi Studio designs cute, nature-inspired patterns for people who want to love what they wear.",
@@ -422,7 +440,7 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
     key: "about.intro.eyebrow",
     label: "Intro eyebrow",
     format: "plain",
-    defaultValue: "Our studio",
+    defaultValue: "My Studio",
   },
   {
     group: "About page",
@@ -440,9 +458,23 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
       "We are a small creative studio focused on patterns that feel joyful on fabric — birds, plants, colour, and personality.",
   },
   {
-    group: "About page",
+    group: "About — story",
+    key: "about.body.image_url",
+    label: "Story image link",
+    format: "plain",
+    defaultValue: "/images/about-story.png",
+  },
+  {
+    group: "About — story",
+    key: "about.body.image_alt",
+    label: "Story image description",
+    format: "plain",
+    defaultValue: "Hiker by an alpine lake in the mountains",
+  },
+  {
+    group: "About — story",
     key: "about.body_html",
-    label: "Main body (two paragraphs as HTML)",
+    label: "Story text",
     format: "html",
     defaultValue:
       "<p>Each print is developed to look great on tees, crop tops, shorts, and whatever you want to live in. Whether you are matching with someone you love or building a wardrobe that feels like you, we hope these patterns make getting dressed a little brighter.</p><p>Thank you for supporting independent design. When you browse here, you are helping us keep experimenting with new motifs, palettes, and silhouettes.</p>",
@@ -486,14 +518,14 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
   {
     group: "Contact page",
     key: "contact.meta_title",
-    label: "Browser tab title",
+    label: "Page title (browser tab)",
     format: "plain",
     defaultValue: "Contact",
   },
   {
     group: "Contact page",
     key: "contact.meta_description",
-    label: "Meta description (SEO)",
+    label: "Short page description",
     format: "plain",
     defaultValue: "Reach Recchi Studio for order questions, collaborations, or wholesale inquiries.",
   },
@@ -527,29 +559,23 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
   },
   {
     group: "Contact page",
-    key: "contact.sidebar.email_label",
-    label: "Sidebar — email label",
+    key: "contact.sidebar.image_url",
+    label: "Sidebar image link",
     format: "plain",
-    defaultValue: "Email",
+    defaultValue:
+      "https://images.unsplash.com/photo-1515378796134-1487dff0ccd1?auto=format&fit=crop&w=900&q=80",
   },
   {
     group: "Contact page",
-    key: "contact.sidebar.email_display",
-    label: "Email address (visible text)",
+    key: "contact.sidebar.image_alt",
+    label: "Sidebar image alt text",
     format: "plain",
-    defaultValue: "hello@recchistudio.com",
-  },
-  {
-    group: "Contact page",
-    key: "contact.sidebar.email_href",
-    label: "Email link (mailto:…)",
-    format: "plain",
-    defaultValue: "mailto:hello@recchistudio.com",
+    defaultValue: "Creative workspace at Recchi Studio",
   },
   {
     group: "Contact page",
     key: "contact.sidebar.note_html",
-    label: "Sidebar note (HTML)",
+    label: "Extra note (optional)",
     format: "html",
     defaultValue: "",
   },
@@ -563,7 +589,7 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
   {
     group: "Contact page",
     key: "contact.footer_html",
-    label: "Line below the grid (HTML; links allowed)",
+    label: "Text below the form",
     format: "html",
     defaultValue:
       "<p>Shopping questions? Start in the <a href=\"/catalog\">catalog</a> or <a href=\"/shipping\">shipping</a> page.</p>",
@@ -572,28 +598,28 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
   {
     group: "Legal — policies page",
     key: "policies.meta_title",
-    label: "Browser tab title",
+    label: "Page title (browser tab)",
     format: "plain",
     defaultValue: "Store policies",
   },
   {
     group: "Legal — policies page",
     key: "policies.meta_description",
-    label: "Meta description (SEO)",
+    label: "Short page description",
     format: "plain",
     defaultValue: "Terms of service, privacy, and how we use your information at Recchi Studio.",
   },
   {
     group: "Legal — shipping page",
     key: "shipping.meta_title",
-    label: "Browser tab title",
+    label: "Page title (browser tab)",
     format: "plain",
     defaultValue: "Shipping & Returns",
   },
   {
     group: "Legal — shipping page",
     key: "shipping.meta_description",
-    label: "Meta description (SEO)",
+    label: "Short page description",
     format: "plain",
     defaultValue: "How we ship orders, timelines, and how returns work at Recchi Studio.",
   },
@@ -602,17 +628,29 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
   {
     group: "Legal — MDX",
     key: "legal.policies_mdx",
-    label: "Store policies (MDX)",
+    label: "Full policy text",
     format: "mdx",
     defaultValue: "",
   },
   {
     group: "Legal — MDX",
     key: "legal.shipping_mdx",
-    label: "Shipping & returns (MDX)",
+    label: "Full shipping page text",
     format: "mdx",
     defaultValue: "",
   },
+
+  ...globalTypographyDefinitions().map(
+    (d) =>
+      ({
+        group: d.group,
+        key: d.key,
+        label: d.label,
+        format: "choice" as const,
+        defaultValue: "inherit",
+        choices: [...d.options],
+      }) satisfies SiteCopyDefinition,
+  ),
 ];
 
 const DEF_BY_KEY = new Map(SITE_COPY_DEFINITIONS.map((d) => [d.key, d]));

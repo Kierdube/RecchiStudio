@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { FeatureIcon } from "@/components/FeatureIcon";
+import { SiteCopyText } from "@/components/SiteCopyText";
 import { MarketingShell } from "@/components/MarketingShell";
 import { PageIntro } from "@/components/PageIntro";
 import { SiteCopyHtml } from "@/components/SiteCopyHtml";
-import { getSiteCopyRecord, siteCopyGet } from "@/lib/site-copy";
+import { getSiteCopyRecord, resolveSiteCopyImageUrl, siteCopyGet } from "@/lib/site-copy";
 
 const FEATURE_KINDS = ["cotton", "design", "nature"] as const;
 
@@ -20,20 +20,36 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function AboutPage() {
   const copy = await getSiteCopyRecord();
+  const storyImageUrl = resolveSiteCopyImageUrl(siteCopyGet(copy, "about.body.image_url"));
+  const storyImageAlt = siteCopyGet(copy, "about.body.image_alt");
 
   return (
     <MarketingShell>
-      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "About" }]} />
       <PageIntro
         eyebrow={siteCopyGet(copy, "about.intro.eyebrow")}
+        eyebrowUppercase={false}
         title={siteCopyGet(copy, "about.intro.title")}
         description={siteCopyGet(copy, "about.intro.description")}
       />
 
-      <SiteCopyHtml
-        html={siteCopyGet(copy, "about.body_html")}
-        className="space-y-6 text-base leading-relaxed text-[#19371E]/82 [&_p]:m-0"
-      />
+      <div className="mt-10 grid items-center gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-14 xl:gap-16">
+        <SiteCopyHtml
+          html={siteCopyGet(copy, "about.body_html")}
+          className="space-y-6 text-base leading-relaxed text-[#19371E]/82 [&_p]:m-0"
+        />
+        {storyImageUrl ? (
+          <div className="mx-auto w-full max-w-md lg:mx-0 lg:max-w-none lg:justify-self-end">
+            <div className="overflow-hidden rounded-[2rem] bg-gradient-to-b from-[#F4F9EF] to-[#E8F0DD] shadow-[0_28px_80px_-40px_rgba(25,55,30,0.35)] ring-1 ring-[#19371E]/10">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={storyImageUrl}
+                alt={storyImageAlt}
+                className="aspect-[4/5] w-full object-cover"
+              />
+            </div>
+          </div>
+        ) : null}
+      </div>
 
       <ul className="mt-12 grid gap-5 sm:grid-cols-3">
         {FEATURE_KINDS.map((kind, i) => {
@@ -44,8 +60,12 @@ export default async function AboutPage() {
               className="flex flex-col items-center rounded-2xl border border-[#19371E]/10 bg-white/90 p-6 text-center shadow-sm ring-1 ring-black/[0.02] sm:items-start sm:text-left"
             >
               <FeatureIcon kind={kind} />
-              <p className="mt-4 font-semibold text-[#19371E]">{siteCopyGet(copy, `about.feature.${n}.title`)}</p>
-              <p className="mt-2 text-sm text-[#19371E]/70">{siteCopyGet(copy, `about.feature.${n}.body`)}</p>
+              <p className="mt-4 font-semibold text-[#19371E]">
+                <SiteCopyText value={siteCopyGet(copy, `about.feature.${n}.title`)} inline />
+              </p>
+              <p className="mt-2 text-sm text-[#19371E]/70">
+                <SiteCopyText value={siteCopyGet(copy, `about.feature.${n}.body`)} inline />
+              </p>
             </li>
           );
         })}

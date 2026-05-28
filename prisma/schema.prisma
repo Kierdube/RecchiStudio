@@ -14,6 +14,7 @@ model ContactSubmission {
   createdAt DateTime @default(now())
   name      String
   email     String
+  topic     String   @default("Other")
   message   String
 }
 

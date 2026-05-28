@@ -1,4 +1,4 @@
-import { sanitizeProductDescriptionHtml } from "@/lib/sanitize-product-description";
+import { sanitizeRichTextHtml } from "@/lib/rich-text-sanitize";
 
 /** Renders sanitized marketing HTML (same rules as product descriptions). */
 export function SiteCopyHtml({
@@ -11,7 +11,7 @@ export function SiteCopyHtml({
   return (
     <div
       className={className}
-      dangerouslySetInnerHTML={{ __html: sanitizeProductDescriptionHtml(html) }}
+      dangerouslySetInnerHTML={{ __html: sanitizeRichTextHtml(html) }}
     />
   );
 }

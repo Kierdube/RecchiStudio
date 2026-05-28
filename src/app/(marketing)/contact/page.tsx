@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
 
-import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ContactForm } from "@/components/ContactForm";
 import { MarketingShell } from "@/components/MarketingShell";
 import { PageIntro } from "@/components/PageIntro";
 import { SiteCopyHtml } from "@/components/SiteCopyHtml";
-import { getSiteCopyRecord, siteCopyGet } from "@/lib/site-copy";
+import { getSiteCopyRecord, resolveSiteCopyImageUrl, siteCopyGet } from "@/lib/site-copy";
 
 export async function generateMetadata(): Promise<Metadata> {
   const copy = await getSiteCopyRecord();
@@ -17,14 +16,13 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ContactPage() {
   const copy = await getSiteCopyRecord();
-  const emailDisplay = siteCopyGet(copy, "contact.sidebar.email_display");
-  const emailHref = siteCopyGet(copy, "contact.sidebar.email_href");
+  const sidebarImageUrl = resolveSiteCopyImageUrl(siteCopyGet(copy, "contact.sidebar.image_url"));
+  const sidebarImageAlt = siteCopyGet(copy, "contact.sidebar.image_alt");
   const noteHtmlRaw = siteCopyGet(copy, "contact.sidebar.note_html");
   const noteHtml = /replace this address with yours/i.test(noteHtmlRaw) ? "" : noteHtmlRaw;
 
   return (
     <MarketingShell>
-      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Contact" }]} />
       <PageIntro
         eyebrow={siteCopyGet(copy, "contact.intro.eyebrow")}
         title={siteCopyGet(copy, "contact.intro.title")}
@@ -36,17 +34,16 @@ export default async function ContactPage() {
           <h2 className="text-sm font-semibold uppercase tracking-wide text-[#19371E]/55">
             {siteCopyGet(copy, "contact.sidebar.direct_heading")}
           </h2>
-          <p className="text-[#19371E]/80">
-            <span className="block text-xs font-semibold uppercase tracking-wide text-[#19371E]/45">
-              {siteCopyGet(copy, "contact.sidebar.email_label")}
-            </span>
-            <a
-              className="mt-1 inline-block text-lg font-semibold text-[#2d5a36] underline-offset-4 hover:underline"
-              href={emailHref}
-            >
-              {emailDisplay}
-            </a>
-          </p>
+          {sidebarImageUrl ? (
+            <div className="overflow-hidden rounded-2xl bg-gradient-to-b from-[#F4F9EF] to-[#E8F0DD] shadow-sm ring-1 ring-[#19371E]/10">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={sidebarImageUrl}
+                alt={sidebarImageAlt}
+                className="aspect-[4/5] w-full object-cover"
+              />
+            </div>
+          ) : null}
           {noteHtml ? (
             <SiteCopyHtml
               html={noteHtml}
@@ -55,7 +52,7 @@ export default async function ContactPage() {
           ) : null}
         </div>
 
-        <div className="rounded-2xl border border-[#19371E]/10 bg-[#F4F9EF]/60 p-6 ring-1 ring-[#19371E]/5 sm:p-8 lg:col-span-3">
+        <div className="rounded-2xl border border-[#19371E]/10 bg-white/90 p-6 ring-1 ring-[#19371E]/5 sm:p-8 lg:col-span-3">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-[#19371E]/55">
             {siteCopyGet(copy, "contact.form.heading")}
           </h2>

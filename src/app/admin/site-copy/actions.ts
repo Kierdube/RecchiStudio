@@ -5,7 +5,8 @@ import sanitizeHtml from "sanitize-html";
 
 import { prisma } from "@/lib/prisma";
 import { siteCopyDefinitionOrThrow } from "@/lib/site-copy-definitions";
-import { sanitizeProductDescriptionHtml } from "@/lib/sanitize-product-description";
+import { isPlainOnlySiteCopyKey } from "@/lib/site-copy-editor";
+import { sanitizeRichTextHtml } from "@/lib/rich-text-sanitize";
 import { assertAdminSession } from "@/lib/verify-admin-session";
 
 const MAX_PLAIN = 8000;
@@ -41,8 +42,12 @@ export async function saveSiteCopyBlock(
   let value = String(formData.get("value") ?? "");
 
   if (def.format === "html") {
-    value = sanitizeProductDescriptionHtml(value).slice(0, MAX_HTML);
+    value = sanitizeRichTextHtml(value).slice(0, MAX_HTML);
   } else if (def.format === "plain") {
+    value = isPlainOnlySiteCopyKey(key)
+      ? sanitizePlain(value)
+      : sanitizeRichTextHtml(value).slice(0, MAX_HTML);
+  } else if (def.format === "choice") {
     value = sanitizePlain(value);
   } else {
     value = value.trim().slice(0, MAX_MDX);

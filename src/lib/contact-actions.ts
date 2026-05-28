@@ -4,10 +4,15 @@ import { Resend } from "resend";
 import { z } from "zod";
 
 import { prisma } from "@/lib/prisma";
+import { CONTACT_TOPIC_SET } from "@/lib/contact-topics";
 
 const submissionSchema = z.object({
   name: z.string().trim().min(1, "Please enter your name").max(200),
   email: z.string().trim().email("Please enter a valid email").max(254),
+  topic: z
+    .string()
+    .trim()
+    .refine((v) => CONTACT_TOPIC_SET.has(v), "Please select a topic"),
   message: z.string().trim().min(1, "Please enter a message").max(8000),
 });
 
@@ -25,6 +30,7 @@ export async function submitContact(_prev: ContactState, formData: FormData): Pr
   const parsed = submissionSchema.safeParse({
     name: formData.get("name"),
     email: formData.get("email"),
+    topic: formData.get("topic"),
     message: formData.get("message"),
   });
 
@@ -32,11 +38,11 @@ export async function submitContact(_prev: ContactState, formData: FormData): Pr
     return { ok: false, error: parsed.error.issues.map((i) => i.message).join(" ") };
   }
 
-  const { name, email, message } = parsed.data;
+  const { name, email, topic, message } = parsed.data;
 
   try {
     await prisma.contactSubmission.create({
-      data: { name, email, message },
+      data: { name, email, topic, message },
     });
   } catch {
     return { ok: false, error: "Could not save your message. Please try again later." };
@@ -54,8 +60,8 @@ export async function submitContact(_prev: ContactState, formData: FormData): Pr
         from,
         to: [to],
         replyTo: email,
-        subject: `Recchi Studio contact: ${name}`,
-        text: `From: ${name} <${email}>\n\n${message}`,
+        subject: `Recchi Studio contact (${topic}): ${name}`,
+        text: `From: ${name} <${email}>\nTopic: ${topic}\n\n${message}`,
       });
     } catch {
       // Saved to DB; email is best-effort

@@ -1,13 +1,9 @@
 import { jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
-import { isAdminAuthBypassed } from "@/lib/admin-auth-bypass";
 import { COOKIE_NAME } from "@/lib/auth-constants";
 
 export async function assertAdminSession(): Promise<void> {
-  if (isAdminAuthBypassed()) {
-    return;
-  }
   const secret = process.env.AUTH_SECRET;
   if (!secret || secret.length < 32) {
     throw new Error("Unauthorized");

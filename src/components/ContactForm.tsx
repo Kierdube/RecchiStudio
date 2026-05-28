@@ -3,6 +3,10 @@
 import { useActionState } from "react";
 
 import { submitContact, type ContactState } from "@/lib/contact-actions";
+import { CONTACT_TOPICS } from "@/lib/contact-topics";
+
+const fieldClassName =
+  "mt-1.5 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-white px-3 py-2.5 text-base text-[#19371E] outline-none ring-[#C5E6A6]/80 focus:border-[#19371E]/25 focus:ring-2";
 
 export function ContactForm() {
   const [state, formAction, pending] = useActionState<ContactState, FormData>(submitContact, null);
@@ -45,7 +49,7 @@ export function ContactForm() {
           name="name"
           required
           autoComplete="name"
-          className="mt-1.5 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-white px-3 py-2.5 text-base text-[#19371E] outline-none ring-[#C5E6A6]/80 focus:border-[#19371E]/25 focus:ring-2"
+          className={fieldClassName}
         />
       </div>
       <div>
@@ -61,8 +65,32 @@ export function ContactForm() {
           type="email"
           required
           autoComplete="email"
-          className="mt-1.5 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-white px-3 py-2.5 text-base text-[#19371E] outline-none ring-[#C5E6A6]/80 focus:border-[#19371E]/25 focus:ring-2"
+          className={fieldClassName}
         />
+      </div>
+      <div>
+        <label
+          htmlFor="contact-topic"
+          className="block text-xs font-semibold uppercase tracking-wide text-[#19371E]/50"
+        >
+          Topic
+        </label>
+        <select
+          id="contact-topic"
+          name="topic"
+          required
+          defaultValue=""
+          className={`${fieldClassName} cursor-pointer`}
+        >
+          <option value="" disabled>
+            Select a topic
+          </option>
+          {CONTACT_TOPICS.map((topic) => (
+            <option key={topic} value={topic}>
+              {topic}
+            </option>
+          ))}
+        </select>
       </div>
       <div>
         <label

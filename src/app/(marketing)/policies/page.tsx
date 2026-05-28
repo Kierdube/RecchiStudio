@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { MarketingShell } from "@/components/MarketingShell";
 import { MdxArticle } from "@/components/MdxArticle";
 import { compileMdxFromString, loadMdxFromRoot } from "@/lib/load-mdx";
@@ -23,7 +22,6 @@ export default async function PoliciesPage() {
 
   return (
     <MarketingShell wide>
-      <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Store policies" }]} />
       <MdxArticle>{content}</MdxArticle>
     </MarketingShell>
   );

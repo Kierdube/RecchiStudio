@@ -11,7 +11,7 @@ export function MarketingShell({
   wide?: boolean;
 }) {
   return (
-    <main className="border-b border-[#19371E]/8 bg-gradient-to-b from-[#FDFCF8] via-white/40 to-[#F4F9EF]/50">
+    <main className="border-b border-[#19371E]/8">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
         {wide ? (
           <div className="mx-auto w-full max-w-3xl lg:max-w-4xl">{children}</div>

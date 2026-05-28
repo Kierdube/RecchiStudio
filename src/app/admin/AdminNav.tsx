@@ -43,7 +43,7 @@ export function AdminNav() {
             href="/admin/site-copy"
             className="inline-flex min-h-10 items-center rounded-md px-2 py-1.5 hover:bg-zinc-100 hover:text-zinc-950"
           >
-            Site copy
+            Content
           </Link>
           <Link
             href="/"

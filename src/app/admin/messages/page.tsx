@@ -31,13 +31,14 @@ export default async function AdminMessagesPage() {
             <tr>
               <th className="px-4 py-3">Date</th>
               <th className="px-4 py-3">From</th>
+              <th className="px-4 py-3">Topic</th>
               <th className="px-4 py-3">Message</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-zinc-100">
             {messages.length === 0 ? (
               <tr>
-                <td colSpan={3} className="px-4 py-10 text-center text-zinc-500">
+                <td colSpan={4} className="px-4 py-10 text-center text-zinc-500">
                   No messages yet.
                 </td>
               </tr>
@@ -56,6 +57,7 @@ export default async function AdminMessagesPage() {
                       {m.email}
                     </a>
                   </td>
+                  <td className="whitespace-nowrap px-4 py-3 text-sm text-zinc-700">{m.topic}</td>
                   <td className="max-w-md px-4 py-3">
                     <p className="whitespace-pre-wrap break-words text-zinc-700">{m.message}</p>
                   </td>

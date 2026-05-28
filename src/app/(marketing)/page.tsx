@@ -5,9 +5,10 @@ import { ProductCard } from "@/components/ProductCard";
 import { RotatingHeadline } from "@/components/RotatingHeadline";
 import { SectionWave } from "@/components/SectionWave";
 import { SiteCopyHtml } from "@/components/SiteCopyHtml";
+import { SiteCopyText } from "@/components/SiteCopyText";
 import { primaryProductImage } from "@/lib/product-images";
 import { prisma } from "@/lib/prisma";
-import { getSiteCopyRecord, parseRotatingWords, siteCopyGet } from "@/lib/site-copy";
+import { getSiteCopyRecord, parseRotatingWords, resolveSiteCopyImageUrl, siteCopyGet } from "@/lib/site-copy";
 
 const FEATURE_KINDS = ["cotton", "design", "nature"] as const;
 
@@ -31,6 +32,8 @@ export default async function HomePage() {
     /sign in to the admin|npm run db:seed|prisma studio/i.test(homeCollectionEmptyHtmlRaw)
       ? "<p>No products are available right now. Please check back soon.</p>"
       : homeCollectionEmptyHtmlRaw;
+  const closingImageUrl = resolveSiteCopyImageUrl(siteCopyGet(copy, "home.closing.image_url"));
+  const closingImageAlt = siteCopyGet(copy, "home.closing.image_alt");
 
   return (
     <main>
@@ -44,8 +47,8 @@ export default async function HomePage() {
             }
           >
             <div className="min-w-0">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#2d5a36]/90">
-                {siteCopyGet(copy, "home.hero.eyebrow")}
+              <p className="recchi-eyebrow text-xs font-semibold uppercase tracking-[0.2em] text-[#2d5a36]/90">
+                <SiteCopyText value={siteCopyGet(copy, "home.hero.eyebrow")} inline />
               </p>
               <div className="mt-4 max-w-3xl">
                 <RotatingHeadline
@@ -128,7 +131,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="border-y border-[#19371E]/8 bg-[#F4F9EF]/60 px-4 py-12 sm:px-6 sm:py-16">
+      <section className="border-y border-[#19371E]/8 px-4 py-12 sm:px-6 sm:py-16">
         <div className="mx-auto max-w-6xl">
           <div className="overflow-hidden rounded-[2rem] ring-1 ring-[#19371E]/10 shadow-[0_24px_80px_-32px_rgba(25,55,30,0.35)]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -180,13 +183,27 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="border-t border-[#19371E]/8 bg-gradient-to-b from-[#FDFCF8] to-[#F4F9EF]/80 px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
-        <p className="mx-auto max-w-2xl text-center text-lg font-medium leading-relaxed text-[#19371E]/88">
-          {siteCopyGet(copy, "home.closing")}
-        </p>
+      <section className="border-t border-[#19371E]/8 px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-14 xl:gap-16">
+          {closingImageUrl ? (
+            <div className="mx-auto w-full max-w-md lg:mx-0 lg:max-w-none">
+              <div className="overflow-hidden rounded-[2rem] bg-gradient-to-b from-[#F4F9EF] to-[#E8F0DD] shadow-[0_28px_80px_-40px_rgba(25,55,30,0.35)] ring-1 ring-[#19371E]/10">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={closingImageUrl}
+                  alt={closingImageAlt}
+                  className="aspect-[4/5] w-full object-cover"
+                />
+              </div>
+            </div>
+          ) : null}
+          <p className="text-center text-2xl font-medium leading-relaxed text-[#19371E]/88 sm:text-3xl lg:text-left lg:text-[2rem] lg:leading-snug">
+            <SiteCopyText value={siteCopyGet(copy, "home.closing")} inline />
+          </p>
+        </div>
       </section>
 
-      <div className="bg-[#F4F9EF]/80">
+      <div className="bg-background">
         <SectionWave />
       </div>
     </main>

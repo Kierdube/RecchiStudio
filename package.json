@@ -18,8 +18,11 @@
   "dependencies": {
     "@prisma/client": "^5.22.0",
     "@tiptap/extension-character-count": "^3.22.4",
+    "@tiptap/extension-font-family": "^3.22.4",
     "@tiptap/extension-link": "^3.22.4",
     "@tiptap/extension-placeholder": "^3.22.4",
+    "@tiptap/extension-text-style": "^3.22.4",
+    "@tiptap/extension-underline": "^3.22.4",
     "@tiptap/react": "^3.22.4",
     "@tiptap/starter-kit": "^3.22.4",
     "googleapis": "^156.0.0",

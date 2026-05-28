@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ProductCard } from "@/components/ProductCard";
 import {
   SHOP_PAGE_SIZE,
@@ -50,10 +49,9 @@ export default async function CatalogPage({ searchParams }: Props) {
   const stateForUi = { ...state, page };
 
   return (
-    <main className="border-b border-[#19371E]/8 bg-gradient-to-b from-[#FDFCF8] to-[#F4F9EF]/40">
+    <main className="border-b border-[#19371E]/8">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
-        <Breadcrumbs items={[{ label: "Home", href: "/" }, { label: "Catalog" }]} />
-        <header className="mt-2 max-w-2xl">
+        <header className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2d5a36]/80">
             {siteCopyGet(copy, "catalog.header.eyebrow")}
           </p>

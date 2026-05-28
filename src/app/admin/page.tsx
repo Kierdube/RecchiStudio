@@ -29,7 +29,7 @@ export default async function AdminDashboardPage() {
     prisma.contactSubmission.findMany({
       orderBy: { createdAt: "desc" },
       take: 5,
-      select: { id: true, name: true, email: true, createdAt: true },
+      select: { id: true, name: true, email: true, topic: true, createdAt: true },
     }),
   ]);
   const [productsUpdated7d, productsUpdated30d, messages7d, messages30d] = await Promise.all([
@@ -58,9 +58,9 @@ export default async function AdminDashboardPage() {
     <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
       <p className="mt-1.5 max-w-3xl text-sm text-zinc-600">
-        Central control panel for catalog, messaging, and site content. Public-facing wording lives in{" "}
+        Central control panel for catalog, messaging, and site content. Edit wording in{" "}
         <Link href="/admin/site-copy" className="font-medium text-zinc-900 underline-offset-2 hover:underline">
-          Site copy
+          Content
         </Link>{" "}
         and{" "}
         <Link href="/admin/products" className="font-medium text-zinc-900 underline-offset-2 hover:underline">
@@ -85,7 +85,7 @@ export default async function AdminDashboardPage() {
           href="/admin/site-copy"
           className="inline-flex rounded-lg border border-zinc-300 bg-white px-5 py-2.5 text-sm font-semibold text-zinc-900 hover:bg-zinc-50"
         >
-          Edit site copy
+          Edit content
         </Link>
         <Link
           href="/admin/messages"
@@ -138,11 +138,8 @@ export default async function AdminDashboardPage() {
             ))}
           </ul>
           <p className="mt-4 border-t border-zinc-100 pt-4 text-xs leading-relaxed text-zinc-500">
-            Contact notifications use{" "}
-            <code className="rounded bg-zinc-100 px-1">RESEND_API_KEY</code>,{" "}
-            <code className="rounded bg-zinc-100 px-1">CONTACT_TO_EMAIL</code>, and{" "}
-            <code className="rounded bg-zinc-100 px-1">RESEND_FROM_EMAIL</code>. Payments require{" "}
-            <code className="rounded bg-zinc-100 px-1">STRIPE_SECRET_KEY</code>.
+            Contact notifications and checkout need to be set up by your site administrator before
+            those features can send email or accept payments.
           </p>
         </section>
 
@@ -206,6 +203,7 @@ export default async function AdminDashboardPage() {
                 <li key={message.id} className="rounded-lg border border-zinc-100 px-3 py-2">
                   <p className="text-sm font-medium text-zinc-900">{message.name}</p>
                   <p className="mt-1 truncate text-xs text-zinc-500">{message.email}</p>
+                  <p className="mt-1 text-xs text-zinc-500">{message.topic}</p>
                   <p className="mt-1 text-xs text-zinc-500">Received {formatDate(message.createdAt)}</p>
                 </li>
               ))}
@@ -227,9 +225,9 @@ export default async function AdminDashboardPage() {
             <span className="mt-0.5 shrink-0 font-semibold tabular-nums text-zinc-400">1</span>
             <span>
               <Link href="/admin/site-copy" className="font-semibold text-zinc-900 underline-offset-2 hover:underline">
-                Site copy
+                Content
               </Link>
-              {" "}for homepage sections, catalog headings, footer text, SEO copy, and legal MDX.
+              {" "}for homepage sections, page text, navigation labels, footer links, and policy pages.
             </span>
           </li>
           <li className="flex gap-3">
