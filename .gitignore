@@ -44,3 +44,7 @@ next-env.d.ts
 # prisma
 /prisma/dev.db
 /prisma/dev.db-journal
+
+# admin uploads (local dev only; production uses Cloudinary / GCS / S3)
+/public/uploads/*
+!/public/uploads/.gitkeep

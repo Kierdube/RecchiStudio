@@ -38,10 +38,10 @@ export function parseRotatingWords(raw: string): string[] {
   return words.length > 0 ? words : ["cute.", "elegant.", "unique.", "yourself."];
 }
 
-/** HTTPS URL or site path (e.g. `/images/foo.jpg`) from site copy. */
+/** HTTPS URL or site path (e.g. `/images/foo.jpg`, `/uploads/…`) from site copy. */
 export function resolveSiteCopyImageUrl(raw: string): string | null {
   const url = raw.trim();
   if (/^https?:\/\//i.test(url)) return url;
-  if (url.startsWith("/")) return url;
+  if (/^\/(images|uploads)\//.test(url)) return url;
   return null;
 }

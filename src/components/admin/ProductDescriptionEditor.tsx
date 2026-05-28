@@ -11,6 +11,7 @@ import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useState } from "react";
 
+import { FONT_FAMILY_OPTIONS } from "@/lib/google-fonts";
 import { descriptionHtmlForEditor } from "@/lib/product-description-editor";
 import { sanitizeRichTextHtml } from "@/lib/rich-text-sanitize";
 import {
@@ -19,10 +20,10 @@ import {
 
 const FONT_FAMILIES = [
   { label: "Default", value: "" },
-  { label: "Inter Tight", value: "'Inter Tight', system-ui, sans-serif" },
-  { label: "Georgia", value: "Georgia, serif" },
-  { label: "Arial", value: "Arial, Helvetica, sans-serif" },
-  { label: "System UI", value: "system-ui, sans-serif" },
+  ...FONT_FAMILY_OPTIONS.filter((opt) => opt.value !== "inherit").map((opt) => ({
+    label: opt.label,
+    value: opt.value,
+  })),
 ] as const;
 
 type Props = {

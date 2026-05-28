@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { ProductDescriptionEditor } from "@/components/admin/ProductDescriptionEditor";
 import type { SiteCopyDefinition } from "@/lib/site-copy-definitions";
 import { siteCopyEditorMode } from "@/lib/site-copy-editor";
@@ -18,11 +19,19 @@ export function SiteCopyBlockForm({ def, value }: { def: SiteCopyDefinition; val
   );
 
   const editorMode = siteCopyEditorMode(def.key, def.format);
+  const isChoice = def.format === "choice" && Boolean(def.choices);
 
   return (
     <form action={formAction} className="space-y-3 rounded-xl border border-zinc-200 bg-zinc-50/50 p-4">
       <input type="hidden" name="key" value={def.key} />
       <p className="text-sm font-medium text-zinc-800">{def.label}</p>
+      {editorMode === "image" ? (
+        <ImageUploadField
+          defaultValue={value}
+          hiddenInputName="value"
+          fieldId={`site-copy-${def.key.replace(/\./g, "-")}`}
+        />
+      ) : null}
       {editorMode === "plain" ? (
         <textarea
           name="value"
@@ -61,28 +70,36 @@ export function SiteCopyBlockForm({ def, value }: { def: SiteCopyDefinition; val
           className="min-h-[14rem] w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 font-sans text-sm leading-relaxed text-zinc-900 outline-none ring-zinc-400 focus:ring-2"
         />
       ) : null}
-      {def.format === "choice" && def.choices ? (
-        <select
-          name="value"
-          defaultValue={value || "inherit"}
-          className="min-h-11 w-full max-w-md rounded-lg border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 outline-none ring-zinc-400 focus:ring-2"
+      <div
+        className={
+          isChoice
+            ? "flex flex-wrap items-center gap-4 pt-0.5"
+            : "flex flex-wrap items-center gap-4 border-t border-zinc-200/80 pt-3"
+        }
+      >
+        {isChoice && def.choices ? (
+          <select
+            name="value"
+            defaultValue={value || "inherit"}
+            className="min-h-11 min-w-[12rem] flex-1 rounded-lg border border-zinc-300 bg-white px-3 py-2 text-base text-zinc-900 outline-none ring-zinc-400 focus:ring-2 sm:max-w-md"
+          >
+            {def.choices.map((choice) => (
+              <option key={choice.value} value={choice.value}>
+                {choice.label}
+              </option>
+            ))}
+          </select>
+        ) : null}
+        <button
+          type="submit"
+          disabled={pending}
+          className="min-h-10 shrink-0 rounded-lg bg-zinc-900 px-5 py-2 text-sm font-semibold text-white hover:bg-zinc-800 disabled:opacity-50 touch-manipulation"
         >
-          {def.choices.map((choice) => (
-            <option key={choice.value} value={choice.value}>
-              {choice.label}
-            </option>
-          ))}
-        </select>
-      ) : null}
+          {pending ? "Saving…" : "Save"}
+        </button>
+      </div>
       {state?.error ? <p className="text-sm text-red-600">{state.error}</p> : null}
       {state?.ok ? <p className="text-sm text-emerald-700">Saved.</p> : null}
-      <button
-        type="submit"
-        disabled={pending}
-        className="min-h-10 rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white hover:bg-zinc-800 disabled:opacity-50 touch-manipulation"
-      >
-        {pending ? "Saving…" : "Save"}
-      </button>
     </form>
   );
 }

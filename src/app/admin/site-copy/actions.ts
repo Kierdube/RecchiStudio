@@ -7,6 +7,8 @@ import { prisma } from "@/lib/prisma";
 import { siteCopyDefinitionOrThrow } from "@/lib/site-copy-definitions";
 import { isPlainOnlySiteCopyKey } from "@/lib/site-copy-editor";
 import { sanitizeRichTextHtml } from "@/lib/rich-text-sanitize";
+import { isSiteCopyImageKey } from "@/lib/site-copy-image-key";
+import { sanitizeStoredImageUrl } from "@/lib/upload-image";
 import { assertAdminSession } from "@/lib/verify-admin-session";
 
 const MAX_PLAIN = 8000;
@@ -44,9 +46,14 @@ export async function saveSiteCopyBlock(
   if (def.format === "html") {
     value = sanitizeRichTextHtml(value).slice(0, MAX_HTML);
   } else if (def.format === "plain") {
-    value = isPlainOnlySiteCopyKey(key)
-      ? sanitizePlain(value)
-      : sanitizeRichTextHtml(value).slice(0, MAX_HTML);
+    if (isSiteCopyImageKey(key)) {
+      value = sanitizeStoredImageUrl(value);
+      if (!value) return { error: "Upload an image or use a valid image URL." };
+    } else {
+      value = isPlainOnlySiteCopyKey(key)
+        ? sanitizePlain(value)
+        : sanitizeRichTextHtml(value).slice(0, MAX_HTML);
+    }
   } else if (def.format === "choice") {
     value = sanitizePlain(value);
   } else {

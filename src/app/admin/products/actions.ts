@@ -12,6 +12,7 @@ import {
   plainTextFromProductDescriptionHtml,
   sanitizeProductDescriptionHtml,
 } from "@/lib/sanitize-product-description";
+import { sanitizeStoredImageUrl } from "@/lib/upload-image";
 
 const productFields = z.object({
   name: z.string().trim().min(1, "Name is required").max(200),
@@ -68,17 +69,13 @@ function parseImageUrls(formData: FormData): { ok: true; value: string[] } | { o
   const seen = new Set<string>();
   const out: string[] = [];
   for (const line of lines) {
-    if (seen.has(line)) continue;
-    seen.add(line);
-    try {
-      const u = new URL(line);
-      if (u.protocol !== "http:" && u.protocol !== "https:") {
-        return { ok: false, error: "Each image URL must start with http:// or https://" };
-      }
-    } catch {
-      return { ok: false, error: "Each line must be a valid http(s) URL" };
+    const url = sanitizeStoredImageUrl(line);
+    if (!url) {
+      return { ok: false, error: "Each image must be uploaded or be a valid https URL." };
     }
-    out.push(line);
+    if (seen.has(url)) continue;
+    seen.add(url);
+    out.push(url);
   }
   return { ok: true, value: out };
 }

@@ -1,7 +1,9 @@
 import { cookies } from "next/headers";
 
+import { GoogleFontsLoader } from "@/components/GoogleFontsLoader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { GlobalTypographyStyles } from "@/components/GlobalTypographyStyles";
+import { googleFontsUsedInSiteCopy } from "@/lib/google-fonts";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getSiteCopyRecord } from "@/lib/site-copy";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
@@ -27,12 +29,15 @@ export default async function MarketingLayout({
     ? cookieCurrency
     : DEFAULT_DISPLAY_CURRENCY;
 
+  const googleFonts = googleFontsUsedInSiteCopy(copy);
+
   return (
     <CurrencyProvider
       initialRates={ratesPayload.rates}
       ratesAsOf={ratesPayload.asOf}
       initialCurrency={initialCurrency}
     >
+      <GoogleFontsLoader fonts={googleFonts} />
       <GlobalTypographyStyles copy={copy} />
       <SiteHeader copy={copy} />
       <div data-recchi-content className="min-w-0 flex-1 bg-background">

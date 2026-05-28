@@ -22,11 +22,10 @@ export default async function HomePage() {
     getSiteCopyRecord(),
   ]);
 
-  const bannerUrl = siteCopyGet(copy, "home.banner.image_url");
+  const bannerUrl = resolveSiteCopyImageUrl(siteCopyGet(copy, "home.banner.image_url"));
   const bannerAlt = siteCopyGet(copy, "home.banner.image_alt");
-  const heroImageUrl = siteCopyGet(copy, "home.hero.image_url").trim();
+  const heroImageUrl = resolveSiteCopyImageUrl(siteCopyGet(copy, "home.hero.image_url"));
   const heroImageAlt = siteCopyGet(copy, "home.hero.image_alt");
-  const showHeroImage = /^https?:\/\//i.test(heroImageUrl);
   const homeCollectionEmptyHtmlRaw = siteCopyGet(copy, "home.collection.empty_html");
   const homeCollectionEmptyHtml =
     /sign in to the admin|npm run db:seed|prisma studio/i.test(homeCollectionEmptyHtmlRaw)
@@ -41,7 +40,7 @@ export default async function HomePage() {
         <div className="mx-auto max-w-6xl">
           <div
             className={
-              showHeroImage
+              heroImageUrl
                 ? "grid items-center gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-14 xl:gap-16"
                 : ""
             }
@@ -70,7 +69,7 @@ export default async function HomePage() {
                 </Link>
               </div>
             </div>
-            {showHeroImage ? (
+            {heroImageUrl ? (
               <div className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none lg:justify-self-stretch">
                 <div className="overflow-hidden rounded-[2rem] bg-gradient-to-b from-[#F4F9EF] to-[#E8F0DD] shadow-[0_28px_80px_-40px_rgba(25,55,30,0.45)] ring-1 ring-[#19371E]/10">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -127,14 +126,16 @@ export default async function HomePage() {
 
       <section className="border-y border-[#19371E]/8 px-4 py-12 sm:px-6 sm:py-16">
         <div className="mx-auto max-w-6xl">
-          <div className="overflow-hidden rounded-[2rem] ring-1 ring-[#19371E]/10 shadow-[0_24px_80px_-32px_rgba(25,55,30,0.35)]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={bannerUrl}
-              alt={bannerAlt}
-              className="aspect-[4/3] max-h-[min(70vw,420px)] w-full object-cover sm:aspect-[21/9] sm:max-h-[420px] md:aspect-[24/9]"
-            />
-          </div>
+          {bannerUrl ? (
+            <div className="overflow-hidden rounded-[2rem] ring-1 ring-[#19371E]/10 shadow-[0_24px_80px_-32px_rgba(25,55,30,0.35)]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={bannerUrl}
+                alt={bannerAlt}
+                className="aspect-[4/3] max-h-[min(70vw,420px)] w-full object-cover sm:aspect-[21/9] sm:max-h-[420px] md:aspect-[24/9]"
+              />
+            </div>
+          ) : null}
         </div>
       </section>
 
@@ -178,9 +179,9 @@ export default async function HomePage() {
       </section>
 
       <section className="border-t border-[#19371E]/8 px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
-        <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-14 xl:gap-16">
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-8 sm:gap-10 lg:flex-row lg:items-center lg:gap-12 xl:gap-16">
           {closingImageUrl ? (
-            <div className="mx-auto w-full max-w-md lg:mx-0 lg:max-w-none">
+            <div className="w-full max-w-[17.5rem] shrink-0 sm:max-w-[19rem] lg:max-w-[20rem]">
               <div className="overflow-hidden rounded-[2rem] bg-gradient-to-b from-[#F4F9EF] to-[#E8F0DD] shadow-[0_28px_80px_-40px_rgba(25,55,30,0.35)] ring-1 ring-[#19371E]/10">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -191,7 +192,7 @@ export default async function HomePage() {
               </div>
             </div>
           ) : null}
-          <p className="text-center text-2xl font-medium leading-relaxed text-[#19371E]/88 sm:text-3xl lg:text-left lg:text-[2rem] lg:leading-snug">
+          <p className="min-w-0 flex-1 text-center text-2xl font-medium leading-relaxed text-[#19371E]/88 sm:text-3xl lg:text-left lg:text-[2rem] lg:leading-snug">
             <SiteCopyText value={siteCopyGet(copy, "home.closing")} inline />
           </p>
         </div>

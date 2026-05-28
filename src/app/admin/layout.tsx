@@ -1,3 +1,5 @@
+import { GoogleFontsLoaderAll } from "@/components/GoogleFontsLoader";
+
 import { AdminNav } from "./AdminNav";
 
 export default function AdminRootLayout({
@@ -7,6 +9,7 @@ export default function AdminRootLayout({
 }) {
   return (
     <div className="min-h-full flex flex-col bg-zinc-50 text-zinc-900">
+      <GoogleFontsLoaderAll />
       <AdminNav />
       <div className="min-w-0 flex-1">{children}</div>
     </div>

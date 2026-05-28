@@ -1,4 +1,8 @@
+import { FONT_FAMILY_OPTIONS } from "@/lib/google-fonts";
+
 export type TypographyLevel = "h1" | "h2" | "h3" | "p" | "eyebrow";
+
+export { FONT_FAMILY_OPTIONS };
 
 export const TYPOGRAPHY_LEVELS: {
   level: TypographyLevel;
@@ -11,14 +15,6 @@ export const TYPOGRAPHY_LEVELS: {
   { level: "p", label: "Paragraphs", selector: "[data-recchi-content] p" },
   { level: "eyebrow", label: "Small labels (eyebrows)", selector: "[data-recchi-content] .recchi-eyebrow" },
 ];
-
-export const FONT_FAMILY_OPTIONS = [
-  { value: "inherit", label: "Default site font" },
-  { value: "'Inter Tight', system-ui, sans-serif", label: "Inter Tight" },
-  { value: "Georgia, 'Times New Roman', serif", label: "Georgia" },
-  { value: "Arial, Helvetica, sans-serif", label: "Arial" },
-  { value: "system-ui, sans-serif", label: "System UI" },
-] as const;
 
 export const FONT_SIZE_OPTIONS = [
   { value: "inherit", label: "Default" },

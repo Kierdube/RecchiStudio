@@ -54,7 +54,7 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
   {
     group: "Home — hero",
     key: "home.hero.image_url",
-    label: "Hero image link",
+    label: "Hero image",
     format: "plain",
     defaultValue:
       "https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&w=1100&q=80",
@@ -108,7 +108,7 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
   {
     group: "Home — banner",
     key: "home.banner.image_url",
-    label: "Banner image link",
+    label: "Banner image",
     format: "plain",
     defaultValue:
       "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=2400&q=80",
@@ -174,7 +174,7 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
   {
     group: "Home — closing",
     key: "home.closing.image_url",
-    label: "Closing image link",
+    label: "Closing image",
     format: "plain",
     defaultValue: "/images/home-closing.png",
   },
@@ -446,7 +446,7 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
   {
     group: "About — story",
     key: "about.body.image_url",
-    label: "Story image link",
+    label: "Story image",
     format: "plain",
     defaultValue: "/images/about-story.png",
   },
@@ -546,7 +546,7 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
   {
     group: "Contact page",
     key: "contact.sidebar.image_url",
-    label: "Sidebar image link",
+    label: "Sidebar image",
     format: "plain",
     defaultValue:
       "https://images.unsplash.com/photo-1515378796134-1487dff0ccd1?auto=format&fit=crop&w=900&q=80",
