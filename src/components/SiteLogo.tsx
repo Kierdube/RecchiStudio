@@ -7,6 +7,9 @@ export const SITE_LOGO = {
   height: 204,
 } as const;
 
+/** Shared header + footer logo height (75% of prior h-18 / sm:h-20). */
+export const SITE_LOGO_SIZE_CLASS = "h-[3.375rem] w-auto shrink-0 sm:h-[3.75rem]";
+
 type SiteLogoProps = {
   alt: string;
   className?: string;
