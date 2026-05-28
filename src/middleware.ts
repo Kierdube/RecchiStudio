@@ -1,11 +1,15 @@
 import { SignJWT, jwtVerify } from "jose";
 import { NextResponse, type NextRequest } from "next/server";
 
+import { isAdminAuthBypassed } from "@/lib/admin-auth-bypass";
 import { COOKIE_NAME } from "@/lib/auth-constants";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   if (!pathname.startsWith("/admin")) {
+    return NextResponse.next();
+  }
+  if (isAdminAuthBypassed()) {
     return NextResponse.next();
   }
   if (pathname === "/admin/login" || pathname.startsWith("/admin/login/")) {
