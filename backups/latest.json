@@ -1,0 +1,782 @@
+{
+  "version": 1,
+  "exportedAt": "2026-05-28T00:31:10.412Z",
+  "siteCopyBlocks": [
+    {
+      "id": "cmpn0433n001tibnzmjw0q2bl",
+      "key": "about.body_html",
+      "label": "Main body (two paragraphs as HTML)",
+      "format": "html",
+      "value": "<p>Each print is developed to look great on tees, crop tops, shorts, and whatever you want to live in. Whether you are matching with someone you love or building a wardrobe that feels like you, we hope these patterns make getting dressed a little brighter.</p><p>Thank you for supporting independent design. When you browse here, you are helping us keep experimenting with new motifs, palettes, and silhouettes.</p>",
+      "updatedAt": "2026-05-28T00:25:07.393Z"
+    },
+    {
+      "id": "cmpn043c50020ibnzzpuq1e3w",
+      "key": "about.cta_catalog",
+      "label": "Primary button",
+      "format": "plain",
+      "value": "Browse Collections",
+      "updatedAt": "2026-05-28T00:25:07.700Z"
+    },
+    {
+      "id": "cmpn043df0021ibnzdxdeforq",
+      "key": "about.cta_contact",
+      "label": "Secondary button",
+      "format": "plain",
+      "value": "Get in touch",
+      "updatedAt": "2026-05-28T00:25:07.745Z"
+    },
+    {
+      "id": "cmpn04360001vibnzpm3t85fe",
+      "key": "about.feature.1.body",
+      "label": "Highlight 1 body",
+      "format": "plain",
+      "value": "Natural fibres, made to wash and wear.",
+      "updatedAt": "2026-05-28T00:25:07.475Z"
+    },
+    {
+      "id": "cmpn0434r001uibnz9tn3orcg",
+      "key": "about.feature.1.title",
+      "label": "Highlight 1 title",
+      "format": "plain",
+      "value": "100% Cotton",
+      "updatedAt": "2026-05-28T00:25:07.433Z"
+    },
+    {
+      "id": "cmpn0438f001xibnz6099eh0q",
+      "key": "about.feature.2.body",
+      "label": "Highlight 2 body",
+      "format": "plain",
+      "value": "Prints you will not find on generic templates.",
+      "updatedAt": "2026-05-28T00:25:07.559Z"
+    },
+    {
+      "id": "cmpn04378001wibnze3qjk281",
+      "key": "about.feature.2.title",
+      "label": "Highlight 2 title",
+      "format": "plain",
+      "value": "Original artwork",
+      "updatedAt": "2026-05-28T00:25:07.516Z"
+    },
+    {
+      "id": "cmpn043az001zibnzogcw51fw",
+      "key": "about.feature.3.body",
+      "label": "Highlight 3 body",
+      "format": "plain",
+      "value": "Motifs rooted in the outdoors.",
+      "updatedAt": "2026-05-28T00:25:07.655Z"
+    },
+    {
+      "id": "cmpn0439q001yibnzmtrpp50w",
+      "key": "about.feature.3.title",
+      "label": "Highlight 3 title",
+      "format": "plain",
+      "value": "Nature inspired",
+      "updatedAt": "2026-05-28T00:25:07.607Z"
+    },
+    {
+      "id": "cmpn0432f001sibnzay6nd467",
+      "key": "about.intro.description",
+      "label": "Intro paragraph",
+      "format": "plain",
+      "value": "We are a small creative studio focused on patterns that feel joyful on fabric — birds, plants, colour, and personality.",
+      "updatedAt": "2026-05-28T00:25:07.353Z"
+    },
+    {
+      "id": "cmpn04303001qibnzrcng8wbq",
+      "key": "about.intro.eyebrow",
+      "label": "Intro eyebrow",
+      "format": "plain",
+      "value": "My studio",
+      "updatedAt": "2026-05-28T00:25:07.259Z"
+    },
+    {
+      "id": "cmpn04316001ribnzmdymtqkt",
+      "key": "about.intro.title",
+      "label": "Intro title",
+      "format": "plain",
+      "value": "Cute, classy, and a little wild!",
+      "updatedAt": "2026-05-28T00:25:07.303Z"
+    },
+    {
+      "id": "cmpn042yv001pibnzhz8rivzf",
+      "key": "about.meta_description",
+      "label": "Meta description (SEO)",
+      "format": "plain",
+      "value": "Recchi Studio designs cute, nature-inspired patterns for people who want to love what they wear.",
+      "updatedAt": "2026-05-28T00:25:07.216Z"
+    },
+    {
+      "id": "cmpn042xp001oibnzd2cihdjl",
+      "key": "about.meta_title",
+      "label": "Browser tab title",
+      "format": "plain",
+      "value": "About",
+      "updatedAt": "2026-05-28T00:25:07.173Z"
+    },
+    {
+      "id": "cmpn0422f000yibnzjy67qcui",
+      "key": "catalog.header.blurb",
+      "label": "Intro blurb",
+      "format": "plain",
+      "value": "Filter by collection, search the catalog, sort by price or name, and page through when you have dozens of pieces.",
+      "updatedAt": "2026-05-28T00:25:06.024Z"
+    },
+    {
+      "id": "cmpn04200000wibnznd1rf325",
+      "key": "catalog.header.eyebrow",
+      "label": "Header eyebrow",
+      "format": "plain",
+      "value": "Browse",
+      "updatedAt": "2026-05-28T00:25:05.933Z"
+    },
+    {
+      "id": "cmpn04218000xibnz6rffcap8",
+      "key": "catalog.header.title",
+      "label": "Page title",
+      "format": "plain",
+      "value": "Catalog",
+      "updatedAt": "2026-05-28T00:25:05.977Z"
+    },
+    {
+      "id": "cmpn041yz000vibnzq63gm0fh",
+      "key": "catalog.meta_description",
+      "label": "Meta description (SEO)",
+      "format": "plain",
+      "value": "Browse Recchi Studio — filter by collection, search, sort by price, and page through the catalog.",
+      "updatedAt": "2026-05-28T00:25:05.888Z"
+    },
+    {
+      "id": "cmpn041xg000uibnzsg1ci3eh",
+      "key": "catalog.meta_title",
+      "label": "Browser tab title",
+      "format": "plain",
+      "value": "Collection",
+      "updatedAt": "2026-05-28T00:25:05.846Z"
+    },
+    {
+      "id": "cmpn0423o000zibnzon15kt7i",
+      "key": "catalog.search_placeholder",
+      "label": "Search field placeholder",
+      "format": "plain",
+      "value": "Search by name or description…",
+      "updatedAt": "2026-05-28T00:25:06.063Z"
+    },
+    {
+      "id": "cmpn043rs002dibnzqfb5zf9e",
+      "key": "contact.footer_html",
+      "label": "Line below the grid (HTML; links allowed)",
+      "format": "html",
+      "value": "<p>Shopping questions? Start in the <a href=\"/catalog\">catalog</a> or <a href=\"/shipping\">shipping</a> page.</p>",
+      "updatedAt": "2026-05-28T00:25:08.281Z"
+    },
+    {
+      "id": "cmpn043qn002cibnzbvru0v9y",
+      "key": "contact.form.heading",
+      "label": "Form card heading",
+      "format": "plain",
+      "value": "Message",
+      "updatedAt": "2026-05-28T00:25:08.238Z"
+    },
+    {
+      "id": "cmpn043jf0026ibnz4emwmbpw",
+      "key": "contact.intro.description",
+      "label": "Intro paragraph",
+      "format": "plain",
+      "value": "Send a message below and we will get back to you as soon as we can.",
+      "updatedAt": "2026-05-28T00:25:07.972Z"
+    },
+    {
+      "id": "cmpn043h00024ibnznww39orc",
+      "key": "contact.intro.eyebrow",
+      "label": "Intro eyebrow",
+      "format": "plain",
+      "value": "Hello",
+      "updatedAt": "2026-05-28T00:25:07.886Z"
+    },
+    {
+      "id": "cmpn043i80025ibnzinctxar2",
+      "key": "contact.intro.title",
+      "label": "Intro title",
+      "format": "plain",
+      "value": "We would love to hear from you",
+      "updatedAt": "2026-05-28T00:25:07.929Z"
+    },
+    {
+      "id": "cmpn043fv0023ibnzgfy1ziwt",
+      "key": "contact.meta_description",
+      "label": "Meta description (SEO)",
+      "format": "plain",
+      "value": "Reach Recchi Studio for order questions, collaborations, or wholesale inquiries.",
+      "updatedAt": "2026-05-28T00:25:07.845Z"
+    },
+    {
+      "id": "cmpn043eo0022ibnzzq6irwlh",
+      "key": "contact.meta_title",
+      "label": "Browser tab title",
+      "format": "plain",
+      "value": "Contact",
+      "updatedAt": "2026-05-28T00:25:07.791Z"
+    },
+    {
+      "id": "cmpn043ko0027ibnzzntffwwc",
+      "key": "contact.sidebar.direct_heading",
+      "label": "Sidebar — “Direct” heading",
+      "format": "plain",
+      "value": "Direct",
+      "updatedAt": "2026-05-28T00:25:08.016Z"
+    },
+    {
+      "id": "cmpn043n20029ibnzsqs261lx",
+      "key": "contact.sidebar.email_display",
+      "label": "Email address (visible text)",
+      "format": "plain",
+      "value": "hello@recchistudio.com",
+      "updatedAt": "2026-05-28T00:25:08.104Z"
+    },
+    {
+      "id": "cmpn043ob002aibnz79rp8gqc",
+      "key": "contact.sidebar.email_href",
+      "label": "Email link (mailto:…)",
+      "format": "plain",
+      "value": "mailto:hello@recchistudio.com",
+      "updatedAt": "2026-05-28T00:25:08.148Z"
+    },
+    {
+      "id": "cmpn043lt0028ibnzjhdh4fzk",
+      "key": "contact.sidebar.email_label",
+      "label": "Sidebar — email label",
+      "format": "plain",
+      "value": "Email",
+      "updatedAt": "2026-05-28T00:25:08.061Z"
+    },
+    {
+      "id": "cmpn043pf002bibnzwzbsjcw4",
+      "key": "contact.sidebar.note_html",
+      "label": "Sidebar note (HTML)",
+      "format": "html",
+      "value": "",
+      "updatedAt": "2026-05-28T00:25:08.193Z"
+    },
+    {
+      "id": "cmpn042fl0019ibnz0gf2t8m7",
+      "key": "footer.brand_blurb",
+      "label": "Brand blurb",
+      "format": "plain",
+      "value": "Express yourself with cute nature-inspired patterns!",
+      "updatedAt": "2026-05-28T00:25:06.513Z"
+    },
+    {
+      "id": "cmpn042eg0018ibnzqoxfp1tb",
+      "key": "footer.brand_title",
+      "label": "Brand line next to mark",
+      "format": "plain",
+      "value": "Recchi Studio",
+      "updatedAt": "2026-05-28T00:25:06.467Z"
+    },
+    {
+      "id": "cmpn042tx001libnzdijsmfa9",
+      "key": "footer.catalog_blurb",
+      "label": "Catalog column blurb",
+      "format": "plain",
+      "value": "Browse tees, crop tops, sweaters, and more. Checkout is secure through Stripe.",
+      "updatedAt": "2026-05-28T00:25:07.041Z"
+    },
+    {
+      "id": "cmpn042v4001mibnz45ycpv60",
+      "key": "footer.catalog_cta",
+      "label": "Catalog column link text",
+      "format": "plain",
+      "value": "View Collections →",
+      "updatedAt": "2026-05-28T00:25:07.084Z"
+    },
+    {
+      "id": "cmpn042wg001nibnzvwqyohh6",
+      "key": "footer.copyright",
+      "label": "Copyright line (year is added automatically before this text)",
+      "format": "plain",
+      "value": "Recchi Studio. All rights reserved.",
+      "updatedAt": "2026-05-28T00:25:07.129Z"
+    },
+    {
+      "id": "cmpn042ml001fibnzpfamh507",
+      "key": "footer.nav.about",
+      "label": "Link — About Us",
+      "format": "plain",
+      "value": "About Me",
+      "updatedAt": "2026-05-28T00:25:06.778Z"
+    },
+    {
+      "id": "cmpn042nv001gibnztkk6hrim",
+      "key": "footer.nav.contact",
+      "label": "Link — Contact Us",
+      "format": "plain",
+      "value": "Contact Us",
+      "updatedAt": "2026-05-28T00:25:06.824Z"
+    },
+    {
+      "id": "cmpn042li001eibnzoxz2kgjq",
+      "key": "footer.nav.policies",
+      "label": "Link — Store Policies",
+      "format": "plain",
+      "value": "Store Policies",
+      "updatedAt": "2026-05-28T00:25:06.734Z"
+    },
+    {
+      "id": "cmpn042ka001dibnzq7p2jd5i",
+      "key": "footer.nav.shipping",
+      "label": "Link — Shipping and Returns",
+      "format": "plain",
+      "value": "Shipping and Returns",
+      "updatedAt": "2026-05-28T00:25:06.688Z"
+    },
+    {
+      "id": "cmpn042j4001cibnzh9q3pa7r",
+      "key": "footer.section_catalog",
+      "label": "Column heading — catalog",
+      "format": "plain",
+      "value": "Collections",
+      "updatedAt": "2026-05-28T00:25:06.644Z"
+    },
+    {
+      "id": "cmpn042gs001aibnzpilbyq5f",
+      "key": "footer.section_pages",
+      "label": "Column heading — pages",
+      "format": "plain",
+      "value": "Pages",
+      "updatedAt": "2026-05-28T00:25:06.558Z"
+    },
+    {
+      "id": "cmpn042hu001bibnzvu2x1tzp",
+      "key": "footer.section_styles",
+      "label": "Column heading — styles",
+      "format": "plain",
+      "value": "Styles",
+      "updatedAt": "2026-05-28T00:25:06.598Z"
+    },
+    {
+      "id": "cmpn042p1001hibnz398m3bjr",
+      "key": "footer.style.birds",
+      "label": "Style link — Birds",
+      "format": "plain",
+      "value": "Birds",
+      "updatedAt": "2026-05-28T00:25:06.868Z"
+    },
+    {
+      "id": "cmpn042ri001jibnz039m003s",
+      "key": "footer.style.cats",
+      "label": "Style link — Cats",
+      "format": "plain",
+      "value": "Cats",
+      "updatedAt": "2026-05-28T00:25:06.955Z"
+    },
+    {
+      "id": "cmpn042q9001iibnz52ry1knn",
+      "key": "footer.style.flamingos",
+      "label": "Style link — Flamingos",
+      "format": "plain",
+      "value": "Flamingos",
+      "updatedAt": "2026-05-28T00:25:06.912Z"
+    },
+    {
+      "id": "cmpn042sp001kibnzm832x127",
+      "key": "footer.style.other",
+      "label": "Style link — Other",
+      "format": "plain",
+      "value": "Other",
+      "updatedAt": "2026-05-28T00:25:06.998Z"
+    },
+    {
+      "id": "cmpn042d80017ibnzdbvmhara",
+      "key": "header.menu_button",
+      "label": "Mobile menu button",
+      "format": "plain",
+      "value": "Menu",
+      "updatedAt": "2026-05-28T00:25:06.421Z"
+    },
+    {
+      "id": "cmpn042610011ibnztrxo5c7l",
+      "key": "header.nav.about",
+      "label": "Nav — About",
+      "format": "plain",
+      "value": "About",
+      "updatedAt": "2026-05-28T00:25:06.152Z"
+    },
+    {
+      "id": "cmpn0429n0014ibnz1v9x6phw",
+      "key": "header.nav.catalog",
+      "label": "Nav — Catalog (desktop + mobile)",
+      "format": "plain",
+      "value": "Collection",
+      "updatedAt": "2026-05-28T00:25:06.288Z"
+    },
+    {
+      "id": "cmpn0428f0013ibnz71m6v6x3",
+      "key": "header.nav.contact",
+      "label": "Nav — Contact",
+      "format": "plain",
+      "value": "Contact",
+      "updatedAt": "2026-05-28T00:25:06.242Z"
+    },
+    {
+      "id": "cmpn042by0016ibnzogbriyrs",
+      "key": "header.nav.home",
+      "label": "Mobile menu — Home",
+      "format": "plain",
+      "value": "Home",
+      "updatedAt": "2026-05-28T00:25:06.379Z"
+    },
+    {
+      "id": "cmpn042ar0015ibnztveu45hh",
+      "key": "header.nav.policies",
+      "label": "Mobile menu — Policies",
+      "format": "plain",
+      "value": "Policies",
+      "updatedAt": "2026-05-28T00:25:06.333Z"
+    },
+    {
+      "id": "cmpn042780012ibnz6z7kg2xz",
+      "key": "header.nav.shipping",
+      "label": "Nav — Shipping",
+      "format": "plain",
+      "value": "Shipping",
+      "updatedAt": "2026-05-28T00:25:06.197Z"
+    },
+    {
+      "id": "cmpn0424t0010ibnzji26gvmr",
+      "key": "header.tagline",
+      "label": "Subtitle under logo (desktop)",
+      "format": "plain",
+      "value": "Remove this line entirely",
+      "updatedAt": "2026-05-28T00:25:06.107Z"
+    },
+    {
+      "id": "cmpn041iu000iibnz55cgb78u",
+      "key": "home.banner.image_alt",
+      "label": "Banner image alt text",
+      "format": "plain",
+      "value": "Apparel display suggesting patterns and colour from the collection",
+      "updatedAt": "2026-05-28T00:25:05.306Z"
+    },
+    {
+      "id": "cmpn041ho000hibnzk4xq06tg",
+      "key": "home.banner.image_url",
+      "label": "Banner image URL",
+      "format": "plain",
+      "value": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=2400&q=80",
+      "updatedAt": "2026-05-28T00:25:05.260Z"
+    },
+    {
+      "id": "cmpn041w9000tibnz3khw0ik0",
+      "key": "home.closing",
+      "label": "Closing line (full width)",
+      "format": "plain",
+      "value": "Thank you for showing an interest in my small business!",
+      "updatedAt": "2026-05-28T00:25:05.799Z"
+    },
+    {
+      "id": "cmpn041e5000eibnz126e8mby",
+      "key": "home.collection.blurb",
+      "label": "Blurb",
+      "format": "plain",
+      "value": "Fresh drops in the catalog — tees, crop tops, shorts, and more.",
+      "updatedAt": "2026-05-28T00:25:05.130Z"
+    },
+    {
+      "id": "cmpn041fb000fibnzs1429gfu",
+      "key": "home.collection.cta_view_all",
+      "label": "“View all” link text",
+      "format": "plain",
+      "value": "View all products",
+      "updatedAt": "2026-05-28T00:25:05.173Z"
+    },
+    {
+      "id": "cmpn041gf000gibnzut4dlsaf",
+      "key": "home.collection.empty_html",
+      "label": "Empty state (when no products; HTML ok)",
+      "format": "html",
+      "value": "<p>No products are available right now. Please check back soon.</p>",
+      "updatedAt": "2026-05-28T00:25:05.215Z"
+    },
+    {
+      "id": "cmpn041bt000cibnzzl91wgg1",
+      "key": "home.collection.eyebrow",
+      "label": "Eyebrow",
+      "format": "plain",
+      "value": "Collection",
+      "updatedAt": "2026-05-28T00:25:05.046Z"
+    },
+    {
+      "id": "cmpn041cy000dibnz63sbxjkq",
+      "key": "home.collection.title",
+      "label": "Section title",
+      "format": "plain",
+      "value": "Styles",
+      "updatedAt": "2026-05-28T00:25:05.087Z"
+    },
+    {
+      "id": "cmpn041q7000oibnzwvfcdgb3",
+      "key": "home.feature.1.body",
+      "label": "Feature 1 body",
+      "format": "plain",
+      "value": "Biodegradable and natural fibers that feel easy on your skin, wash after wash.",
+      "updatedAt": "2026-05-28T00:25:05.573Z"
+    },
+    {
+      "id": "cmpn041p0000nibnzri56ruou",
+      "key": "home.feature.1.title",
+      "label": "Feature 1 title",
+      "format": "plain",
+      "value": "100% Cotton",
+      "updatedAt": "2026-05-28T00:25:05.528Z"
+    },
+    {
+      "id": "cmpn041ss000qibnz0veyab3o",
+      "key": "home.feature.2.body",
+      "label": "Feature 2 body",
+      "format": "plain",
+      "value": "I am an artist and small business owner who likes to spend a lot of time in nature, observing birds and wildlife. My designs are an appreciation of nature and are one-of-a-kind designs that are expressive for those who like pieces that are elegant, cute, and unique (an intersection that is difficult to achieve).",
+      "updatedAt": "2026-05-28T00:25:05.664Z"
+    },
+    {
+      "id": "cmpn041rl000pibnzeuvtw8e4",
+      "key": "home.feature.2.title",
+      "label": "Feature 2 title",
+      "format": "plain",
+      "value": "Uniquely Designed",
+      "updatedAt": "2026-05-28T00:25:05.618Z"
+    },
+    {
+      "id": "cmpn041v6000sibnzbsdq5pf2",
+      "key": "home.feature.3.body",
+      "label": "Feature 3 body",
+      "format": "plain",
+      "value": "Birds, plants, and abstract patterns inspired from the outdoors and printed onto comfortable pieces.",
+      "updatedAt": "2026-05-28T00:25:05.754Z"
+    },
+    {
+      "id": "cmpn041tz000ribnzwmqo97kr",
+      "key": "home.feature.3.title",
+      "label": "Feature 3 title",
+      "format": "plain",
+      "value": "Nature inspired",
+      "updatedAt": "2026-05-28T00:25:05.708Z"
+    },
+    {
+      "id": "cmpn0415r0007ibnzxl13pre8",
+      "key": "home.hero.body_html",
+      "label": "Intro paragraph under the headline",
+      "format": "html",
+      "value": "<p>Welcome to my small business!</p><p>Each of my patterns are inspired by nature and designed by me, a Canadian artist. Each pattern is printed on 100% cotton.</p>",
+      "updatedAt": "2026-05-28T00:25:04.821Z"
+    },
+    {
+      "id": "cmpn041850009ibnzh6c9pqtd",
+      "key": "home.hero.cta_about",
+      "label": "Secondary button (about)",
+      "format": "plain",
+      "value": "About Recchi Studio",
+      "updatedAt": "2026-05-28T00:25:04.914Z"
+    },
+    {
+      "id": "cmpn0416y0008ibnz11okvuw9",
+      "key": "home.hero.cta_catalog",
+      "label": "Primary button (catalog)",
+      "format": "plain",
+      "value": "Browse Collection",
+      "updatedAt": "2026-05-28T00:25:04.870Z"
+    },
+    {
+      "id": "cmpn0410r0004ibnz6fizt9qn",
+      "key": "home.hero.eyebrow",
+      "label": "Eyebrow (small caps line)",
+      "format": "plain",
+      "value": "Express yourself",
+      "updatedAt": "2026-05-28T00:25:04.686Z"
+    },
+    {
+      "id": "cmpn041al000bibnzupe7zaqb",
+      "key": "home.hero.image_alt",
+      "label": "Hero image alt text",
+      "format": "plain",
+      "value": "TBD",
+      "updatedAt": "2026-05-28T00:25:05.001Z"
+    },
+    {
+      "id": "cmpn0419d000aibnznwy861mu",
+      "key": "home.hero.image_url",
+      "label": "Hero image URL (right column on large screens)",
+      "format": "plain",
+      "value": "https://photos.google.com/album/AF1QipPd7vwL310_AJCRE1YUX59pqqrZV97CZwD5oyd4/photo/AF1QipPEoiXivj5s6-WY7JAb_8JpVhPZOeia34Bm8kMm",
+      "updatedAt": "2026-05-28T00:25:04.957Z"
+    },
+    {
+      "id": "cmpn0413c0005ibnzb1rt8256",
+      "key": "home.hero.rotate_prefix",
+      "label": "Headline — text before the rotating word",
+      "format": "plain",
+      "value": "Show your true colours. Be ",
+      "updatedAt": "2026-05-28T00:25:04.731Z"
+    },
+    {
+      "id": "cmpn0414j0006ibnzr9ext5m3",
+      "key": "home.hero.rotate_words",
+      "label": "Rotating words (one per line)",
+      "format": "plain",
+      "value": "cute.\nelegant.\nunique.\nyourself.",
+      "updatedAt": "2026-05-28T00:25:04.775Z"
+    },
+    {
+      "id": "cmpn041nv000mibnzj40zz34k",
+      "key": "home.story.body_html",
+      "label": "Body",
+      "format": "html",
+      "value": "<p>I like to design nature-inspired patterns from my time birdwatching and observing wildlife. I like to print these patterns onto 100% cotton clothing to create unique pieces that are expressive for fellow nature lovers.<br /><br />Thank you for supporting my small business!</p>",
+      "updatedAt": "2026-05-28T00:25:05.486Z"
+    },
+    {
+      "id": "cmpn041k3000jibnzsqchc7pv",
+      "key": "home.story.eyebrow",
+      "label": "Eyebrow",
+      "format": "plain",
+      "value": "",
+      "updatedAt": "2026-05-28T00:25:05.348Z"
+    },
+    {
+      "id": "cmpn041mm000libnzu5k4diua",
+      "key": "home.story.tagline",
+      "label": "Tagline",
+      "format": "plain",
+      "value": "Cute. Classy. Elegant. Unique.",
+      "updatedAt": "2026-05-28T00:25:05.439Z"
+    },
+    {
+      "id": "cmpn041le000kibnz3byjnr6t",
+      "key": "home.story.title",
+      "label": "Title",
+      "format": "plain",
+      "value": "About",
+      "updatedAt": "2026-05-28T00:25:05.393Z"
+    },
+    {
+      "id": "cmpn043xt002iibnzz4wa3dq0",
+      "key": "legal.policies_mdx",
+      "label": "Store policies (MDX)",
+      "format": "mdx",
+      "value": "# Store policies\n\nStarter text for a small shop. **Have a lawyer review** before you rely on it in production — this file lives at `content/policies.mdx` so you can edit copy without touching React.\n\n## Terms of service\n\nBy placing an order, you agree to pay the listed price plus applicable taxes and shipping. Product colours may vary slightly by screen and print batch.\n\nWe reserve the right to cancel orders that look fraudulent or where inventory cannot be fulfilled — you will be refunded in full through your payment provider (Stripe).\n\n## Privacy\n\nCheckout is processed by **Stripe**. We receive the information needed to fulfill your order (name, shipping address, email). We do not store full card numbers on our servers.\n\n## Cookies\n\nThis storefront may set essential cookies for checkout flows and admin sessions. Add analytics or marketing cookie language if you enable those tools.\n\n## Contact\n\nQuestions about these policies? Use the [contact form](/contact) or the email shown on that page.\n",
+      "updatedAt": "2026-05-28T00:25:08.504Z"
+    },
+    {
+      "id": "cmpn043z3002jibnzmlmbr2fb",
+      "key": "legal.shipping_mdx",
+      "label": "Shipping & returns (MDX)",
+      "format": "mdx",
+      "value": "# Shipping & returns\n\n## Shipping\n\n- Orders typically ship within **2–5 business days** unless stated otherwise on the product page.\n- Tracking is sent by email when your package leaves our studio or fulfillment partner.\n- **International orders** — add duties, taxes, and carrier notes here.\n\n## Returns & exchanges\n\n- We accept returns of unworn items within **14 days of delivery** (customize your window).\n- Initiate a return by emailing support with your order number — wire your helpdesk when ready.\n- **Final sale** items — list categories here if applicable.\n\n## Need help?\n\nSee [store policies](/policies) or [contact us](/contact).\n",
+      "updatedAt": "2026-05-28T00:25:08.549Z"
+    },
+    {
+      "id": "cmpn043u7002fibnzqc5ai1zu",
+      "key": "policies.meta_description",
+      "label": "Meta description (SEO)",
+      "format": "plain",
+      "value": "Terms of service, privacy, and how we use your information at Recchi Studio.",
+      "updatedAt": "2026-05-28T00:25:08.369Z"
+    },
+    {
+      "id": "cmpn043t0002eibnzp78sog85",
+      "key": "policies.meta_title",
+      "label": "Browser tab title",
+      "format": "plain",
+      "value": "Store policies",
+      "updatedAt": "2026-05-28T00:25:08.326Z"
+    },
+    {
+      "id": "cmpn043wk002hibnzgmuta4a0",
+      "key": "shipping.meta_description",
+      "label": "Meta description (SEO)",
+      "format": "plain",
+      "value": "How we ship orders, timelines, and how returns work at Recchi Studio.",
+      "updatedAt": "2026-05-28T00:25:08.462Z"
+    },
+    {
+      "id": "cmpn043vf002gibnzrj1xc02s",
+      "key": "shipping.meta_title",
+      "label": "Browser tab title",
+      "format": "plain",
+      "value": "Shipping & Returns",
+      "updatedAt": "2026-05-28T00:25:08.415Z"
+    },
+    {
+      "id": "cmpor48y70004sbi9bjrek8r9",
+      "key": "site.branding.favicon_url",
+      "label": "Favicon URL (browser tab icon)",
+      "format": "url",
+      "value": "/favicon.png",
+      "updatedAt": "2026-05-28T00:26:17.835Z"
+    }
+  ],
+  "products": [
+    {
+      "id": "cmpn040ug0000ibnzpewscyac",
+      "createdAt": "2026-05-26T19:01:18.281Z",
+      "updatedAt": "2026-05-28T00:25:04.299Z",
+      "name": "Abstract Pomegranate Crop Top",
+      "slug": "abstract-pomegranate-crop-top",
+      "description": "A bold abstract pomegranate print on a soft crop — statement colour, easy cotton comfort.",
+      "priceCents": 2900,
+      "imageUrls": "[\"https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=900&q=80\",\"https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=900&q=80\"]",
+      "published": true,
+      "categorySlug": "abstract"
+    },
+    {
+      "id": "cmpn040zn0003ibnzq3xvpz3p",
+      "createdAt": "2026-05-26T19:01:18.467Z",
+      "updatedAt": "2026-05-28T00:25:04.551Z",
+      "name": "Flamingo Crop Top",
+      "slug": "flamingo-crop-top",
+      "description": "Crop top cut with the same joyful pattern language as the rest of the line.",
+      "priceCents": 2600,
+      "imageUrls": "[\"https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=80\"]",
+      "published": true,
+      "categorySlug": "birds"
+    },
+    {
+      "id": "cmpn040yi0002ibnz2mz4zjfq",
+      "createdAt": "2026-05-26T19:01:18.427Z",
+      "updatedAt": "2026-05-28T00:25:04.506Z",
+      "name": "Flamingo Tee",
+      "slug": "flamingo-tee",
+      "description": "Soft cotton tee with a nature-inspired flamingo pattern. Express yourself with something cute and unique.",
+      "priceCents": 2800,
+      "imageUrls": "[\"https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=80\"]",
+      "published": true,
+      "categorySlug": "birds"
+    },
+    {
+      "id": "cmpn040x70001ibnz1kcss88k",
+      "createdAt": "2026-05-26T19:01:18.379Z",
+      "updatedAt": "2026-05-28T00:25:04.464Z",
+      "name": "Flamingo Uni Shorts",
+      "slug": "flamingo-uni-shorts",
+      "description": "Easy shorts with a playful flamingo pattern — pair with tees from the collection.",
+      "priceCents": 3200,
+      "imageUrls": "[\"https://images.unsplash.com/photo-1591195853828-11db59a44f6b?auto=format&fit=crop&w=900&q=80\"]",
+      "published": true,
+      "categorySlug": "flamingos"
+    },
+    {
+      "id": "cmoixhpyh00008xatdry7w9rv",
+      "createdAt": "2026-04-28T17:57:11.466Z",
+      "updatedAt": "2026-04-28T17:57:55.361Z",
+      "name": "Tiger Sweater",
+      "slug": "tiger-sweater",
+      "description": "<p>100% cotton sweater with a loose boat neckline and niche tiger pattern.</p>",
+      "priceCents": 5900,
+      "imageUrls": "[\"https://photos.fife.usercontent.google.com/pw/AP1GczNnc0PhY0LhWc5h6bdo6fe9kMgBBU3DE-PE98-hkDZmkDZVW-PZhie8mA=w1553-h2063-s-no-gm?authuser=0\",\"https://icdn.yoycol.cn/yoycol/240563-b5a72f25-743f-4ec7-89a9-00ee55aca6a7.jpeg?x-oss-process=image/format,webp\"]",
+      "published": true,
+      "categorySlug": "other"
+    }
+  ],
+  "orders": [],
+  "contactSubmissions": []
+}
