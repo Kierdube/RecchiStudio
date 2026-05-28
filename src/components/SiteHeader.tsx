@@ -19,7 +19,6 @@ function BagIcon({ className }: { className?: string }) {
 
 export function SiteHeader({ copy }: { copy: Record<string, string> }) {
   const brandTitle = siteCopyGet(copy, "footer.brand_title");
-  const tagline = siteCopyGet(copy, "header.tagline");
   const navAbout = siteCopyGet(copy, "header.nav.about");
   const navShipping = siteCopyGet(copy, "header.nav.shipping");
   const navContact = siteCopyGet(copy, "header.nav.contact");
@@ -31,11 +30,8 @@ export function SiteHeader({ copy }: { copy: Record<string, string> }) {
   return (
     <header className="sticky top-0 z-40 border-b border-[#19371E]/10 bg-[#FDFCF8]/85 pt-[env(safe-area-inset-top,0px)] shadow-sm shadow-[#19371E]/[0.03] backdrop-blur-md supports-[backdrop-filter]:bg-[#FDFCF8]/70">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:gap-6 sm:px-6 sm:py-4">
-        <Link href="/" className="group flex min-w-0 items-center gap-3 sm:gap-4">
+        <Link href="/" className="group flex min-w-0 items-center">
           <SiteLogo alt={brandTitle} href={null} className="h-9 w-auto shrink-0 sm:h-10" />
-          <span className="hidden max-w-[12rem] text-xs font-medium leading-snug text-[#2d5a36]/80 sm:block">
-            {tagline}
-          </span>
         </Link>
 
         <div className="hidden items-center gap-5 sm:flex lg:gap-7">

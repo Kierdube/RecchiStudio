@@ -242,13 +242,6 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
   // —— Header ——
   {
     group: "Site header",
-    key: "header.tagline",
-    label: "Subtitle under logo (desktop)",
-    format: "plain",
-    defaultValue: "Patterns & catalog",
-  },
-  {
-    group: "Site header",
     key: "header.nav.about",
     label: "Nav — About",
     format: "plain",

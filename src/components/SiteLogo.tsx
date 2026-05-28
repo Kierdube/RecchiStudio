@@ -2,6 +2,7 @@ import Link from "next/link";
 
 export const SITE_LOGO = {
   src: "/images/logo.png",
+  srcOnDark: "/images/logo-white.png",
   width: 363,
   height: 204,
 } as const;
@@ -11,7 +12,7 @@ type SiteLogoProps = {
   className?: string;
   /** Omit or pass `null` when the logo sits inside another link. */
   href?: string | null;
-  /** Light logo treatment for dark backgrounds (e.g. footer). */
+  /** White logo asset for dark backgrounds (e.g. footer). */
   onDark?: boolean;
 };
 
@@ -24,11 +25,11 @@ export function SiteLogo({
   const img = (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={SITE_LOGO.src}
+      src={onDark ? SITE_LOGO.srcOnDark : SITE_LOGO.src}
       alt={alt}
       width={SITE_LOGO.width}
       height={SITE_LOGO.height}
-      className={[className, onDark ? "brightness-0 invert" : ""].filter(Boolean).join(" ")}
+      className={className}
     />
   );
 
