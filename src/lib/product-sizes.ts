@@ -39,3 +39,8 @@ export function parseSizesJson(json: string | null | undefined): string[] {
 export function serializeSizesJson(sizes: string[]): string {
   return JSON.stringify(sizes);
 }
+
+/** Admin textarea: one size per line or comma-separated. */
+export function parseSizesFromFormField(raw: string): string[] {
+  return parseSizesFromSheet(raw);
+}

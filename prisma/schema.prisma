@@ -48,3 +48,24 @@ model Product {
   @@index([published, categorySlug])
   @@index([published, priceCents])
 }
+
+/// Paid checkout sessions (created from Stripe webhook).
+model Order {
+  id                    String   @id @default(cuid())
+  createdAt             DateTime @default(now())
+  stripeSessionId       String   @unique
+  stripePaymentIntentId String?
+  productId             String?
+  productName           String
+  productSlug           String?
+  size                  String?
+  amountCents           Int
+  currency              String   @default("cad")
+  customerEmail         String?
+  customerName          String?
+  /// JSON shipping address from Stripe (if collected).
+  shippingJson          String?
+  status                String   @default("paid")
+
+  @@index([createdAt])
+}

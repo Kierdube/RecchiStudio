@@ -17,10 +17,12 @@ export default async function AdminDashboardPage() {
   const thirtyDaysAgo = new Date(now);
   thirtyDaysAgo.setDate(now.getDate() - 30);
 
-  const [count, published, messageCount, recentProducts, recentMessages] = await Promise.all([
+  const [count, published, messageCount, orderCount, recentProducts, recentMessages, recentOrders] =
+    await Promise.all([
     prisma.product.count(),
     prisma.product.count({ where: { published: true } }),
     prisma.contactSubmission.count(),
+    prisma.order.count(),
     prisma.product.findMany({
       orderBy: { updatedAt: "desc" },
       take: 5,
@@ -30,6 +32,18 @@ export default async function AdminDashboardPage() {
       orderBy: { createdAt: "desc" },
       take: 5,
       select: { id: true, name: true, email: true, topic: true, createdAt: true },
+    }),
+    prisma.order.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      select: {
+        id: true,
+        productName: true,
+        size: true,
+        amountCents: true,
+        currency: true,
+        createdAt: true,
+      },
     }),
   ]);
   const [productsUpdated7d, productsUpdated30d, messages7d, messages30d] = await Promise.all([
@@ -43,6 +57,7 @@ export default async function AdminDashboardPage() {
     { label: "Database", ok: Boolean(process.env.DATABASE_URL) },
     { label: "Admin auth secret", ok: Boolean(process.env.AUTH_SECRET) },
     { label: "Stripe checkout", ok: Boolean(process.env.STRIPE_SECRET_KEY) },
+    { label: "Stripe webhook", ok: Boolean(process.env.STRIPE_WEBHOOK_SECRET) },
     { label: "Public app URL", ok: Boolean(process.env.NEXT_PUBLIC_APP_URL) },
     {
       label: "Contact email alerts",
@@ -88,6 +103,12 @@ export default async function AdminDashboardPage() {
           Edit content
         </Link>
         <Link
+          href="/admin/orders"
+          className="inline-flex rounded-lg border border-zinc-300 bg-white px-5 py-2.5 text-sm font-semibold text-zinc-900 hover:bg-zinc-50"
+        >
+          View orders
+        </Link>
+        <Link
           href="/admin/messages"
           className="inline-flex rounded-lg border border-zinc-300 bg-white px-5 py-2.5 text-sm font-semibold text-zinc-900 hover:bg-zinc-50"
         >
@@ -95,11 +116,16 @@ export default async function AdminDashboardPage() {
         </Link>
       </div>
 
-      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
           <p className="text-sm font-medium text-zinc-500">Products</p>
           <p className="mt-2 text-3xl font-semibold tabular-nums">{count}</p>
           <p className="mt-1 text-sm text-zinc-600">{published} published</p>
+        </div>
+        <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
+          <p className="text-sm font-medium text-zinc-500">Orders</p>
+          <p className="mt-2 text-3xl font-semibold tabular-nums">{orderCount}</p>
+          <p className="mt-1 text-sm text-zinc-600">paid checkouts</p>
         </div>
         <div className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
           <p className="text-sm font-medium text-zinc-500">Contact</p>
@@ -119,6 +145,35 @@ export default async function AdminDashboardPage() {
           <p className="mt-1 text-sm text-zinc-600">core environment checks passing</p>
         </div>
       </div>
+
+      {recentOrders.length > 0 ? (
+        <section className="mt-8 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm">
+          <p className="text-sm font-semibold text-zinc-900">Recent orders</p>
+          <ul className="mt-4 space-y-3">
+            {recentOrders.map((order) => (
+              <li key={order.id} className="rounded-lg border border-zinc-100 px-3 py-2">
+                <p className="text-sm font-medium text-zinc-900">
+                  {order.productName}
+                  {order.size ? ` (${order.size})` : ""}
+                </p>
+                <p className="mt-1 text-xs text-zinc-500">
+                  {formatDate(order.createdAt)} —{" "}
+                  {new Intl.NumberFormat("en-CA", {
+                    style: "currency",
+                    currency: order.currency.toUpperCase(),
+                  }).format(order.amountCents / 100)}
+                </p>
+              </li>
+            ))}
+          </ul>
+          <Link
+            href="/admin/orders"
+            className="mt-4 inline-block text-sm font-semibold text-zinc-900 underline-offset-2 hover:underline"
+          >
+            View all orders →
+          </Link>
+        </section>
+      ) : null}
 
       <div className="mt-8 grid gap-4 lg:grid-cols-3">
         <section className="rounded-xl border border-zinc-200 bg-white p-6 shadow-sm lg:col-span-1">

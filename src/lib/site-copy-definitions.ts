@@ -14,6 +14,23 @@ export type SiteCopyDefinition = {
 
 /** Central list: keys, labels, groups, formats, and built-in defaults (DB overrides on save). */
 export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
+  // —— Home SEO ——
+  {
+    group: "Home — SEO",
+    key: "home.meta_title",
+    label: "Page title (browser tab / search)",
+    format: "plain",
+    defaultValue: "Recchi Studio — Cute nature-inspired apparel",
+  },
+  {
+    group: "Home — SEO",
+    key: "home.meta_description",
+    label: "Meta description (search & social preview)",
+    format: "plain",
+    defaultValue:
+      "Express yourself with cute, nature-inspired patterns. Shop tees, crop tops, and more from Recchi Studio.",
+  },
+
   // —— Home hero ——
   {
     group: "Home — hero",

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import { FeatureIcon } from "@/components/FeatureIcon";
@@ -11,6 +12,18 @@ import { prisma } from "@/lib/prisma";
 import { getSiteCopyRecord, parseRotatingWords, resolveSiteCopyImageUrl, siteCopyGet } from "@/lib/site-copy";
 
 const FEATURE_KINDS = ["cotton", "design", "nature"] as const;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const copy = await getSiteCopyRecord();
+  return {
+    title: siteCopyGet(copy, "home.meta_title"),
+    description: siteCopyGet(copy, "home.meta_description"),
+    openGraph: {
+      title: siteCopyGet(copy, "home.meta_title"),
+      description: siteCopyGet(copy, "home.meta_description"),
+    },
+  };
+}
 
 export default async function HomePage() {
   const [products, copy] = await Promise.all([

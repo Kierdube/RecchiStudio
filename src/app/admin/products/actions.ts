@@ -14,6 +14,10 @@ import {
 } from "@/lib/sanitize-product-description";
 import { sanitizeStoredImageUrl } from "@/lib/upload-image";
 import { adminDollarsToCatalogCents } from "@/lib/admin-pricing";
+import {
+  parseSizesFromFormField,
+  serializeSizesJson,
+} from "@/lib/product-sizes";
 
 const productFields = z.object({
   name: z.string().trim().min(1, "Name is required").max(200),
@@ -81,6 +85,12 @@ function parseImageUrls(formData: FormData): { ok: true; value: string[] } | { o
   return { ok: true, value: out };
 }
 
+function parseSizesField(formData: FormData): { ok: true; value: string } {
+  const raw = String(formData.get("sizes") ?? "");
+  const sizes = parseSizesFromFormField(raw);
+  return { ok: true, value: serializeSizesJson(sizes) };
+}
+
 export type ProductActionState = { error: string } | null;
 
 export async function createProduct(
@@ -93,6 +103,7 @@ export async function createProduct(
   }
   const imgs = parseImageUrls(formData);
   if (!imgs.ok) return { error: imgs.error };
+  const sizesField = parseSizesField(formData);
   const descNorm = normalizeDescription(parsed.data.description);
   if (!descNorm.ok) return { error: descNorm.error };
   const { name, slug, priceDollars, categorySlug } = parsed.data;
@@ -107,6 +118,7 @@ export async function createProduct(
         description: descNorm.value,
         priceCents,
         imageUrls: serializeImageUrls(imgs.value),
+        sizesJson: sizesField.value,
         categorySlug,
         published,
       },
@@ -135,6 +147,7 @@ export async function updateProduct(
   }
   const imgs = parseImageUrls(formData);
   if (!imgs.ok) return { error: imgs.error };
+  const sizesField = parseSizesField(formData);
   const descNorm = normalizeDescription(parsed.data.description);
   if (!descNorm.ok) return { error: descNorm.error };
   const { name, slug, priceDollars, categorySlug } = parsed.data;
@@ -150,6 +163,7 @@ export async function updateProduct(
         description: descNorm.value,
         priceCents,
         imageUrls: serializeImageUrls(imgs.value),
+        sizesJson: sizesField.value,
         categorySlug,
         published,
       },

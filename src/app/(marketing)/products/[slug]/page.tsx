@@ -15,6 +15,7 @@ import { ProductImageGallery } from "@/components/ProductImageGallery";
 import { primaryProductImage } from "@/lib/product-images";
 import { prisma } from "@/lib/prisma";
 import { parseSizesJson } from "@/lib/product-sizes";
+import { productOpenGraph } from "@/lib/seo";
 import {
   plainTextFromProductDescriptionHtml,
   sanitizeProductDescriptionHtml,
@@ -32,10 +33,12 @@ export async function generateMetadata({ params }: Props) {
         160,
       )
     : `${product.name} — Recchi Studio`;
-  return {
+  return productOpenGraph({
     title: product.name,
     description: metaDesc || `${product.name} — Recchi Studio`,
-  };
+    slug: product.slug,
+    imageUrl: primaryProductImage(product.imageUrls),
+  });
 }
 
 export default async function ProductPage({ params }: Props) {
@@ -120,31 +123,8 @@ export default async function ProductPage({ params }: Props) {
               <p className="mt-8 text-sm text-[#19371E]/50">Description coming soon.</p>
             )}
 
-            {sizes.length ? (
-              <div className="mt-8 rounded-2xl border border-[#19371E]/10 bg-white/70 px-5 py-4 shadow-sm">
-                <label
-                  htmlFor="size-select"
-                  className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2d5a36]/80"
-                >
-                  Size
-                </label>
-                <select
-                  id="size-select"
-                  name="size"
-                  defaultValue={sizes[0]}
-                  className="mt-3 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-white px-3 py-2 text-sm font-semibold text-[#19371E] shadow-sm outline-none transition focus:border-[#19371E]/25 focus:ring-2 focus:ring-[#C5E6A6]/80"
-                >
-                  {sizes.map((s) => (
-                    <option key={s} value={s}>
-                      {s}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            ) : null}
-
             <div className="mt-10">
-              <BuyButton productId={product.id} />
+              <BuyButton productId={product.id} sizes={sizes} />
               <CheckoutCurrencyNote />
               <p className="mt-4 text-xs leading-relaxed text-[#19371E]/50">
                 Secure checkout with Stripe. You will be redirected to enter payment and see shipping

@@ -34,6 +34,12 @@ export function AdminNav() {
             Products
           </Link>
           <Link
+            href="/admin/orders"
+            className="inline-flex min-h-10 items-center rounded-md px-2 py-1.5 hover:bg-zinc-100 hover:text-zinc-950"
+          >
+            Orders
+          </Link>
+          <Link
             href="/admin/messages"
             className="inline-flex min-h-10 items-center rounded-md px-2 py-1.5 hover:bg-zinc-100 hover:text-zinc-950"
           >

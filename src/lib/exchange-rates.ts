@@ -53,14 +53,18 @@ export function convertCatalogCents(
   const usdToCad = rates.CAD ?? FALLBACK_USD_RATES.CAD;
   const usdCents = Math.round(cadCents / usdToCad);
   if (target === "USD") return usdCents;
-  return convertUsdCents(usdCents, target, rates);
+  return convertUsdMinorToTarget(usdCents, target, rates);
 }
 
-/** USD catalog cents → target currency minor units (cents/pence). @deprecated Use convertCatalogCents */
-export function convertUsdCents(usdCents: number, target: DisplayCurrencyCode, rates: Record<string, number>): number {
-  if (target === "USD") return usdCents;
+function convertUsdMinorToTarget(
+  usdCents: number,
+  target: Exclude<DisplayCurrencyCode, "USD" | "CAD">,
+  rates: Record<string, number>,
+): number {
   const r = rates[target];
-  if (!r || !Number.isFinite(r)) return Math.round(usdCents * (FALLBACK_USD_RATES[target] ?? 1));
+  if (!r || !Number.isFinite(r)) {
+    return Math.round(usdCents * FALLBACK_USD_RATES[target]);
+  }
   return Math.round(usdCents * r);
 }
 

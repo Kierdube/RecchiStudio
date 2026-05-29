@@ -2,18 +2,34 @@
 
 import { useState } from "react";
 
-export function BuyButton({ productId }: { productId: string }) {
+export function BuyButton({
+  productId,
+  sizes = [],
+}: {
+  productId: string;
+  sizes?: string[];
+}) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedSize, setSelectedSize] = useState(sizes[0] ?? "");
 
   async function onCheckout() {
     setLoading(true);
     setError(null);
     try {
+      const body: { productId: string; size?: string } = { productId };
+      if (sizes.length > 0) {
+        if (!selectedSize) {
+          setError("Please select a size");
+          return;
+        }
+        body.size = selectedSize;
+      }
+
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId }),
+        body: JSON.stringify(body),
       });
       const data = (await res.json()) as { url?: string; error?: string };
       if (!res.ok) {
@@ -34,6 +50,30 @@ export function BuyButton({ productId }: { productId: string }) {
 
   return (
     <div>
+      {sizes.length > 0 ? (
+        <div className="mb-6 rounded-2xl border border-[#19371E]/10 bg-white/70 px-5 py-4 shadow-sm">
+          <label
+            htmlFor="size-select"
+            className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2d5a36]/80"
+          >
+            Size
+          </label>
+          <select
+            id="size-select"
+            name="size"
+            value={selectedSize}
+            onChange={(e) => setSelectedSize(e.target.value)}
+            className="mt-3 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-white px-3 py-2 text-sm font-semibold text-[#19371E] shadow-sm outline-none transition focus:border-[#19371E]/25 focus:ring-2 focus:ring-[#C5E6A6]/80"
+          >
+            {sizes.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+        </div>
+      ) : null}
+
       <button
         type="button"
         onClick={onCheckout}

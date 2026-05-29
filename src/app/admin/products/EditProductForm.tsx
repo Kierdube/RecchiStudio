@@ -12,6 +12,7 @@ import { productImageUrls } from "@/lib/product-images";
 import { adminPriceLabel } from "@/lib/admin-pricing";
 
 import { ImageUrlsField } from "./ImageUrlsField";
+import { ProductSizesField } from "./ProductSizesField";
 import { updateProduct, type ProductActionState } from "./actions";
 
 export function EditProductForm({
@@ -101,6 +102,7 @@ export function EditProductForm({
         />
       </div>
       <ImageUrlsField defaultUrls={productImageUrls(product.imageUrls)} />
+      <ProductSizesField defaultSizesJson={product.sizesJson} />
       <div className="flex items-center gap-2">
         <input
           id="published"

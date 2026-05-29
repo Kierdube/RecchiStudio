@@ -2,9 +2,11 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
+import { fulfillCheckoutSession } from "@/lib/fulfill-checkout-session";
+
 /**
- * Optional: confirm payments, send emails, decrement inventory.
- * Configure STRIPE_WEBHOOK_SECRET and point Stripe CLI or Dashboard to /api/webhooks/stripe
+ * Confirms payments, saves orders, and sends fulfillment emails.
+ * Configure STRIPE_WEBHOOK_SECRET and point Stripe to /api/webhooks/stripe
  */
 export async function POST(request: Request) {
   const secretKey = process.env.STRIPE_SECRET_KEY;
@@ -33,8 +35,11 @@ export async function POST(request: Request) {
 
   switch (event.type) {
     case "checkout.session.completed": {
-      // const session = event.data.object as Stripe.Checkout.Session;
-      // TODO: mark order paid, notify fulfillment, etc.
+      const session = event.data.object as Stripe.Checkout.Session;
+      const full = await stripe.checkout.sessions.retrieve(session.id, {
+        expand: ["line_items"],
+      });
+      await fulfillCheckoutSession(full);
       break;
     }
     default:

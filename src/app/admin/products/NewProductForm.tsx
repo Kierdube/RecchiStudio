@@ -7,6 +7,7 @@ import { adminPriceLabel } from "@/lib/admin-pricing";
 import { SHOP_CATEGORIES } from "@/lib/catalog";
 
 import { ImageUrlsField } from "./ImageUrlsField";
+import { ProductSizesField } from "./ProductSizesField";
 import { createProduct, type ProductActionState } from "./actions";
 
 export function NewProductForm() {
@@ -87,6 +88,7 @@ export function NewProductForm() {
         />
       </div>
       <ImageUrlsField />
+      <ProductSizesField />
       <div className="flex items-center gap-2">
         <input id="published" name="published" type="checkbox" className="h-5 w-5 rounded border-zinc-300" />
         <label htmlFor="published" className="min-h-11 py-1 text-sm text-zinc-700">

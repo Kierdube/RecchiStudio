@@ -18,8 +18,6 @@ type CurrencyContextValue = {
   setCurrency: (c: DisplayCurrencyCode) => void;
   /** Catalog amounts are CAD cents; returns formatted string in the selected display currency. */
   formatPriceCents: (priceCents: number) => string;
-  /** @deprecated Use formatPriceCents */
-  formatUsdCents: (priceCents: number) => string;
   ratesAsOf: string;
   refreshRates: () => Promise<void>;
 };
@@ -86,7 +84,6 @@ export function CurrencyProvider({
       currency,
       setCurrency,
       formatPriceCents,
-      formatUsdCents: formatPriceCents,
       ratesAsOf,
       refreshRates,
     }),

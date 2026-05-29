@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { STRIPE_CHECKOUT_CURRENCY } from "@/lib/currency";
 import { productImageUrls } from "@/lib/product-images";
+import { parseSizesJson } from "@/lib/product-sizes";
 import { prisma } from "@/lib/prisma";
 import {
   plainTextFromProductDescriptionHtml,
@@ -12,6 +13,7 @@ import {
 
 const bodySchema = z.object({
   productId: z.string().min(1),
+  size: z.string().trim().max(50).optional(),
 });
 
 export async function POST(request: Request) {
@@ -42,6 +44,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Product not found" }, { status: 404 });
   }
 
+  const sizes = parseSizesJson(product.sizesJson);
+  const size = parsed.data.size?.trim();
+  if (sizes.length > 0) {
+    if (!size || !sizes.includes(size)) {
+      return NextResponse.json({ error: "Please select a valid size" }, { status: 400 });
+    }
+  }
+
   const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "");
   if (!appUrl) {
     return NextResponse.json(
@@ -59,6 +69,14 @@ export async function POST(request: Request) {
       )
     : undefined;
 
+  const lineItemName = size ? `${product.name} (${size})` : product.name;
+  const sessionMetadata: Record<string, string> = {
+    productId: product.id,
+    productSlug: product.slug,
+    productName: product.name,
+  };
+  if (size) sessionMetadata.size = size;
+
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
     line_items: [
@@ -68,7 +86,7 @@ export async function POST(request: Request) {
           currency: STRIPE_CHECKOUT_CURRENCY,
           unit_amount: product.priceCents,
           product_data: {
-            name: product.name,
+            name: lineItemName,
             description: stripeDescription || undefined,
             images: checkoutImages.length > 0 ? checkoutImages : undefined,
             metadata: { productId: product.id, slug: product.slug },
@@ -77,8 +95,8 @@ export async function POST(request: Request) {
       },
     ],
     success_url: `${appUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${appUrl}/catalog`,
-    metadata: { productId: product.id },
+    cancel_url: `${appUrl}/products/${product.slug}`,
+    metadata: sessionMetadata,
   });
 
   if (!session.url) {

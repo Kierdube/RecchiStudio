@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter_Tight } from "next/font/google";
 
 import "./globals.css";
+import { defaultOpenGraph, siteUrl } from "@/lib/seo";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -17,12 +18,26 @@ const interTight = Inter_Tight({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl()),
   title: {
     default: "Recchi Studio — Express yourself with cute and nature-inspired patterns",
     template: "%s | Recchi Studio",
   },
   description:
     "Cute, nature-inspired patterns — express yourself with what you wear. Browse the catalog for tees, crop tops, and more.",
+  openGraph: {
+    ...defaultOpenGraph(),
+    title: "Recchi Studio",
+    description:
+      "Cute, nature-inspired apparel — express yourself with what you wear. Browse tees, crop tops, and more.",
+    url: siteUrl(),
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Recchi Studio",
+    description:
+      "Cute, nature-inspired apparel — express yourself with what you wear.",
+  },
   icons: {
     icon: [{ url: "/favicon.ico", sizes: "any" }, { url: "/icon.png", type: "image/png", sizes: "48x48" }],
     apple: [{ url: "/apple-icon.png", type: "image/png", sizes: "180x180" }],
