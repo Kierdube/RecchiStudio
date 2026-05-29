@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 
 import { ProductDescriptionEditor } from "@/components/admin/ProductDescriptionEditor";
+import { adminPriceLabel } from "@/lib/admin-pricing";
 import { SHOP_CATEGORIES } from "@/lib/catalog";
 
 import { ImageUrlsField } from "./ImageUrlsField";
@@ -73,7 +74,7 @@ export function NewProductForm() {
       </div>
       <div>
         <label className="block text-sm font-medium text-zinc-700" htmlFor="priceDollars">
-          Price (USD)
+          {adminPriceLabel()}
         </label>
         <input
           id="priceDollars"

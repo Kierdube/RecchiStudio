@@ -9,16 +9,24 @@ import { SHOP_CATEGORIES } from "@/lib/catalog";
 import { ProductDescriptionEditor } from "@/components/admin/ProductDescriptionEditor";
 import { productImageUrls } from "@/lib/product-images";
 
+import { adminPriceLabel } from "@/lib/admin-pricing";
+
 import { ImageUrlsField } from "./ImageUrlsField";
 import { updateProduct, type ProductActionState } from "./actions";
 
-export function EditProductForm({ product }: { product: Product }) {
+export function EditProductForm({
+  product,
+  priceCad,
+}: {
+  product: Product;
+  priceCad: string;
+}) {
   const [state, formAction, pending] = useActionState<ProductActionState, FormData>(
     updateProduct,
     null,
   );
 
-  const dollars = (product.priceCents / 100).toFixed(2);
+  const dollars = priceCad;
 
   return (
     <form action={formAction} className="mx-auto max-w-2xl space-y-6">
@@ -79,7 +87,7 @@ export function EditProductForm({ product }: { product: Product }) {
       </div>
       <div>
         <label className="block text-sm font-medium text-zinc-700" htmlFor="priceDollars">
-          Price (USD)
+          {adminPriceLabel()}
         </label>
         <input
           id="priceDollars"

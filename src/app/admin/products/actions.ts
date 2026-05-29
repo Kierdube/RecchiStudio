@@ -13,6 +13,7 @@ import {
   sanitizeProductDescriptionHtml,
 } from "@/lib/sanitize-product-description";
 import { sanitizeStoredImageUrl } from "@/lib/upload-image";
+import { adminDollarsToUsdCents, getAdminExchangeRates } from "@/lib/admin-pricing";
 
 const productFields = z.object({
   name: z.string().trim().min(1, "Name is required").max(200),
@@ -96,7 +97,8 @@ export async function createProduct(
   if (!descNorm.ok) return { error: descNorm.error };
   const { name, slug, priceDollars, categorySlug } = parsed.data;
   const published = parsed.data.published === "on";
-  const priceCents = Math.round(priceDollars * 100);
+  const rates = await getAdminExchangeRates();
+  const priceCents = adminDollarsToUsdCents(priceDollars, rates);
 
   try {
     await prisma.product.create({
@@ -138,7 +140,8 @@ export async function updateProduct(
   if (!descNorm.ok) return { error: descNorm.error };
   const { name, slug, priceDollars, categorySlug } = parsed.data;
   const published = parsed.data.published === "on";
-  const priceCents = Math.round(priceDollars * 100);
+  const rates = await getAdminExchangeRates();
+  const priceCents = adminDollarsToUsdCents(priceDollars, rates);
 
   try {
     await prisma.product.update({

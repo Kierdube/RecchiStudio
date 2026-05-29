@@ -3,18 +3,20 @@ import Link from "next/link";
 import { categoryLabelForSlug } from "@/lib/catalog";
 import { primaryProductImage } from "@/lib/product-images";
 import { prisma } from "@/lib/prisma";
+import {
+  ADMIN_PRICE_CURRENCY,
+  formatUsdCentsForAdmin,
+  getAdminExchangeRates,
+} from "@/lib/admin-pricing";
 
 import { DeleteProductForm } from "./DeleteProductForm";
 import { ImportProductsButton } from "./ImportProductsButton";
 
-function formatPrice(cents: number) {
-  return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
-    cents / 100,
-  );
-}
-
 export default async function AdminProductsPage() {
-  const products = await prisma.product.findMany({ orderBy: { updatedAt: "desc" } });
+  const [products, rates] = await Promise.all([
+    prisma.product.findMany({ orderBy: { updatedAt: "desc" } }),
+    getAdminExchangeRates(),
+  ]);
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
@@ -22,8 +24,8 @@ export default async function AdminProductsPage() {
         <div>
           <h1 className="text-2xl font-semibold">Products</h1>
           <p className="mt-1 text-sm text-zinc-600">
-            Edit names, long descriptions, USD prices, collection, and photo URLs — multiple per
-            product, with previews on the edit screen.
+            Edit names, long descriptions, {ADMIN_PRICE_CURRENCY} prices, collection, and photo
+            URLs — multiple per product, with previews on the edit screen.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
@@ -45,7 +47,7 @@ export default async function AdminProductsPage() {
               <th className="px-4 py-3">Name</th>
               <th className="px-4 py-3">Slug</th>
               <th className="px-4 py-3">Collection</th>
-              <th className="px-4 py-3">Price</th>
+              <th className="px-4 py-3">Price ({ADMIN_PRICE_CURRENCY})</th>
               <th className="px-4 py-3">Status</th>
               <th className="px-4 py-3 text-right">Actions</th>
             </tr>
@@ -81,7 +83,9 @@ export default async function AdminProductsPage() {
                   <td className="px-4 py-3 font-medium">{p.name}</td>
                   <td className="px-4 py-3 text-zinc-600">{p.slug}</td>
                   <td className="px-4 py-3 text-zinc-600">{categoryLabelForSlug(p.categorySlug)}</td>
-                  <td className="px-4 py-3 tabular-nums">{formatPrice(p.priceCents)}</td>
+                  <td className="px-4 py-3 tabular-nums">
+                    {formatUsdCentsForAdmin(p.priceCents, rates)}
+                  </td>
                   <td className="px-4 py-3">
                     {p.published ? (
                       <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-800">
