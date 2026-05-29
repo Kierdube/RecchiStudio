@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { prisma } from "@/lib/prisma";
-import { getAdminExchangeRates, usdCentsToAdminDollars } from "@/lib/admin-pricing";
+import { catalogCentsToAdminDollars } from "@/lib/admin-pricing";
 
 import { EditProductForm } from "../EditProductForm";
 
@@ -14,12 +14,9 @@ type Props = { params: Promise<{ id: string }> };
 
 export default async function EditProductPage({ params }: Props) {
   const { id } = await params;
-  const [product, rates] = await Promise.all([
-    prisma.product.findUnique({ where: { id } }),
-    getAdminExchangeRates(),
-  ]);
+  const product = await prisma.product.findUnique({ where: { id } });
   if (!product) notFound();
-  const priceCad = usdCentsToAdminDollars(product.priceCents, rates);
+  const priceCad = catalogCentsToAdminDollars(product.priceCents);
 
   return (
     <main className="px-4 py-10 sm:px-6">

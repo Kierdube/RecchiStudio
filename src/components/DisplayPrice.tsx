@@ -2,20 +2,21 @@
 
 import { useOptionalCurrency } from "@/contexts/CurrencyContext";
 import { DEFAULT_DISPLAY_CURRENCY, FALLBACK_USD_RATES } from "@/lib/currency";
-import { convertUsdCents, formatMinorUnits } from "@/lib/exchange-rates";
+import { convertCatalogCents, formatMinorUnits } from "@/lib/exchange-rates";
 
 export function DisplayPrice({
-  usdCents,
+  priceCents,
   className,
 }: {
-  usdCents: number;
+  /** Stored catalog price in CAD cents. */
+  priceCents: number;
   className?: string;
 }) {
   const ctx = useOptionalCurrency();
   const text = ctx
-    ? ctx.formatUsdCents(usdCents)
+    ? ctx.formatPriceCents(priceCents)
     : formatMinorUnits(
-        convertUsdCents(usdCents, DEFAULT_DISPLAY_CURRENCY, FALLBACK_USD_RATES),
+        convertCatalogCents(priceCents, DEFAULT_DISPLAY_CURRENCY, FALLBACK_USD_RATES),
         DEFAULT_DISPLAY_CURRENCY,
       );
   return <span className={className}>{text}</span>;

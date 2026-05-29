@@ -6,7 +6,6 @@ import { assertAdminSession } from "@/lib/verify-admin-session";
 import { serializeImageUrls } from "@/lib/product-images";
 import { parseSizesFromSheet, serializeSizesJson } from "@/lib/product-sizes";
 import { sanitizeProductDescriptionHtml } from "@/lib/sanitize-product-description";
-import { fetchUsdExchangeRates } from "@/lib/exchange-rates";
 
 function requiredEnv(name: string): string {
   const v = process.env[name];
@@ -167,12 +166,7 @@ export async function POST() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Your sheet prices are CAD, but the storefront/Stripe expect USD cents.
-  // We convert CAD -> USD using the same USD->CAD exchange rate the UI uses.
-  const rates = await fetchUsdExchangeRates("live");
-  const usdToCad = rates.rates.CAD;
-  const cadToUsd = usdToCad && Number.isFinite(usdToCad) && usdToCad > 0 ? 1 / usdToCad : 1 / 1.38;
-
+  // Sheet prices are CAD; catalog stores CAD cents.
   let csvText: string;
   try {
     const url = requiredEnv("PRODUCTS_CSV_URL");
@@ -265,7 +259,7 @@ export async function POST() {
       errors.push({ row: rowIndex, slug, error: cadPrice.error });
       continue;
     }
-    const usdCents = Math.max(1, Math.round(cadPrice.cents * cadToUsd));
+    const cadCents = Math.max(1, cadPrice.cents);
 
     const imageCandidates = [parsed.data.image1, parsed.data.image2, parsed.data.image3]
       .map((x) => String(x ?? "").trim())
@@ -299,7 +293,7 @@ export async function POST() {
             slug,
             name: parsed.data.name,
             description,
-            priceCents: usdCents,
+            priceCents: cadCents,
             categorySlug: "other",
             published: true,
             imageUrls: serializeImageUrls(imageUrls),
@@ -313,7 +307,7 @@ export async function POST() {
           data: {
             name: parsed.data.name,
             description,
-            priceCents: usdCents,
+            priceCents: cadCents,
             categorySlug: "other",
             published: true,
             imageUrls: serializeImageUrls(imageUrls),

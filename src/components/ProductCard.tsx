@@ -52,7 +52,7 @@ export function ProductCard({
         </h3>
         <div className="flex items-center justify-between gap-2">
           <DisplayPrice
-            usdCents={priceCents}
+            priceCents={priceCents}
             className="text-sm font-medium tabular-nums text-[#2d5a36]"
           />
           <Link

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { z } from "zod";
 
+import { STRIPE_CHECKOUT_CURRENCY } from "@/lib/currency";
 import { productImageUrls } from "@/lib/product-images";
 import { prisma } from "@/lib/prisma";
 import {
@@ -64,7 +65,7 @@ export async function POST(request: Request) {
       {
         quantity: 1,
         price_data: {
-          currency: "usd",
+          currency: STRIPE_CHECKOUT_CURRENCY,
           unit_amount: product.priceCents,
           product_data: {
             name: product.name,

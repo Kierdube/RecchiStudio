@@ -11,13 +11,15 @@ import {
 } from "react";
 
 import { CURRENCY_COOKIE, type DisplayCurrencyCode } from "@/lib/currency";
-import { convertUsdCents, formatMinorUnits, type UsdExchangeRates } from "@/lib/exchange-rates";
+import { convertCatalogCents, formatMinorUnits, type UsdExchangeRates } from "@/lib/exchange-rates";
 
 type CurrencyContextValue = {
   currency: DisplayCurrencyCode;
   setCurrency: (c: DisplayCurrencyCode) => void;
-  /** Catalog amounts are USD cents; returns formatted string in the selected display currency. */
-  formatUsdCents: (usdCents: number) => string;
+  /** Catalog amounts are CAD cents; returns formatted string in the selected display currency. */
+  formatPriceCents: (priceCents: number) => string;
+  /** @deprecated Use formatPriceCents */
+  formatUsdCents: (priceCents: number) => string;
   ratesAsOf: string;
   refreshRates: () => Promise<void>;
 };
@@ -71,9 +73,9 @@ export function CurrencyProvider({
     return () => window.clearInterval(t);
   }, [refreshRates]);
 
-  const formatUsdCents = useCallback(
-    (usdCents: number) => {
-      const minor = convertUsdCents(usdCents, currency, rates);
+  const formatPriceCents = useCallback(
+    (priceCents: number) => {
+      const minor = convertCatalogCents(priceCents, currency, rates);
       return formatMinorUnits(minor, currency);
     },
     [currency, rates],
@@ -83,11 +85,12 @@ export function CurrencyProvider({
     () => ({
       currency,
       setCurrency,
-      formatUsdCents,
+      formatPriceCents,
+      formatUsdCents: formatPriceCents,
       ratesAsOf,
       refreshRates,
     }),
-    [currency, setCurrency, formatUsdCents, ratesAsOf, refreshRates],
+    [currency, setCurrency, formatPriceCents, ratesAsOf, refreshRates],
   );
 
   return <CurrencyContext.Provider value={value}>{children}</CurrencyContext.Provider>;

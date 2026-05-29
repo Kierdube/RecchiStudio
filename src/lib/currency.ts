@@ -1,5 +1,8 @@
-/** Catalog / Stripe amounts are stored as USD minor units (cents). */
-export const SHOP_PRICE_CURRENCY = "USD" as const;
+/** Catalog / Stripe checkout amounts are stored as CAD minor units (cents). */
+export const SHOP_PRICE_CURRENCY = "CAD" as const;
+
+/** Lowercase code for Stripe Checkout `price_data.currency`. */
+export const STRIPE_CHECKOUT_CURRENCY = SHOP_PRICE_CURRENCY.toLowerCase() as "cad";
 
 export const DISPLAY_CURRENCIES = [
   { code: "CAD" as const, label: "CAD" },

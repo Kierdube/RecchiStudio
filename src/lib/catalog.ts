@@ -5,7 +5,7 @@ import {
   isDisplayCurrency,
   type DisplayCurrencyCode,
 } from "@/lib/currency";
-import { convertDisplayDollarsToUsdCents } from "@/lib/exchange-rates";
+import { convertDisplayDollarsToCatalogCents } from "@/lib/exchange-rates";
 
 export const SHOP_CATEGORIES = [
   { slug: "birds", label: "Birds" },
@@ -139,11 +139,11 @@ export function shopWhereFromState(
 
   const minC =
     state.minDollars !== undefined
-      ? convertDisplayDollarsToUsdCents(state.minDollars, state.displayCurrency, rates)
+      ? convertDisplayDollarsToCatalogCents(state.minDollars, state.displayCurrency, rates)
       : undefined;
   const maxC =
     state.maxDollars !== undefined
-      ? convertDisplayDollarsToUsdCents(state.maxDollars, state.displayCurrency, rates)
+      ? convertDisplayDollarsToCatalogCents(state.maxDollars, state.displayCurrency, rates)
       : undefined;
 
   if (minC !== undefined || maxC !== undefined) {

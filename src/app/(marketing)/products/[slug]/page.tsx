@@ -106,7 +106,7 @@ export default async function ProductPage({ params }: Props) {
               {product.name}
             </h1>
             <p className="mt-5 text-3xl font-semibold tabular-nums tracking-tight text-[#2d5a36]">
-              <DisplayPrice usdCents={product.priceCents} />
+              <DisplayPrice priceCents={product.priceCents} />
             </p>
 
             {product.description ? (

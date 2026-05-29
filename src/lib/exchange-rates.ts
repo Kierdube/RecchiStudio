@@ -43,7 +43,20 @@ export async function fetchUsdExchangeRates(
   }
 }
 
-/** USD catalog cents → target currency minor units (cents/pence). */
+/** CAD catalog cents → target currency minor units (cents/pence). */
+export function convertCatalogCents(
+  cadCents: number,
+  target: DisplayCurrencyCode,
+  rates: Record<string, number>,
+): number {
+  if (target === "CAD") return cadCents;
+  const usdToCad = rates.CAD ?? FALLBACK_USD_RATES.CAD;
+  const usdCents = Math.round(cadCents / usdToCad);
+  if (target === "USD") return usdCents;
+  return convertUsdCents(usdCents, target, rates);
+}
+
+/** USD catalog cents → target currency minor units (cents/pence). @deprecated Use convertCatalogCents */
 export function convertUsdCents(usdCents: number, target: DisplayCurrencyCode, rates: Record<string, number>): number {
   if (target === "USD") return usdCents;
   const r = rates[target];
@@ -51,7 +64,24 @@ export function convertUsdCents(usdCents: number, target: DisplayCurrencyCode, r
   return Math.round(usdCents * r);
 }
 
-/** Display currency dollars (e.g. catalog min/max filter) → USD catalog cents. */
+/** Display currency dollars (e.g. catalog min/max filter) → CAD catalog cents. */
+export function convertDisplayDollarsToCatalogCents(
+  displayDollars: number,
+  source: DisplayCurrencyCode,
+  rates: Record<string, number>,
+): number {
+  const displayMinor = Math.round(displayDollars * 100);
+  if (source === "CAD") return displayMinor;
+  if (source === "USD") {
+    const usdToCad = rates.CAD ?? FALLBACK_USD_RATES.CAD;
+    return Math.round(displayMinor * usdToCad);
+  }
+  const usdCents = convertDisplayDollarsToUsdCents(displayDollars, source, rates);
+  const usdToCad = rates.CAD ?? FALLBACK_USD_RATES.CAD;
+  return Math.round(usdCents * usdToCad);
+}
+
+/** Display currency dollars → USD catalog cents (internal helper for cross-rates). */
 export function convertDisplayDollarsToUsdCents(
   displayDollars: number,
   source: DisplayCurrencyCode,

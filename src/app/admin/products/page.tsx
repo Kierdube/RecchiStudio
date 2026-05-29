@@ -5,18 +5,14 @@ import { primaryProductImage } from "@/lib/product-images";
 import { prisma } from "@/lib/prisma";
 import {
   ADMIN_PRICE_CURRENCY,
-  formatUsdCentsForAdmin,
-  getAdminExchangeRates,
+  formatCatalogCentsForAdmin,
 } from "@/lib/admin-pricing";
 
 import { DeleteProductForm } from "./DeleteProductForm";
 import { ImportProductsButton } from "./ImportProductsButton";
 
 export default async function AdminProductsPage() {
-  const [products, rates] = await Promise.all([
-    prisma.product.findMany({ orderBy: { updatedAt: "desc" } }),
-    getAdminExchangeRates(),
-  ]);
+  const products = await prisma.product.findMany({ orderBy: { updatedAt: "desc" } });
 
   return (
     <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
@@ -84,7 +80,7 @@ export default async function AdminProductsPage() {
                   <td className="px-4 py-3 text-zinc-600">{p.slug}</td>
                   <td className="px-4 py-3 text-zinc-600">{categoryLabelForSlug(p.categorySlug)}</td>
                   <td className="px-4 py-3 tabular-nums">
-                    {formatUsdCentsForAdmin(p.priceCents, rates)}
+                    {formatCatalogCentsForAdmin(p.priceCents)}
                   </td>
                   <td className="px-4 py-3">
                     {p.published ? (
