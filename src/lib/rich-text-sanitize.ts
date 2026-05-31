@@ -54,6 +54,19 @@ export function plainTextFromRichTextHtml(html: string): string {
     .trim();
 }
 
+/** True when the editor is visually empty (e.g. TipTap's `<p></p>` or `<p><br></p>`). */
+export function isRichTextHtmlEmpty(html: string | null | undefined): boolean {
+  if (html == null) return true;
+  return plainTextFromRichTextHtml(html).length === 0;
+}
+
+/** Collapse empty rich text to `""` for DB storage; otherwise sanitized HTML. */
+export function normalizeRichTextHtmlForStorage(input: string): string {
+  const sanitized = sanitizeRichTextHtml(input);
+  if (isRichTextHtmlEmpty(sanitized)) return "";
+  return sanitized;
+}
+
 /** Strip a single wrapper `<p>` for inline headings / labels. */
 export function richTextForInlineDisplay(html: string): string {
   const sanitized = sanitizeRichTextHtml(html);

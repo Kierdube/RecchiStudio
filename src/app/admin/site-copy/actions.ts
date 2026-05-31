@@ -6,7 +6,10 @@ import sanitizeHtml from "sanitize-html";
 import { prisma } from "@/lib/prisma";
 import { siteCopyDefinitionOrThrow } from "@/lib/site-copy-definitions";
 import { isPlainOnlySiteCopyKey } from "@/lib/site-copy-editor";
-import { sanitizeRichTextHtml } from "@/lib/rich-text-sanitize";
+import {
+  normalizeRichTextHtmlForStorage,
+  sanitizeRichTextHtml,
+} from "@/lib/rich-text-sanitize";
 import { isSiteCopyImageKey } from "@/lib/site-copy-image-key";
 import { sanitizeStoredImageUrl } from "@/lib/upload-image";
 import { assertAdminSession } from "@/lib/verify-admin-session";
@@ -44,7 +47,7 @@ export async function saveSiteCopyBlock(
   let value = String(formData.get("value") ?? "");
 
   if (def.format === "html") {
-    value = sanitizeRichTextHtml(value).slice(0, MAX_HTML);
+    value = normalizeRichTextHtmlForStorage(value).slice(0, MAX_HTML);
   } else if (def.format === "plain") {
     if (isSiteCopyImageKey(key)) {
       value = sanitizeStoredImageUrl(value);
@@ -52,7 +55,7 @@ export async function saveSiteCopyBlock(
     } else {
       value = isPlainOnlySiteCopyKey(key)
         ? sanitizePlain(value)
-        : sanitizeRichTextHtml(value).slice(0, MAX_HTML);
+        : normalizeRichTextHtmlForStorage(value).slice(0, MAX_HTML);
     }
   } else if (def.format === "choice") {
     value = sanitizePlain(value);

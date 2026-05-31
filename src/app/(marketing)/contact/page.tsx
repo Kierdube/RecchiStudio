@@ -4,6 +4,7 @@ import { ContactForm } from "@/components/ContactForm";
 import { MarketingShell } from "@/components/MarketingShell";
 import { PageIntro } from "@/components/PageIntro";
 import { SiteCopyHtml } from "@/components/SiteCopyHtml";
+import { isRichTextHtmlEmpty } from "@/lib/rich-text-sanitize";
 import { getSiteCopyRecord, resolveSiteCopyImageUrl, siteCopyGet } from "@/lib/site-copy";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -19,7 +20,10 @@ export default async function ContactPage() {
   const sidebarImageUrl = resolveSiteCopyImageUrl(siteCopyGet(copy, "contact.sidebar.image_url"));
   const sidebarImageAlt = siteCopyGet(copy, "contact.sidebar.image_alt");
   const noteHtmlRaw = siteCopyGet(copy, "contact.sidebar.note_html");
-  const noteHtml = /replace this address with yours/i.test(noteHtmlRaw) ? "" : noteHtmlRaw;
+  const noteHtml =
+    /replace this address with yours/i.test(noteHtmlRaw) || isRichTextHtmlEmpty(noteHtmlRaw)
+      ? ""
+      : noteHtmlRaw;
 
   return (
     <MarketingShell>

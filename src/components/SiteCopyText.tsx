@@ -1,4 +1,8 @@
-import { sanitizeRichTextHtml, richTextForInlineDisplay } from "@/lib/rich-text-sanitize";
+import {
+  isRichTextHtmlEmpty,
+  richTextForInlineDisplay,
+  sanitizeRichTextHtml,
+} from "@/lib/rich-text-sanitize";
 
 type SiteCopyTextProps = {
   value: string;
@@ -10,7 +14,7 @@ type SiteCopyTextProps = {
 /** Renders site copy that may be plain text or sanitized rich HTML. */
 export function SiteCopyText({ value, className, inline = false }: SiteCopyTextProps) {
   const raw = value.trim();
-  if (!raw) return null;
+  if (!raw || isRichTextHtmlEmpty(raw)) return null;
 
   const looksLikeHtml = /[<>&]/.test(raw);
   if (!looksLikeHtml) {
@@ -18,7 +22,7 @@ export function SiteCopyText({ value, className, inline = false }: SiteCopyTextP
   }
 
   const html = inline ? richTextForInlineDisplay(raw) : sanitizeRichTextHtml(raw);
-  if (!html) return null;
+  if (!html || isRichTextHtmlEmpty(html)) return null;
 
   return <span className={className} dangerouslySetInnerHTML={{ __html: html }} />;
 }

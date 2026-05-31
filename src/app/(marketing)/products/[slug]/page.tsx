@@ -15,6 +15,7 @@ import { ProductImageGallery } from "@/components/ProductImageGallery";
 import { primaryProductImage } from "@/lib/product-images";
 import { prisma } from "@/lib/prisma";
 import { parseSizesJson } from "@/lib/product-sizes";
+import { isRichTextHtmlEmpty } from "@/lib/rich-text-sanitize";
 import { productOpenGraph } from "@/lib/seo";
 import {
   plainTextFromProductDescriptionHtml,
@@ -112,7 +113,7 @@ export default async function ProductPage({ params }: Props) {
               <DisplayPrice priceCents={product.priceCents} />
             </p>
 
-            {product.description ? (
+            {product.description && !isRichTextHtmlEmpty(product.description) ? (
               <div
                 className="product-description-content mt-8 max-w-prose text-base leading-relaxed text-[#19371E]/80 [&_a]:font-medium [&_a]:text-[#2d5a36] [&_a]:underline [&_a]:underline-offset-2 [&_blockquote]:my-4 [&_blockquote]:border-l-2 [&_blockquote]:border-[#2d5a36]/35 [&_blockquote]:pl-4 [&_blockquote]:text-[#19371E]/75 [&_h2]:mt-8 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:text-[#19371E] [&_h3]:mt-6 [&_h3]:text-lg [&_h3]:font-semibold [&_h3]:text-[#19371E] [&_li]:my-1 [&_ol]:my-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_p]:my-4 [&_p:first-child]:mt-0 [&_ul]:my-4 [&_ul]:list-disc [&_ul]:pl-6"
                 dangerouslySetInnerHTML={{

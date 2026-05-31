@@ -1,4 +1,7 @@
-import { sanitizeRichTextHtml } from "@/lib/rich-text-sanitize";
+import {
+  isRichTextHtmlEmpty,
+  sanitizeRichTextHtml,
+} from "@/lib/rich-text-sanitize";
 
 /** Renders sanitized marketing HTML (same rules as product descriptions). */
 export function SiteCopyHtml({
@@ -8,10 +11,15 @@ export function SiteCopyHtml({
   html: string;
   className?: string;
 }) {
+  if (isRichTextHtmlEmpty(html)) return null;
+
+  const safe = sanitizeRichTextHtml(html);
+  if (!safe) return null;
+
   return (
     <div
       className={className}
-      dangerouslySetInnerHTML={{ __html: sanitizeRichTextHtml(html) }}
+      dangerouslySetInnerHTML={{ __html: safe }}
     />
   );
 }

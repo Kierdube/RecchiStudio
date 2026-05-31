@@ -6,6 +6,7 @@ import { z } from "zod";
 
 import { prisma } from "@/lib/prisma";
 import { serializeImageUrls } from "@/lib/product-images";
+import { isRichTextHtmlEmpty } from "@/lib/rich-text-sanitize";
 import {
   PRODUCT_DESCRIPTION_MAX_HTML,
   PRODUCT_DESCRIPTION_MAX_TEXT,
@@ -59,7 +60,7 @@ function normalizeDescription(
       error: `Description must be at most ${PRODUCT_DESCRIPTION_MAX_TEXT.toLocaleString()} characters of text (formatting does not count toward that limit).`,
     };
   }
-  if (!plain) return { ok: true, value: null };
+  if (!plain || isRichTextHtmlEmpty(sanitized)) return { ok: true, value: null };
   return { ok: true, value: sanitized };
 }
 

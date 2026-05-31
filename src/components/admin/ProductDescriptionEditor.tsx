@@ -13,7 +13,10 @@ import { useState } from "react";
 
 import { FONT_FAMILY_OPTIONS } from "@/lib/google-fonts";
 import { descriptionHtmlForEditor } from "@/lib/product-description-editor";
-import { sanitizeRichTextHtml } from "@/lib/rich-text-sanitize";
+import {
+  normalizeRichTextHtmlForStorage,
+  sanitizeRichTextHtml,
+} from "@/lib/rich-text-sanitize";
 import {
   PRODUCT_DESCRIPTION_MAX_TEXT,
 } from "@/lib/sanitize-product-description";
@@ -242,10 +245,10 @@ export function ProductDescriptionEditor({
         },
       },
       onCreate: ({ editor: ed }) => {
-        setHtml(sanitizeRichTextHtml(ed.getHTML()));
+        setHtml(normalizeRichTextHtmlForStorage(ed.getHTML()));
       },
       onUpdate: ({ editor: ed }) => {
-        setHtml(sanitizeRichTextHtml(ed.getHTML()));
+        setHtml(normalizeRichTextHtmlForStorage(ed.getHTML()));
       },
     },
     [textLimit, inline],

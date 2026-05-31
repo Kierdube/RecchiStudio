@@ -122,20 +122,48 @@ export function ImageUrlsField({
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
       <div className="mt-1 grid gap-2 sm:grid-cols-2">
         {urls.map((u, i) => (
-          <PreviewThumb key={`${u}-${i}`} url={u} index={i} />
+          <PreviewThumb
+            key={`${u}-${i}`}
+            url={u}
+            index={i}
+            onRemove={() => {
+              setText((prev) => {
+                const lines = linesToUrls(prev);
+                lines.splice(i, 1);
+                return lines.join("\n");
+              });
+            }}
+          />
         ))}
       </div>
     </div>
   );
 }
 
-function PreviewThumb({ url, index }: { url: string; index: number }) {
+function PreviewThumb({
+  url,
+  index,
+  onRemove,
+}: {
+  url: string;
+  index: number;
+  onRemove: () => void;
+}) {
   const [broken, setBroken] = useState(false);
   return (
     <div className="overflow-hidden rounded-xl border border-zinc-200 bg-zinc-100">
-      <p className="border-b border-zinc-200 bg-zinc-50 px-2 py-1 text-[10px] font-medium uppercase tracking-wide text-zinc-500">
-        {index === 0 ? "Card + checkout" : `Gallery ${index + 1}`}
-      </p>
+      <div className="flex items-center justify-between gap-2 border-b border-zinc-200 bg-zinc-50 px-2 py-1">
+        <p className="text-[10px] font-medium uppercase tracking-wide text-zinc-500">
+          {index === 0 ? "Card + checkout" : `Gallery ${index + 1}`}
+        </p>
+        <button
+          type="button"
+          onClick={onRemove}
+          className="shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold text-red-700 hover:bg-red-50"
+        >
+          Remove
+        </button>
+      </div>
       {!broken ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
