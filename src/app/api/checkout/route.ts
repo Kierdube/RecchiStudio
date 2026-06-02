@@ -2,18 +2,17 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { z } from "zod";
 
-import { STRIPE_CHECKOUT_CURRENCY } from "@/lib/currency";
-import { productImageUrls } from "@/lib/product-images";
-import { parseSizesJson } from "@/lib/product-sizes";
-import { prisma } from "@/lib/prisma";
-import {
-  plainTextFromProductDescriptionHtml,
-  sanitizeProductDescriptionHtml,
-} from "@/lib/sanitize-product-description";
+import { MAX_CART_LINE_QUANTITY, MAX_CART_LINES } from "@/lib/cart";
+import { resolveCheckoutLines } from "@/lib/checkout-line-items";
 
-const bodySchema = z.object({
+const cartItemSchema = z.object({
   productId: z.string().min(1),
   size: z.string().trim().max(50).optional(),
+  quantity: z.number().int().min(1).max(MAX_CART_LINE_QUANTITY),
+});
+
+const bodySchema = z.object({
+  items: z.array(cartItemSchema).min(1).max(MAX_CART_LINES),
 });
 
 export async function POST(request: Request) {
@@ -34,22 +33,12 @@ export async function POST(request: Request) {
 
   const parsed = bodySchema.safeParse(json);
   if (!parsed.success) {
-    return NextResponse.json({ error: "Invalid body" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid cart" }, { status: 400 });
   }
 
-  const product = await prisma.product.findFirst({
-    where: { id: parsed.data.productId, published: true },
-  });
-  if (!product) {
-    return NextResponse.json({ error: "Product not found" }, { status: 404 });
-  }
-
-  const sizes = parseSizesJson(product.sizesJson);
-  const size = parsed.data.size?.trim();
-  if (sizes.length > 0) {
-    if (!size || !sizes.includes(size)) {
-      return NextResponse.json({ error: "Please select a valid size" }, { status: 400 });
-    }
+  const resolved = await resolveCheckoutLines(parsed.data.items);
+  if (!resolved.ok) {
+    return NextResponse.json({ error: resolved.error }, { status: 400 });
   }
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "");
@@ -60,42 +49,27 @@ export async function POST(request: Request) {
     );
   }
 
-  const stripe = new Stripe(secretKey);
-  const checkoutImages = productImageUrls(product.imageUrls).slice(0, 8);
-  const stripeDescription = product.description
-    ? plainTextFromProductDescriptionHtml(sanitizeProductDescriptionHtml(product.description)).slice(
-        0,
-        500,
-      )
-    : undefined;
-
-  const lineItemName = size ? `${product.name} (${size})` : product.name;
+  const lines = resolved.lines;
+  const itemCount = lines.reduce((sum, l) => sum + l.quantity, 0);
   const sessionMetadata: Record<string, string> = {
-    productId: product.id,
-    productSlug: product.slug,
-    productName: product.name,
+    cartCheckout: "true",
+    itemCount: String(itemCount),
   };
-  if (size) sessionMetadata.size = size;
 
+  if (lines.length === 1) {
+    const only = lines[0]!;
+    sessionMetadata.productId = only.productId;
+    sessionMetadata.productSlug = only.slug;
+    sessionMetadata.productName = only.name;
+    if (only.size) sessionMetadata.size = only.size;
+  }
+
+  const stripe = new Stripe(secretKey);
   const session = await stripe.checkout.sessions.create({
     mode: "payment",
-    line_items: [
-      {
-        quantity: 1,
-        price_data: {
-          currency: STRIPE_CHECKOUT_CURRENCY,
-          unit_amount: product.priceCents,
-          product_data: {
-            name: lineItemName,
-            description: stripeDescription || undefined,
-            images: checkoutImages.length > 0 ? checkoutImages : undefined,
-            metadata: { productId: product.id, slug: product.slug },
-          },
-        },
-      },
-    ],
+    line_items: lines.map((l) => l.stripeLineItem),
     success_url: `${appUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${appUrl}/products/${product.slug}`,
+    cancel_url: `${appUrl}/cart`,
     metadata: sessionMetadata,
   });
 

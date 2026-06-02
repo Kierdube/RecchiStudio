@@ -59,6 +59,9 @@ model Order {
   productName           String
   productSlug           String?
   size                  String?
+  itemCount             Int      @default(1)
+  /// JSON array of line items for multi-product cart checkouts.
+  lineItemsJson         String?
   amountCents           Int
   currency              String   @default("cad")
   customerEmail         String?

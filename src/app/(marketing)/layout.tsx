@@ -6,6 +6,7 @@ import { GlobalTypographyStyles } from "@/components/GlobalTypographyStyles";
 import { googleFontsUsedInSiteCopy } from "@/lib/google-fonts";
 import { SiteHeader } from "@/components/SiteHeader";
 import { getSiteCopyRecord } from "@/lib/site-copy";
+import { CartProvider } from "@/contexts/CartContext";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
 import {
   CURRENCY_COOKIE,
@@ -37,13 +38,15 @@ export default async function MarketingLayout({
       ratesAsOf={ratesPayload.asOf}
       initialCurrency={initialCurrency}
     >
-      <GoogleFontsLoader fonts={googleFonts} />
-      <GlobalTypographyStyles copy={copy} />
-      <SiteHeader copy={copy} />
-      <div data-recchi-content className="min-w-0 flex-1 bg-background">
-        {children}
-      </div>
-      <SiteFooter copy={copy} />
+      <CartProvider>
+        <GoogleFontsLoader fonts={googleFonts} />
+        <GlobalTypographyStyles copy={copy} />
+        <SiteHeader copy={copy} />
+        <div data-recchi-content className="min-w-0 flex-1 bg-background">
+          {children}
+        </div>
+        <SiteFooter copy={copy} />
+      </CartProvider>
     </CurrencyProvider>
   );
 }

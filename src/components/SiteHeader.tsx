@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { CurrencySwitcher } from "@/components/CurrencySwitcher";
+import { CartLink } from "@/components/CartLink";
 import { SiteLogo, SITE_LOGO_SIZE_CLASS } from "@/components/SiteLogo";
 import { siteCopyGet } from "@/lib/site-copy";
 
@@ -53,7 +54,10 @@ export function SiteHeader({ copy }: { copy: Record<string, string> }) {
               <span>{navCatalog}</span>
             </Link>
           </nav>
-          <CurrencySwitcher className="shrink-0" />
+          <div className="flex items-center gap-2">
+            <CartLink />
+            <CurrencySwitcher className="shrink-0" />
+          </div>
         </div>
 
         <details className="relative sm:hidden">
@@ -62,8 +66,14 @@ export function SiteHeader({ copy }: { copy: Record<string, string> }) {
           </summary>
           <div className="absolute right-0 z-50 mt-2 w-[min(calc(100vw-2rem),18rem)] max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-[#19371E]/10 bg-white py-3 text-sm shadow-lg">
             <div className="border-b border-[#19371E]/8 px-4 pb-3">
-              <CurrencySwitcher layout="stacked" />
+              <div className="flex items-center justify-between gap-3">
+                <CurrencySwitcher layout="stacked" />
+                <CartLink />
+              </div>
             </div>
+            <Link href="/cart" className="flex min-h-11 items-center px-4 py-2 font-medium hover:bg-[#F4F9EF]">
+              Cart
+            </Link>
             <Link href="/catalog" className="flex min-h-11 items-center px-4 py-2 font-medium hover:bg-[#F4F9EF]">
               {navCatalog}
             </Link>

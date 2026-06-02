@@ -1,6 +1,10 @@
 import { Resend } from "resend";
 import type Stripe from "stripe";
 
+import {
+  type OrderLineItem,
+  serializeOrderLineItems,
+} from "@/lib/cart";
 import { prisma } from "@/lib/prisma";
 
 function formatMoney(cents: number, currency: string): string {
@@ -31,9 +35,47 @@ function shippingLines(session: Stripe.Checkout.Session): string {
   return parts.length ? parts.join("\n") : "—";
 }
 
+function lineItemsFromSession(session: Stripe.Checkout.Session): OrderLineItem[] {
+  const rows = session.line_items?.data ?? [];
+  const out: OrderLineItem[] = [];
+
+  for (const line of rows) {
+    const quantity = line.quantity ?? 1;
+    const amountCents = line.amount_total ?? 0;
+    const price = line.price;
+    const product =
+      price && typeof price.product === "object" && price.product !== null
+        ? (price.product as Stripe.Product)
+        : null;
+    const metadata = product?.metadata ?? {};
+    const size = metadata.size?.trim() || null;
+
+    out.push({
+      productId: metadata.productId?.trim() || null,
+      productName: line.description ?? product?.name ?? "Item",
+      productSlug: metadata.slug?.trim() || null,
+      size,
+      quantity,
+      amountCents,
+    });
+  }
+
+  return out;
+}
+
+function orderSummaryName(lineItems: OrderLineItem[]): string {
+  if (lineItems.length === 0) return "Order";
+  if (lineItems.length === 1) {
+    const only = lineItems[0]!;
+    return only.size ? `${only.productName} (${only.size})` : only.productName;
+  }
+  const totalQty = lineItems.reduce((sum, i) => sum + i.quantity, 0);
+  return `${lineItems.length} products (${totalQty} items)`;
+}
+
 async function sendOrderNotificationEmail(order: {
   productName: string;
-  size: string | null;
+  lineItems: OrderLineItem[];
   amountCents: number;
   currency: string;
   customerEmail: string | null;
@@ -57,11 +99,20 @@ async function sendOrderNotificationEmail(order: {
     }
   }
 
-  const sizeLine = order.size ? `\nSize: ${order.size}` : "";
+  const itemLines =
+    order.lineItems.length > 0
+      ? order.lineItems.map((item) => {
+          const size = item.size ? `, size ${item.size}` : "";
+          return `- ${item.productName}${size} × ${item.quantity} — ${formatMoney(item.amountCents, order.currency)}`;
+        })
+      : [`- ${order.productName}`];
+
   const text = [
     "New order — Recchi Studio",
     "",
-    `Product: ${order.productName}${sizeLine}`,
+    "Items:",
+    ...itemLines,
+    "",
     `Total: ${formatMoney(order.amountCents, order.currency)}`,
     "",
     `Customer: ${order.customerName ?? "—"}`,
@@ -79,7 +130,7 @@ async function sendOrderNotificationEmail(order: {
       from,
       to: [to],
       replyTo: order.customerEmail ?? undefined,
-      subject: `New order: ${order.productName}${order.size ? ` (${order.size})` : ""}`,
+      subject: `New order: ${order.productName}`,
       text,
     });
   } catch {
@@ -106,23 +157,21 @@ export async function fulfillCheckoutSession(
   }
 
   const metadata = session.metadata ?? {};
-  const productId = metadata.productId?.trim() || null;
-  const size = metadata.size?.trim() || null;
+  const lineItems = lineItemsFromSession(session);
   const amountCents = session.amount_total ?? 0;
   const currency = (session.currency ?? "cad").toLowerCase();
+  const itemCount = lineItems.reduce((sum, i) => sum + i.quantity, 0) || 1;
 
-  let productName = metadata.productName?.trim() || "Order";
-  let productSlug = metadata.productSlug?.trim() || null;
+  let productName = orderSummaryName(lineItems);
+  let productId = metadata.productId?.trim() || lineItems[0]?.productId || null;
+  let productSlug = metadata.productSlug?.trim() || lineItems[0]?.productSlug || null;
+  let size = metadata.size?.trim() || lineItems[0]?.size || null;
 
-  if (productId) {
-    const product = await prisma.product.findUnique({
-      where: { id: productId },
-      select: { name: true, slug: true },
-    });
-    if (product) {
-      productName = product.name;
-      productSlug = product.slug;
-    }
+  if (lineItems.length === 0) {
+    productName = metadata.productName?.trim() || "Order";
+    productId = metadata.productId?.trim() || null;
+    productSlug = metadata.productSlug?.trim() || null;
+    size = metadata.size?.trim() || null;
   }
 
   const customerEmail =
@@ -147,7 +196,10 @@ export async function fulfillCheckoutSession(
       productId,
       productName,
       productSlug,
-      size,
+      size: lineItems.length === 1 ? size : null,
+      itemCount,
+      lineItemsJson:
+        lineItems.length > 0 ? serializeOrderLineItems(lineItems) : null,
       amountCents,
       currency,
       customerEmail,
@@ -159,7 +211,19 @@ export async function fulfillCheckoutSession(
 
   await sendOrderNotificationEmail({
     productName: order.productName,
-    size: order.size,
+    lineItems:
+      lineItems.length > 0
+        ? lineItems
+        : [
+            {
+              productId,
+              productName,
+              productSlug,
+              size,
+              quantity: 1,
+              amountCents,
+            },
+          ],
     amountCents: order.amountCents,
     currency: order.currency,
     customerEmail: order.customerEmail,

@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
       const full = await stripe.checkout.sessions.retrieve(session.id, {
-        expand: ["line_items"],
+        expand: ["line_items.data.price.product"],
       });
       await fulfillCheckoutSession(full);
       break;

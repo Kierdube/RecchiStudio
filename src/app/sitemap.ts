@@ -6,6 +6,7 @@ import { absoluteUrl } from "@/lib/seo";
 const STATIC_PATHS = [
   "",
   "/catalog",
+  "/cart",
   "/about",
   "/contact",
   "/shipping",

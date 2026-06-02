@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ClearCartOnSuccess } from "@/components/ClearCartOnSuccess";
 import { MarketingShell } from "@/components/MarketingShell";
 
 type Props = { searchParams: Promise<{ session_id?: string }> };
@@ -22,6 +23,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
 
   return (
     <MarketingShell>
+      <ClearCartOnSuccess />
       <div className="py-6 text-center">
         <SuccessMark />
         <p className="mt-8 text-xs font-semibold uppercase tracking-[0.2em] text-[#2d5a36]/85">

@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { parseOrderLineItems } from "@/lib/cart";
 import { prisma } from "@/lib/prisma";
 
 function formatMoney(cents: number, currency: string): string {
@@ -64,14 +65,25 @@ export default async function AdminOrdersPage() {
                 </td>
               </tr>
             ) : (
-              orders.map((o) => (
+              orders.map((o) => {
+                const lines = parseOrderLineItems(o.lineItemsJson);
+                return (
                 <tr key={o.id} className="align-top text-zinc-800">
                   <td className="whitespace-nowrap px-4 py-3 text-xs text-zinc-500">
                     {o.createdAt.toLocaleString()}
                   </td>
                   <td className="px-4 py-3">
                     <p className="font-medium text-zinc-900">{o.productName}</p>
-                    {o.size ? (
+                    {lines.length > 1 ? (
+                      <ul className="mt-2 space-y-1 text-xs text-zinc-600">
+                        {lines.map((line, idx) => (
+                          <li key={`${o.id}-${idx}`}>
+                            {line.productName}
+                            {line.size ? ` (${line.size})` : ""} × {line.quantity}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : o.size ? (
                       <p className="mt-0.5 text-xs text-zinc-600">Size: {o.size}</p>
                     ) : null}
                     {o.productSlug ? (
@@ -105,7 +117,8 @@ export default async function AdminOrdersPage() {
                     {o.status}
                   </td>
                 </tr>
-              ))
+                );
+              })
             )}
           </tbody>
         </table>

@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { BuyButton } from "@/components/BuyButton";
 import { CheckoutCurrencyNote } from "@/components/CheckoutCurrencyNote";
+import { ProductPurchaseActions } from "@/components/ProductPurchaseActions";
 import { DisplayPrice } from "@/components/DisplayPrice";
 import { ProductCard } from "@/components/ProductCard";
 import {
@@ -125,7 +125,14 @@ export default async function ProductPage({ params }: Props) {
             )}
 
             <div className="mt-10">
-              <BuyButton productId={product.id} sizes={sizes} />
+              <ProductPurchaseActions
+                productId={product.id}
+                slug={product.slug}
+                name={product.name}
+                priceCents={product.priceCents}
+                imageUrl={primaryProductImage(product.imageUrls)}
+                sizes={sizes}
+              />
               <CheckoutCurrencyNote />
               <p className="mt-4 text-xs leading-relaxed text-[#19371E]/50">
                 Secure checkout with Stripe. You will be redirected to enter payment and see shipping
