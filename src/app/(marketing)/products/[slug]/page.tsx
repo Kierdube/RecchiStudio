@@ -97,7 +97,7 @@ export default async function ProductPage({ params }: Props) {
               <div className="flex flex-wrap items-center gap-2">
                 <Link
                   href={categoryHref}
-                  className="inline-flex rounded-full border border-[#19371E]/12 bg-white px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#2d5a36] shadow-sm transition hover:border-[#19371E]/25 hover:bg-[#F4F9EF]"
+                  className="inline-flex rounded-full border border-[#19371E]/12 bg-white px-3 py-1 text-xs font-semibold tracking-wide text-[#2d5a36] shadow-sm transition hover:border-[#19371E]/25 hover:bg-[#F4F9EF]"
                 >
                   {categoryLabel}
                 </Link>

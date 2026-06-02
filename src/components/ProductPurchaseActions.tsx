@@ -84,7 +84,7 @@ export function ProductPurchaseActions({
         <div className="mb-6 rounded-2xl border border-[#19371E]/10 bg-white/70 px-5 py-4 shadow-sm">
           <label
             htmlFor="size-select"
-            className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2d5a36]/80"
+            className="text-xs font-semibold tracking-[0.12em] text-[#2d5a36]/80"
           >
             Size
           </label>

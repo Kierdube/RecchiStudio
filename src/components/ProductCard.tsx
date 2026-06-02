@@ -41,7 +41,7 @@ export function ProductCard({
       </Link>
       <div className="flex flex-col gap-1 px-5 pb-5 pt-4">
         {categoryLabel ? (
-          <p className="text-[11px] font-semibold uppercase tracking-wider text-[#2d5a36]/75">
+          <p className="text-[11px] font-semibold tracking-wide text-[#2d5a36]/75">
             {categoryLabel}
           </p>
         ) : null}

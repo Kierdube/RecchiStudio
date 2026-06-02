@@ -85,7 +85,7 @@ export function CartContents() {
                 {item.name}
               </Link>
               {item.size ? (
-                <p className="mt-1 text-xs font-medium uppercase tracking-wide text-[#2d5a36]/80">
+                <p className="mt-1 text-xs font-medium tracking-wide text-[#2d5a36]/80">
                   Size {item.size}
                 </p>
               ) : null}
