@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { ProductCard } from "@/components/ProductCard";
+import { SiteCopyText } from "@/components/SiteCopyText";
 import {
   SHOP_PAGE_SIZE,
   categoryLabelForSlug,
@@ -55,13 +56,13 @@ export default async function CatalogPage({ searchParams }: Props) {
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
         <header className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2d5a36]/80">
-            {siteCopyGet(copy, "catalog.header.eyebrow")}
+            <SiteCopyText value={siteCopyGet(copy, "catalog.header.eyebrow")} inline />
           </p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[#19371E] sm:text-4xl">
-            {siteCopyGet(copy, "catalog.header.title")}
+            <SiteCopyText value={siteCopyGet(copy, "catalog.header.title")} inline />
           </h1>
           <p className="mt-3 text-base leading-relaxed text-[#19371E]/75">
-            {siteCopyGet(copy, "catalog.header.blurb")}
+            <SiteCopyText value={siteCopyGet(copy, "catalog.header.blurb")} inline />
           </p>
         </header>
 

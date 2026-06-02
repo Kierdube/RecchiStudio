@@ -102,12 +102,14 @@ export default async function HomePage() {
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2d5a36]/80">
-              {siteCopyGet(copy, "home.collection.eyebrow")}
+              <SiteCopyText value={siteCopyGet(copy, "home.collection.eyebrow")} inline />
             </p>
             <h2 className="mt-2 text-3xl font-semibold tracking-tight text-[#19371E] sm:text-4xl">
-              {siteCopyGet(copy, "home.collection.title")}
+              <SiteCopyText value={siteCopyGet(copy, "home.collection.title")} inline />
             </h2>
-            <p className="mt-2 max-w-lg text-[#19371E]/72">{siteCopyGet(copy, "home.collection.blurb")}</p>
+            <p className="mt-2 max-w-lg text-[#19371E]/72">
+              <SiteCopyText value={siteCopyGet(copy, "home.collection.blurb")} inline />
+            </p>
           </div>
           <Link
             href="/catalog"
@@ -156,12 +158,14 @@ export default async function HomePage() {
         <div className="mx-auto grid max-w-6xl gap-14 lg:grid-cols-[1fr_1.05fr] lg:items-start">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2d5a36]/80">
-              {siteCopyGet(copy, "home.story.eyebrow")}
+              <SiteCopyText value={siteCopyGet(copy, "home.story.eyebrow")} inline />
             </p>
             <h2 className="mt-2 text-3xl font-semibold tracking-tight text-[#19371E] sm:text-4xl">
-              {siteCopyGet(copy, "home.story.title")}
+              <SiteCopyText value={siteCopyGet(copy, "home.story.title")} inline />
             </h2>
-            <p className="mt-3 text-xl font-medium text-[#2d5a36]">{siteCopyGet(copy, "home.story.tagline")}</p>
+            <p className="mt-3 text-xl font-medium text-[#2d5a36]">
+              <SiteCopyText value={siteCopyGet(copy, "home.story.tagline")} inline />
+            </p>
             <SiteCopyHtml
               html={siteCopyGet(copy, "home.story.body_html")}
               className="mt-5 max-w-prose leading-relaxed text-[#19371E]/80 [&_p]:my-3 [&_p:first-child]:mt-0"
@@ -178,10 +182,10 @@ export default async function HomePage() {
                   <FeatureIcon kind={kind} />
                   <div>
                     <h3 className="text-base font-semibold text-[#19371E]">
-                      {siteCopyGet(copy, `home.feature.${n}.title`)}
+                      <SiteCopyText value={siteCopyGet(copy, `home.feature.${n}.title`)} inline />
                     </h3>
                     <p className="mt-2 text-sm leading-relaxed text-[#19371E]/70">
-                      {siteCopyGet(copy, `home.feature.${n}.body`)}
+                      <SiteCopyText value={siteCopyGet(copy, `home.feature.${n}.body`)} inline />
                     </p>
                   </div>
                 </div>

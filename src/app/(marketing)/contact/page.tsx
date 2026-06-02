@@ -4,6 +4,7 @@ import { ContactForm } from "@/components/ContactForm";
 import { MarketingShell } from "@/components/MarketingShell";
 import { PageIntro } from "@/components/PageIntro";
 import { SiteCopyHtml } from "@/components/SiteCopyHtml";
+import { SiteCopyText } from "@/components/SiteCopyText";
 import { isRichTextHtmlEmpty } from "@/lib/rich-text-sanitize";
 import { getSiteCopyRecord, resolveSiteCopyImageUrl, siteCopyGet } from "@/lib/site-copy";
 
@@ -36,7 +37,7 @@ export default async function ContactPage() {
       <div className="grid gap-8 lg:grid-cols-5 lg:gap-12">
         <div className="space-y-6 rounded-2xl border border-[#19371E]/10 bg-white/90 p-6 shadow-sm ring-1 ring-black/[0.02] sm:p-8 lg:col-span-2">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-[#19371E]/55">
-            {siteCopyGet(copy, "contact.sidebar.direct_heading")}
+            <SiteCopyText value={siteCopyGet(copy, "contact.sidebar.direct_heading")} inline />
           </h2>
           {sidebarImageUrl ? (
             <div className="overflow-hidden rounded-2xl bg-gradient-to-b from-[#F4F9EF] to-[#E8F0DD] shadow-sm ring-1 ring-[#19371E]/10">
@@ -58,7 +59,7 @@ export default async function ContactPage() {
 
         <div className="rounded-2xl border border-[#19371E]/10 bg-white/90 p-6 ring-1 ring-[#19371E]/5 sm:p-8 lg:col-span-3">
           <h2 className="text-sm font-semibold uppercase tracking-wide text-[#19371E]/55">
-            {siteCopyGet(copy, "contact.form.heading")}
+            <SiteCopyText value={siteCopyGet(copy, "contact.form.heading")} inline />
           </h2>
           <ContactForm />
         </div>
