@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter_Tight } from "next/font/google";
 
+import { CartProvider } from "@/contexts/CartContext";
+
 import "./globals.css";
 import { defaultOpenGraph, siteUrl } from "@/lib/seo";
 
@@ -52,7 +54,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${interTight.variable} h-full scroll-smooth antialiased`}>
       <body className="flex min-h-full min-h-[100dvh] flex-col overflow-x-hidden bg-[#FDFCF8] font-sans text-[#19371E] antialiased">
-        {children}
+        <CartProvider>{children}</CartProvider>
       </body>
     </html>
   );
