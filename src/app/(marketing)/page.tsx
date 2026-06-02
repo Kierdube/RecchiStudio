@@ -89,7 +89,7 @@ export default async function HomePage() {
                   <img
                     src={heroImageUrl}
                     alt={heroImageAlt}
-                    className="aspect-[4/5] w-full object-cover sm:aspect-[3/4] lg:aspect-[4/5] lg:min-h-[min(100%,28rem)]"
+                    className="aspect-square w-full object-cover"
                   />
                 </div>
               </div>

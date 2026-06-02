@@ -20,7 +20,7 @@ export function ProductCard({
   categoryLabel,
 }: ProductCardProps) {
   return (
-    <article className="group relative overflow-hidden rounded-3xl border border-[#19371E]/8 bg-white shadow-[0_12px_40px_-24px_rgba(25,55,30,0.35)] ring-1 ring-black/[0.02] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_20px_50px_-20px_rgba(25,55,30,0.45)]">
+    <article className="group relative overflow-hidden rounded-3xl border border-[#19371E]/8 bg-white shadow-[0_4px_12px_-2px_rgba(25,55,30,0.12)] ring-1 ring-black/[0.02] transition duration-300 hover:-translate-y-1 hover:shadow-[0_16px_32px_-4px_rgba(25,55,30,0.28)]">
       <Link
         href={`/products/${slug}`}
         className="block aspect-[4/5] overflow-hidden bg-gradient-to-b from-[#F4F9EF] to-[#E8F0DD]"
@@ -37,7 +37,6 @@ export function ProductCard({
             No image
           </div>
         )}
-        <span className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#19371E]/25 to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />
       </Link>
       <div className="flex flex-col gap-1 px-5 pb-5 pt-4">
         {categoryLabel ? (
