@@ -405,7 +405,7 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
     key: "footer.catalog_blurb",
     label: "Catalog column blurb",
     format: "plain",
-    defaultValue: "Browse tees, crop tops, shorts, and more. Checkout is secure through Stripe.",
+    defaultValue: "Browse tees, crop tops, shorts, and more. Secure checkout.",
   },
   {
     group: "Footer",
@@ -624,7 +624,7 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
     key: "shipping.meta_description",
     label: "Short page description",
     format: "plain",
-    defaultValue: "How we ship orders, timelines, and how returns work at Recchi Studio.",
+    defaultValue: "Free shipping in Canada and the US. How we ship orders, timelines, and returns at Recchi Studio.",
   },
 
   // —— Legal MDX (stored in DB; seed copies from files on first insert only) ——

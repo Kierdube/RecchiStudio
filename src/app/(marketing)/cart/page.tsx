@@ -19,7 +19,7 @@ export default function CartPage() {
             Your cart
           </h1>
           <p className="mt-3 text-base leading-relaxed text-[#19371E]/75">
-            Review your items, adjust sizes and quantities, then checkout securely with Stripe.
+            Review your items, adjust sizes and quantities, then proceed to secure checkout.
           </p>
         </header>
         <div className="mt-12">

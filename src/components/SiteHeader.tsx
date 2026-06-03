@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { CurrencySwitcher } from "@/components/CurrencySwitcher";
 import { CartLink } from "@/components/CartLink";
 import { SiteLogo, SITE_LOGO_SIZE_CLASS } from "@/components/SiteLogo";
 import { siteCopyGet } from "@/lib/site-copy";
@@ -39,24 +38,16 @@ export function SiteHeader({ copy }: { copy: Record<string, string> }) {
           </nav>
           <div className="flex items-center gap-2">
             <CartLink />
-            <CurrencySwitcher className="shrink-0" />
           </div>
         </div>
 
-        <details className="relative sm:hidden">
+        <div className="flex items-center gap-2 sm:hidden">
+          <CartLink />
+          <details className="relative">
           <summary className="flex list-none min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full border border-[#19371E]/15 bg-white px-4 py-2 text-sm font-semibold text-[#19371E] shadow-sm touch-manipulation [&::-webkit-details-marker]:hidden">
             {menuBtn}
           </summary>
           <div className="absolute right-0 z-50 mt-2 w-[min(calc(100vw-2rem),18rem)] max-w-[calc(100vw-2rem)] overflow-hidden rounded-xl border border-[#19371E]/10 bg-white py-3 text-sm shadow-lg">
-            <div className="border-b border-[#19371E]/8 px-4 pb-3">
-              <div className="flex items-center justify-between gap-3">
-                <CurrencySwitcher layout="stacked" />
-                <CartLink />
-              </div>
-            </div>
-            <Link href="/cart" className="flex min-h-11 items-center px-4 py-2 font-medium hover:bg-[#F4F9EF]">
-              Cart
-            </Link>
             <Link href="/catalog" className="flex min-h-11 items-center px-4 py-2 font-medium hover:bg-[#F4F9EF]">
               {navCatalog}
             </Link>
@@ -76,7 +67,8 @@ export function SiteHeader({ copy }: { copy: Record<string, string> }) {
               {navHome}
             </Link>
           </div>
-        </details>
+          </details>
+        </div>
       </div>
     </header>
   );

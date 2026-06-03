@@ -135,8 +135,7 @@ export default async function ProductPage({ params }: Props) {
               />
               <CheckoutCurrencyNote />
               <p className="mt-4 text-xs leading-relaxed text-[#19371E]/50">
-                Secure checkout with Stripe. You will be redirected to enter payment and see shipping
-                options.
+                You will be redirected to a secure checkout page to enter payment and shipping details.
               </p>
             </div>
           </div>

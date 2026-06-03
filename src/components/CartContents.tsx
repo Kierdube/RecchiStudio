@@ -156,7 +156,7 @@ export function CartContents() {
         </button>
         {error ? <p className="mt-3 text-sm text-red-700">{error}</p> : null}
         <p className="mt-4 text-xs leading-relaxed text-[#19371E]/50">
-          Secure checkout with Stripe. Shipping and tax are calculated on the next step.
+          Shipping and tax are calculated on the next step.
         </p>
       </aside>
     </div>

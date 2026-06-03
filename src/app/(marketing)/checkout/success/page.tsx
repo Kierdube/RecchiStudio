@@ -33,8 +33,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
           Payment received
         </h1>
         <p className="mx-auto mt-4 max-w-md text-[#19371E]/75">
-          Stripe has confirmed your checkout. You will get a receipt by email from Stripe with your
-          line items.
+          Your order is confirmed. You will receive a receipt by email with your line items.
         </p>
         {sessionId ? (
           <p className="mx-auto mt-6 max-w-lg break-all text-left text-xs text-[#19371E]/38 sm:text-center">
