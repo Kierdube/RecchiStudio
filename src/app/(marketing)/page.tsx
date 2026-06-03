@@ -204,7 +204,7 @@ export default async function HomePage() {
                 <img
                   src={closingImageUrl}
                   alt={closingImageAlt}
-                  className="aspect-[4/5] w-full object-cover"
+                  className="aspect-square w-full object-cover"
                 />
               </div>
             </div>
