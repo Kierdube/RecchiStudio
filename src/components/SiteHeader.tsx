@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { CartLink } from "@/components/CartLink";
+import { CurrencySwitcher } from "@/components/CurrencySwitcher";
 import { SiteLogo, SITE_LOGO_SIZE_CLASS } from "@/components/SiteLogo";
 import { siteCopyGet } from "@/lib/site-copy";
 
@@ -38,10 +39,12 @@ export function SiteHeader({ copy }: { copy: Record<string, string> }) {
           </nav>
           <div className="flex items-center gap-2">
             <CartLink />
+            <CurrencySwitcher className="shrink-0" />
           </div>
         </div>
 
         <div className="flex items-center gap-2 sm:hidden">
+          <CurrencySwitcher className="shrink-0" />
           <CartLink />
           <details className="relative">
           <summary className="flex list-none min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full border border-[#19371E]/15 bg-white px-4 py-2 text-sm font-semibold text-[#19371E] shadow-sm touch-manipulation [&::-webkit-details-marker]:hidden">

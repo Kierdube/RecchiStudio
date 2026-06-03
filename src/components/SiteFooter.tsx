@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { CurrencySwitcher } from "@/components/CurrencySwitcher";
 import { SiteLogo, SITE_LOGO_SIZE_CLASS } from "@/components/SiteLogo";
 import { shopDefaultState, shopHref } from "@/lib/catalog";
 import { siteCopyGet } from "@/lib/site-copy";
@@ -86,13 +85,8 @@ export function SiteFooter({ copy }: { copy: Record<string, string> }) {
           </div>
         </div>
       </div>
-      <div className="border-t border-white/10 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 px-4 sm:flex-row sm:justify-between sm:px-6">
-          <p className="text-center text-xs text-[#C5E6A6]/55 sm:text-left">
-            © {new Date().getFullYear()} {copyright}
-          </p>
-          <CurrencySwitcher variant="dark" />
-        </div>
+      <div className="border-t border-white/10 py-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] text-center text-xs text-[#C5E6A6]/55">
+        © {new Date().getFullYear()} {copyright}
       </div>
     </footer>
   );
