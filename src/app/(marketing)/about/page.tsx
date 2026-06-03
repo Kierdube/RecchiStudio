@@ -41,7 +41,7 @@ export default async function AboutPage() {
         />
         {storyImageUrl ? (
           <div className="mx-auto w-full max-w-md lg:mx-0 lg:max-w-none lg:justify-self-end">
-            <div className="overflow-hidden rounded-[2rem] bg-gradient-to-b from-[#F4F9EF] to-[#E8F0DD] shadow-[0_28px_80px_-40px_rgba(25,55,30,0.35)] ring-1 ring-[#19371E]/10">
+            <div className="overflow-hidden rounded-[2rem] bg-gradient-to-b from-[#F4F9EF] to-[#E8F0DD] shadow-[0_28px_80px_-40px_rgba(25,55,30,0.45)] ring-1 ring-[#19371E]/10">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={storyImageUrl}
