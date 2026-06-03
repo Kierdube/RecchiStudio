@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { AboutParrotDecoration } from "@/components/AboutParrotDecoration";
 import { FeatureIcon } from "@/components/FeatureIcon";
 import { SiteCopyText } from "@/components/SiteCopyText";
 import { MarketingShell } from "@/components/MarketingShell";
@@ -25,6 +26,7 @@ export default async function AboutPage() {
 
   return (
     <MarketingShell>
+      <AboutParrotDecoration />
       <PageIntro
         eyebrow={siteCopyGet(copy, "about.intro.eyebrow")}
         eyebrowUppercase={false}
