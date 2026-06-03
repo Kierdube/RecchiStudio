@@ -40,13 +40,13 @@ export default async function AboutPage() {
           className="space-y-6 text-base leading-relaxed text-[#19371E]/82 [&_p]:m-0"
         />
         {storyImageUrl ? (
-          <div className="mx-auto w-full max-w-md lg:mx-0 lg:max-w-none lg:justify-self-end">
+          <div className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none lg:justify-self-stretch">
             <div className="overflow-hidden rounded-[2rem] bg-gradient-to-b from-[#F4F9EF] to-[#E8F0DD] shadow-[0_28px_80px_-40px_rgba(25,55,30,0.45)] ring-1 ring-[#19371E]/10">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={storyImageUrl}
                 alt={storyImageAlt}
-                className="aspect-[4/5] w-full object-cover"
+                className="aspect-square w-full object-cover"
               />
             </div>
           </div>
