@@ -39,7 +39,7 @@ export function CurrencySwitcher({
           id="currency-select"
           value={currency}
           onChange={(e) => setCurrency(e.target.value as DisplayCurrencyCode)}
-          className={`cursor-pointer appearance-none border-0 bg-transparent py-2 pl-0 pr-3.5 text-sm font-semibold uppercase tracking-wide outline-none transition sm:py-1.5 sm:text-xs ${controlClass} ${stacked ? "min-h-11 w-full" : ""}`}
+          className={`cursor-pointer appearance-none border-0 bg-transparent py-2 pl-0 pr-3.5 text-sm font-semibold tracking-wide outline-none transition sm:py-1.5 sm:text-xs ${controlClass} ${stacked ? "min-h-11 w-full" : ""}`}
         >
           {DISPLAY_CURRENCIES.map((c) => (
             <option key={c.code} value={c.code}>

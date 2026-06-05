@@ -12,6 +12,7 @@ export function ProductPurchaseActions({
   priceCents,
   imageUrl,
   sizes = [],
+  optionsLabel = "Option",
 }: {
   productId: string;
   slug: string;
@@ -19,6 +20,7 @@ export function ProductPurchaseActions({
   priceCents: number;
   imageUrl: string | null;
   sizes?: string[];
+  optionsLabel?: string;
 }) {
   const { addItem, justAdded, clearJustAdded } = useCart();
   const [selectedSize, setSelectedSize] = useState(sizes[0] ?? "");
@@ -30,7 +32,7 @@ export function ProductPurchaseActions({
     clearJustAdded();
     const size = sizes.length > 0 ? selectedSize : null;
     if (sizes.length > 0 && !size) {
-      setError("Please select a size");
+      setError(`Please select ${optionsLabel.toLowerCase()}`);
       return;
     }
     addItem({
@@ -50,7 +52,7 @@ export function ProductPurchaseActions({
     try {
       const size = sizes.length > 0 ? selectedSize : undefined;
       if (sizes.length > 0 && !size) {
-        setError("Please select a size");
+        setError(`Please select ${optionsLabel.toLowerCase()}`);
         return;
       }
 
@@ -86,7 +88,7 @@ export function ProductPurchaseActions({
             htmlFor="size-select"
             className="text-xs font-semibold tracking-[0.12em] text-[#2d5a36]/80"
           >
-            Size
+            {optionsLabel}
           </label>
           <select
             id="size-select"

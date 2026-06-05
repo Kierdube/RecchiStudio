@@ -26,7 +26,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
       <ClearCartOnSuccess />
       <div className="py-6 text-center">
         <SuccessMark />
-        <p className="mt-8 text-xs font-semibold uppercase tracking-[0.2em] text-[#2d5a36]/85">
+        <p className="mt-8 text-xs font-semibold tracking-[0.2em] text-[#2d5a36]/85">
           Thank you
         </p>
         <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[#19371E] sm:text-4xl">

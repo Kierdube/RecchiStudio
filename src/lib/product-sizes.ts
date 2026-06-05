@@ -1,4 +1,7 @@
 export const MAX_PRODUCT_SIZES = 30;
+export const MAX_OPTIONS_LABEL = 32;
+
+export const DEFAULT_OPTIONS_LABEL = "Option";
 
 export function parseSizesFromSheet(raw: unknown): string[] {
   if (raw == null) return [];
@@ -43,4 +46,14 @@ export function serializeSizesJson(sizes: string[]): string {
 /** Admin textarea: one size per line or comma-separated. */
 export function parseSizesFromFormField(raw: string): string[] {
   return parseSizesFromSheet(raw);
+}
+
+export function parseOptionsLabel(raw: string): string {
+  return raw.trim().replace(/\s+/g, " ").slice(0, MAX_OPTIONS_LABEL);
+}
+
+/** Label shown on the product page when options are set. */
+export function resolveOptionsLabel(label: string | null | undefined): string {
+  const trimmed = label?.trim();
+  return trimmed || DEFAULT_OPTIONS_LABEL;
 }

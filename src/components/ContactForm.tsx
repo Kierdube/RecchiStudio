@@ -40,7 +40,7 @@ export function ContactForm() {
       <div>
         <label
           htmlFor="contact-name"
-          className="block text-xs font-semibold uppercase tracking-wide text-[#19371E]/50"
+          className="block text-xs font-semibold tracking-wide text-[#19371E]/50"
         >
           Name
         </label>
@@ -55,7 +55,7 @@ export function ContactForm() {
       <div>
         <label
           htmlFor="contact-email"
-          className="block text-xs font-semibold uppercase tracking-wide text-[#19371E]/50"
+          className="block text-xs font-semibold tracking-wide text-[#19371E]/50"
         >
           Email
         </label>
@@ -71,7 +71,7 @@ export function ContactForm() {
       <div>
         <label
           htmlFor="contact-topic"
-          className="block text-xs font-semibold uppercase tracking-wide text-[#19371E]/50"
+          className="block text-xs font-semibold tracking-wide text-[#19371E]/50"
         >
           Topic
         </label>
@@ -95,7 +95,7 @@ export function ContactForm() {
       <div>
         <label
           htmlFor="contact-message"
-          className="block text-xs font-semibold uppercase tracking-wide text-[#19371E]/50"
+          className="block text-xs font-semibold tracking-wide text-[#19371E]/50"
         >
           Message
         </label>

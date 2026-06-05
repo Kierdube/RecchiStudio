@@ -153,7 +153,7 @@ function PreviewThumb({
   return (
     <div className="overflow-hidden rounded-xl border border-zinc-200 bg-zinc-100">
       <div className="flex items-center justify-between gap-2 border-b border-zinc-200 bg-zinc-50 px-2 py-1">
-        <p className="text-[10px] font-medium uppercase tracking-wide text-zinc-500">
+        <p className="text-[10px] font-medium tracking-wide text-zinc-500">
           {index === 0 ? "Card + checkout" : `Gallery ${index + 1}`}
         </p>
         <button

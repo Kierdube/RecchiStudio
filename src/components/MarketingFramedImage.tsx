@@ -1,4 +1,4 @@
-/** Marketing photo with shared frame styling (homepage hero uses square). */
+/** Marketing photo with shared frame styling (portrait 4:5 or square). */
 export function MarketingFramedImage({
   src,
   alt,
@@ -6,7 +6,7 @@ export function MarketingFramedImage({
 }: {
   src: string;
   alt: string;
-  /** Portrait 4:5 for about sidebar; square for homepage hero. */
+  /** Portrait 4:5 for hero/about sidebar; square when omitted. */
   aspect?: "square" | "portrait";
 }) {
   const aspectClass = aspect === "portrait" ? "aspect-[4/5]" : "aspect-square";

@@ -5,13 +5,18 @@
 export function MarketingShell({
   children,
   wide,
+  heroBackground,
 }: {
   children: React.ReactNode;
   /** Narrower inner column for policies / long-form MDX (still uses site gutters outside). */
   wide?: boolean;
+  /** Same green gradient as the homepage hero (`recchi-hero`). */
+  heroBackground?: boolean;
 }) {
   return (
-    <main className="border-b border-[#19371E]/8">
+    <main
+      className={`border-b ${heroBackground ? "recchi-hero border-[#19371E]/10" : "border-[#19371E]/8"}`}
+    >
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
         {wide ? (
           <div className="mx-auto w-full max-w-3xl lg:max-w-4xl">{children}</div>

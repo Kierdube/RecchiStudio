@@ -17,7 +17,7 @@ export default async function RootNotFound() {
       <div className="flex-1">
         <MarketingShell>
           <div className="py-10 text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#2d5a36]/75">
+            <p className="text-xs font-semibold tracking-[0.22em] text-[#2d5a36]/75">
               404
             </p>
             <h1 className="mt-4 text-3xl font-semibold tracking-tight text-[#19371E] sm:text-4xl">

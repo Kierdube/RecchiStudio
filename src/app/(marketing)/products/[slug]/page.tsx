@@ -15,7 +15,7 @@ import {
 import { ProductImageGallery } from "@/components/ProductImageGallery";
 import { primaryProductImage } from "@/lib/product-images";
 import { prisma } from "@/lib/prisma";
-import { parseSizesJson } from "@/lib/product-sizes";
+import { parseSizesJson, resolveOptionsLabel } from "@/lib/product-sizes";
 import { resolveProductTags } from "@/lib/product-tags";
 import { isRichTextHtmlEmpty } from "@/lib/rich-text-sanitize";
 import { productOpenGraph } from "@/lib/seo";
@@ -83,6 +83,7 @@ export default async function ProductPage({ params }: Props) {
     page: 1,
   });
   const sizes = parseSizesJson(product.sizesJson);
+  const optionsLabel = resolveOptionsLabel(product.optionsLabel);
   const tags = resolveProductTags(product.tagsJson, product.categorySlug);
 
   return (
@@ -123,6 +124,7 @@ export default async function ProductPage({ params }: Props) {
                 priceCents={product.priceCents}
                 imageUrl={primaryProductImage(product.imageUrls)}
                 sizes={sizes}
+                optionsLabel={optionsLabel}
               />
               <CheckoutCurrencyNote />
               <p className="mt-4 text-xs leading-relaxed text-[#19371E]/50">
@@ -136,7 +138,7 @@ export default async function ProductPage({ params }: Props) {
           <section className="mt-20 border-t border-[#19371E]/10 pt-16">
             <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2d5a36]/80">
+                <p className="text-xs font-semibold tracking-[0.18em] text-[#2d5a36]/80">
                   You may also like
                 </p>
                 <h2 className="mt-2 text-2xl font-semibold text-[#19371E]">Related styles</h2>

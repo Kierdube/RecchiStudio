@@ -51,7 +51,7 @@ export function ProductCard({
             priceCents={priceCents}
             className="text-sm font-medium tabular-nums text-[#2d5a36]"
           />
-          <span className="inline-flex min-h-10 min-w-10 shrink-0 items-center justify-center rounded-lg text-xs font-semibold uppercase tracking-wide text-[#19371E]/50 transition group-hover:text-[#2d5a36]">
+          <span className="inline-flex min-h-10 min-w-10 shrink-0 items-center justify-center rounded-lg text-xs font-semibold tracking-wide text-[#19371E]/50 transition group-hover:text-[#2d5a36]">
             View
           </span>
         </div>

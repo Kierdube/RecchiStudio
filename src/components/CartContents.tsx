@@ -86,7 +86,7 @@ export function CartContents() {
               </Link>
               {item.size ? (
                 <p className="mt-1 text-xs font-medium tracking-wide text-[#2d5a36]/80">
-                  Size {item.size}
+                  Option · {item.size}
                 </p>
               ) : null}
               <p className="mt-2 text-sm font-medium tabular-nums text-[#2d5a36]">
@@ -125,7 +125,7 @@ export function CartContents() {
       </ul>
 
       <aside className="rounded-2xl border border-[#19371E]/10 bg-white p-6 shadow-sm lg:sticky lg:top-28">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-[#19371E]/55">Order summary</h2>
+        <h2 className="text-sm font-semibold tracking-wide text-[#19371E]/55">Order summary</h2>
         <dl className="mt-4 space-y-2 text-sm">
           <div className="flex justify-between gap-4 text-[#19371E]/75">
             <dt>Items</dt>

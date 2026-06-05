@@ -26,22 +26,21 @@ export default async function AboutPage() {
   const storyImageAlt = siteCopyGet(copy, "about.body.image_alt");
 
   return (
-    <MarketingShell>
+    <MarketingShell heroBackground>
       <AboutParrotDecoration />
       <PageIntro
         eyebrow={siteCopyGet(copy, "about.intro.eyebrow")}
-        eyebrowUppercase={false}
         title={siteCopyGet(copy, "about.intro.title")}
       />
 
       <div className={`mt-8 ${MARKETING_IMAGE_GRID_START_CLASS}`}>
-        <div className="space-y-6 text-base leading-relaxed text-[#19371E]/82">
+        <div className="flex flex-col gap-6 text-base leading-relaxed text-[#19371E]/82">
           <p className="m-0">
             <SiteCopyText value={siteCopyGet(copy, "about.intro.description")} inline />
           </p>
           <SiteCopyHtml
             html={siteCopyGet(copy, "about.body_html")}
-            className="space-y-6 [&_p]:m-0"
+            className="flex flex-col gap-6 [&_p]:m-0"
           />
           <div>
             <Link

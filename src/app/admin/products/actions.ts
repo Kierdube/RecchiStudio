@@ -17,6 +17,7 @@ import { sanitizeStoredImageUrl } from "@/lib/upload-image";
 import { adminDollarsToCatalogCents } from "@/lib/admin-pricing";
 import {
   parseSizesFromFormField,
+  parseOptionsLabel,
   serializeSizesJson,
 } from "@/lib/product-sizes";
 import { parseTagsFromFormField, serializeTagsJson } from "@/lib/product-tags";
@@ -93,6 +94,11 @@ function parseSizesField(formData: FormData): { ok: true; value: string } {
   return { ok: true, value: serializeSizesJson(sizes) };
 }
 
+function parseOptionsLabelField(formData: FormData): { ok: true; value: string } {
+  const raw = String(formData.get("optionsLabel") ?? "");
+  return { ok: true, value: parseOptionsLabel(raw) };
+}
+
 function parseTagsField(formData: FormData): { ok: true; value: string } {
   const raw = String(formData.get("tagsJson") ?? "");
   const tags = parseTagsFromFormField(raw);
@@ -112,6 +118,7 @@ export async function createProduct(
   const imgs = parseImageUrls(formData);
   if (!imgs.ok) return { error: imgs.error };
   const sizesField = parseSizesField(formData);
+  const optionsLabelField = parseOptionsLabelField(formData);
   const tagsField = parseTagsField(formData);
   const descNorm = normalizeDescription(parsed.data.description);
   if (!descNorm.ok) return { error: descNorm.error };
@@ -128,6 +135,7 @@ export async function createProduct(
         priceCents,
         imageUrls: serializeImageUrls(imgs.value),
         sizesJson: sizesField.value,
+        optionsLabel: optionsLabelField.value,
         tagsJson: tagsField.value,
         categorySlug,
         published,
@@ -158,6 +166,7 @@ export async function updateProduct(
   const imgs = parseImageUrls(formData);
   if (!imgs.ok) return { error: imgs.error };
   const sizesField = parseSizesField(formData);
+  const optionsLabelField = parseOptionsLabelField(formData);
   const tagsField = parseTagsField(formData);
   const descNorm = normalizeDescription(parsed.data.description);
   if (!descNorm.ok) return { error: descNorm.error };
@@ -175,6 +184,7 @@ export async function updateProduct(
         priceCents,
         imageUrls: serializeImageUrls(imgs.value),
         sizesJson: sizesField.value,
+        optionsLabel: optionsLabelField.value,
         tagsJson: tagsField.value,
         categorySlug,
         published,

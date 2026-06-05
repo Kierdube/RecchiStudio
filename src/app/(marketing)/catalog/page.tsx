@@ -55,7 +55,7 @@ export default async function CatalogPage({ searchParams }: Props) {
     <main className="border-b border-[#19371E]/8">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
         <header className="max-w-2xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2d5a36]/80">
+          <p className="text-xs font-semibold tracking-[0.18em] text-[#2d5a36]/80">
             <SiteCopyText value={siteCopyGet(copy, "catalog.header.eyebrow")} inline />
           </p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[#19371E] sm:text-4xl">

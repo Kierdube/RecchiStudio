@@ -4,20 +4,15 @@ export function PageIntro({
   eyebrow,
   title,
   description,
-  eyebrowUppercase = true,
 }: {
   eyebrow?: string;
   title: string;
   description?: string;
-  /** When false, eyebrow keeps natural title case (e.g. “My Studio”). */
-  eyebrowUppercase?: boolean;
 }) {
   return (
     <header className="mb-10 sm:mb-12">
       {eyebrow ? (
-        <p
-          className={`recchi-eyebrow text-xs font-semibold tracking-[0.2em] text-[#2d5a36]/85 ${eyebrowUppercase ? "uppercase" : ""}`}
-        >
+        <p className="recchi-eyebrow text-xs font-semibold tracking-[0.2em] text-[#2d5a36]/85">
           <SiteCopyText value={eyebrow} inline />
         </p>
       ) : null}

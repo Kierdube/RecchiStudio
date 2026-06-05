@@ -28,7 +28,7 @@ export function SiteFooter({ copy }: { copy: Record<string, string> }) {
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-[#C5E6A6]/85">{brandBlurb}</p>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#C5E6A6]/60">
+            <p className="text-xs font-semibold tracking-wider text-[#C5E6A6]/60">
               {sectionPages}
             </p>
             <ul className="mt-4 space-y-2.5 text-sm">
@@ -45,7 +45,7 @@ export function SiteFooter({ copy }: { copy: Record<string, string> }) {
             </ul>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#C5E6A6]/60">
+            <p className="text-xs font-semibold tracking-wider text-[#C5E6A6]/60">
               {sectionCatalog}
             </p>
             <p className="mt-4 text-sm leading-relaxed text-[#C5E6A6]/85">{catalogBlurb}</p>

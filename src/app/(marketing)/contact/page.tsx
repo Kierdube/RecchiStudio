@@ -36,7 +36,7 @@ export default async function ContactPage() {
 
       <div className="grid gap-8 lg:grid-cols-5 lg:gap-12">
         <div className="space-y-6 rounded-2xl border border-[#19371E]/10 bg-white/90 p-6 shadow-sm ring-1 ring-black/[0.02] sm:p-8 lg:col-span-2">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-[#19371E]/55">
+          <h2 className="text-sm font-semibold tracking-wide text-[#19371E]/55">
             <SiteCopyText value={siteCopyGet(copy, "contact.sidebar.direct_heading")} inline />
           </h2>
           {sidebarImageUrl ? (
@@ -58,7 +58,7 @@ export default async function ContactPage() {
         </div>
 
         <div className="rounded-2xl border border-[#19371E]/10 bg-white/90 p-6 ring-1 ring-[#19371E]/5 sm:p-8 lg:col-span-3">
-          <h2 className="text-sm font-semibold uppercase tracking-wide text-[#19371E]/55">
+          <h2 className="text-sm font-semibold tracking-wide text-[#19371E]/55">
             <SiteCopyText value={siteCopyGet(copy, "contact.form.heading")} inline />
           </h2>
           <ContactForm />

@@ -42,6 +42,8 @@ model Product {
   imageUrls    String   @default("[]")
   /// JSON array of size labels (stored as text), e.g. ["XS","S","M","L","XL"].
   sizesJson    String   @default("[]")
+  /// Shopper-facing label for sizesJson, e.g. "Size" or "Colour". Empty uses "Option".
+  optionsLabel String   @default("")
   published    Boolean  @default(false)
   /// birds | flamingos | cats | abstract | other — shop filters
   categorySlug String   @default("other")

@@ -35,7 +35,7 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
   {
     group: "Home — hero",
     key: "home.hero.eyebrow",
-    label: "Eyebrow (small caps line)",
+    label: "Eyebrow line",
     format: "plain",
     defaultValue: "Express yourself",
   },

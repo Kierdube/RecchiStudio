@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { FeatureIcon } from "@/components/FeatureIcon";
-import { MarketingFramedImage, MARKETING_IMAGE_GRID_CLASS } from "@/components/MarketingFramedImage";
+import { MarketingFramedImage, MARKETING_IMAGE_GRID_START_CLASS } from "@/components/MarketingFramedImage";
 import { ProductCard } from "@/components/ProductCard";
 import { RotatingHeadline } from "@/components/RotatingHeadline";
 import { SectionWave } from "@/components/SectionWave";
@@ -54,11 +54,11 @@ export default async function HomePage() {
         <div className="mx-auto max-w-6xl">
           <div
             className={
-              heroImageUrl ? MARKETING_IMAGE_GRID_CLASS : ""
+              heroImageUrl ? MARKETING_IMAGE_GRID_START_CLASS : ""
             }
           >
             <div className="min-w-0">
-              <p className="recchi-eyebrow text-xs font-semibold uppercase tracking-[0.2em] text-[#2d5a36]/90">
+              <p className="recchi-eyebrow text-xs font-semibold tracking-[0.2em] text-[#2d5a36]/90">
                 <SiteCopyText value={siteCopyGet(copy, "home.hero.eyebrow")} inline />
               </p>
               <div className="mt-4 max-w-3xl">
@@ -82,7 +82,7 @@ export default async function HomePage() {
               </div>
             </div>
             {heroImageUrl ? (
-              <MarketingFramedImage src={heroImageUrl} alt={heroImageAlt} />
+              <MarketingFramedImage src={heroImageUrl} alt={heroImageAlt} aspect="portrait" />
             ) : null}
           </div>
         </div>
@@ -91,7 +91,7 @@ export default async function HomePage() {
       <section className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2d5a36]/80">
+            <p className="text-xs font-semibold tracking-[0.18em] text-[#2d5a36]/80">
               <SiteCopyText value={siteCopyGet(copy, "home.collection.eyebrow")} inline />
             </p>
             <h2 className="mt-2 text-3xl font-semibold tracking-tight text-[#19371E] sm:text-4xl">
@@ -147,7 +147,7 @@ export default async function HomePage() {
       <section id="about" className="scroll-mt-28 px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
         <div className="mx-auto grid max-w-6xl gap-14 lg:grid-cols-[1fr_1.05fr] lg:items-start">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#2d5a36]/80">
+            <p className="text-xs font-semibold tracking-[0.18em] text-[#2d5a36]/80">
               <SiteCopyText value={siteCopyGet(copy, "home.story.eyebrow")} inline />
             </p>
             <h2 className="mt-2 text-3xl font-semibold tracking-tight text-[#19371E] sm:text-4xl">
@@ -199,7 +199,7 @@ export default async function HomePage() {
               </div>
             </div>
           ) : null}
-          <p className="min-w-0 flex-1 text-center text-2xl font-medium leading-relaxed text-[#19371E]/88 sm:text-3xl lg:text-left lg:text-[2rem] lg:leading-snug">
+          <p className="min-w-0 flex-1 text-center text-base leading-relaxed text-[#19371E]/82 sm:text-lg lg:text-left">
             <SiteCopyText value={siteCopyGet(copy, "home.closing")} inline />
           </p>
         </div>

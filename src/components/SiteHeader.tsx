@@ -37,13 +37,13 @@ export function SiteHeader({ copy }: { copy: Record<string, string> }) {
               {navCatalog}
             </Link>
           </nav>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <CartLink />
             <CurrencySwitcher className="shrink-0" />
           </div>
         </div>
 
-        <div className="flex items-center gap-2 sm:hidden">
+        <div className="flex items-center gap-4 sm:hidden">
           <CurrencySwitcher className="shrink-0" />
           <CartLink />
           <details className="relative">

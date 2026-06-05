@@ -105,7 +105,10 @@ export function EditProductForm({
         />
       </div>
       <ImageUrlsField defaultUrls={productImageUrls(product.imageUrls)} />
-      <ProductSizesField defaultSizesJson={product.sizesJson} />
+      <ProductSizesField
+        defaultSizesJson={product.sizesJson}
+        defaultOptionsLabel={product.optionsLabel}
+      />
       <div className="flex items-center gap-2">
         <input
           id="published"

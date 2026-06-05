@@ -45,7 +45,7 @@ export default async function AdminOrdersPage() {
 
       <div className="mt-8 overflow-x-auto rounded-xl border border-zinc-200 bg-white shadow-sm [-webkit-overflow-scrolling:touch]">
         <table className="min-w-[40rem] divide-y divide-zinc-200 text-sm sm:min-w-full">
-          <thead className="bg-zinc-50 text-left text-xs font-semibold uppercase tracking-wide text-zinc-500">
+          <thead className="bg-zinc-50 text-left text-xs font-semibold tracking-wide text-zinc-500">
             <tr>
               <th className="px-4 py-3">Date</th>
               <th className="px-4 py-3">Product</th>
@@ -84,7 +84,7 @@ export default async function AdminOrdersPage() {
                         ))}
                       </ul>
                     ) : o.size ? (
-                      <p className="mt-0.5 text-xs text-zinc-600">Size: {o.size}</p>
+                      <p className="mt-0.5 text-xs text-zinc-600">Option: {o.size}</p>
                     ) : null}
                     {o.productSlug ? (
                       <Link

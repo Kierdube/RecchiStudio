@@ -202,11 +202,11 @@ export default async function AdminDashboardPage() {
           <p className="text-sm font-semibold text-zinc-900">Recent product updates</p>
           <div className="mt-4 grid grid-cols-2 gap-2 text-center">
             <div className="rounded-lg border border-zinc-100 bg-zinc-50 px-2 py-2">
-              <p className="text-[11px] uppercase tracking-wide text-zinc-500">Last 7 days</p>
+              <p className="text-[11px] tracking-wide text-zinc-500">Last 7 days</p>
               <p className="mt-1 text-lg font-semibold tabular-nums text-zinc-900">{productsUpdated7d}</p>
             </div>
             <div className="rounded-lg border border-zinc-100 bg-zinc-50 px-2 py-2">
-              <p className="text-[11px] uppercase tracking-wide text-zinc-500">Last 30 days</p>
+              <p className="text-[11px] tracking-wide text-zinc-500">Last 30 days</p>
               <p className="mt-1 text-lg font-semibold tabular-nums text-zinc-900">{productsUpdated30d}</p>
             </div>
           </div>
@@ -242,11 +242,11 @@ export default async function AdminDashboardPage() {
           <p className="text-sm font-semibold text-zinc-900">Recent messages</p>
           <div className="mt-4 grid grid-cols-2 gap-2 text-center">
             <div className="rounded-lg border border-zinc-100 bg-zinc-50 px-2 py-2">
-              <p className="text-[11px] uppercase tracking-wide text-zinc-500">Last 7 days</p>
+              <p className="text-[11px] tracking-wide text-zinc-500">Last 7 days</p>
               <p className="mt-1 text-lg font-semibold tabular-nums text-zinc-900">{messages7d}</p>
             </div>
             <div className="rounded-lg border border-zinc-100 bg-zinc-50 px-2 py-2">
-              <p className="text-[11px] uppercase tracking-wide text-zinc-500">Last 30 days</p>
+              <p className="text-[11px] tracking-wide text-zinc-500">Last 30 days</p>
               <p className="mt-1 text-lg font-semibold tabular-nums text-zinc-900">{messages30d}</p>
             </div>
           </div>
