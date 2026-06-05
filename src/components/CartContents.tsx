@@ -24,7 +24,7 @@ export function CartContents() {
         body: JSON.stringify({
           items: items.map((i) => ({
             productId: i.productId,
-            size: i.size ?? undefined,
+            options: i.options ?? undefined,
             quantity: i.quantity,
           })),
         }),
@@ -86,7 +86,7 @@ export function CartContents() {
               </Link>
               {item.size ? (
                 <p className="mt-1 text-xs font-medium tracking-wide text-[#2d5a36]/80">
-                  Option · {item.size}
+                  {item.size}
                 </p>
               ) : null}
               <p className="mt-2 text-sm font-medium tabular-nums text-[#2d5a36]">

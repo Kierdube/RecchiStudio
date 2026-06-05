@@ -5,9 +5,12 @@ import { z } from "zod";
 import { MAX_CART_LINE_QUANTITY, MAX_CART_LINES } from "@/lib/cart";
 import { resolveCheckoutLines } from "@/lib/checkout-line-items";
 
+const optionsSchema = z.record(z.string(), z.string().trim().min(1).max(50));
+
 const cartItemSchema = z.object({
   productId: z.string().min(1),
-  size: z.string().trim().max(50).optional(),
+  options: optionsSchema.optional(),
+  size: z.string().trim().max(200).optional(),
   quantity: z.number().int().min(1).max(MAX_CART_LINE_QUANTITY),
 });
 

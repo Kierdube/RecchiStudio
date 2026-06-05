@@ -20,6 +20,7 @@ import {
   parseCartItems,
   type CartItem,
 } from "@/lib/cart";
+import type { ProductOptionSelections } from "@/lib/product-custom-fields";
 
 type AddToCartInput = {
   productId: string;
@@ -27,6 +28,7 @@ type AddToCartInput = {
   name: string;
   priceCents: number;
   imageUrl: string | null;
+  options?: ProductOptionSelections | null;
   size?: string | null;
   quantity?: number;
 };
@@ -77,8 +79,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [items, hydrated]);
 
   const addItem = useCallback((input: AddToCartInput) => {
+    const options = input.options ?? null;
     const size = input.size?.trim() || null;
-    const key = cartItemKey(input.productId, size);
+    const key = cartItemKey(input.productId, options);
     const qty = Math.min(
       MAX_CART_LINE_QUANTITY,
       Math.max(1, Math.floor(input.quantity ?? 1)),
@@ -110,6 +113,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           priceCents: input.priceCents,
           imageUrl: input.imageUrl,
           size,
+          options,
           quantity: qty,
         },
       ];

@@ -44,6 +44,8 @@ model Product {
   sizesJson    String   @default("[]")
   /// Shopper-facing label for sizesJson, e.g. "Size" or "Colour". Empty uses "Option".
   optionsLabel String   @default("")
+  /// JSON array of custom dropdown fields, e.g. [{"label":"Size","options":["S","M"]}].
+  customFieldsJson String @default("[]")
   published    Boolean  @default(false)
   /// birds | flamingos | cats | abstract | other — shop filters
   categorySlug String   @default("other")

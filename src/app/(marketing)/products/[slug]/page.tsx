@@ -15,7 +15,7 @@ import {
 import { ProductImageGallery } from "@/components/ProductImageGallery";
 import { primaryProductImage } from "@/lib/product-images";
 import { prisma } from "@/lib/prisma";
-import { parseSizesJson, resolveOptionsLabel } from "@/lib/product-sizes";
+import { resolveProductCustomFields } from "@/lib/product-custom-fields";
 import { resolveProductTags } from "@/lib/product-tags";
 import { isRichTextHtmlEmpty } from "@/lib/rich-text-sanitize";
 import { productOpenGraph } from "@/lib/seo";
@@ -82,8 +82,7 @@ export default async function ProductPage({ params }: Props) {
     category: categorySlugForFilter,
     page: 1,
   });
-  const sizes = parseSizesJson(product.sizesJson);
-  const optionsLabel = resolveOptionsLabel(product.optionsLabel);
+  const customFields = resolveProductCustomFields(product);
   const tags = resolveProductTags(product.tagsJson, product.categorySlug);
 
   return (
@@ -123,8 +122,7 @@ export default async function ProductPage({ params }: Props) {
                 name={product.name}
                 priceCents={product.priceCents}
                 imageUrl={primaryProductImage(product.imageUrls)}
-                sizes={sizes}
-                optionsLabel={optionsLabel}
+                customFields={customFields}
               />
               <CheckoutCurrencyNote />
               <p className="mt-4 text-xs leading-relaxed text-[#19371E]/50">

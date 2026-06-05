@@ -16,10 +16,10 @@ import {
 import { sanitizeStoredImageUrl } from "@/lib/upload-image";
 import { adminDollarsToCatalogCents } from "@/lib/admin-pricing";
 import {
-  parseSizesFromFormField,
-  parseOptionsLabel,
-  serializeSizesJson,
-} from "@/lib/product-sizes";
+  legacyFieldsFromCustomFields,
+  parseCustomFieldsFromFormField,
+  serializeCustomFieldsJson,
+} from "@/lib/product-custom-fields";
 import { parseTagsFromFormField, serializeTagsJson } from "@/lib/product-tags";
 
 const productFields = z.object({
@@ -88,15 +88,14 @@ function parseImageUrls(formData: FormData): { ok: true; value: string[] } | { o
   return { ok: true, value: out };
 }
 
-function parseSizesField(formData: FormData): { ok: true; value: string } {
-  const raw = String(formData.get("sizes") ?? "");
-  const sizes = parseSizesFromFormField(raw);
-  return { ok: true, value: serializeSizesJson(sizes) };
-}
-
-function parseOptionsLabelField(formData: FormData): { ok: true; value: string } {
-  const raw = String(formData.get("optionsLabel") ?? "");
-  return { ok: true, value: parseOptionsLabel(raw) };
+function parseCustomFieldsField(formData: FormData): {
+  ok: true;
+  value: string;
+  fields: ReturnType<typeof parseCustomFieldsFromFormField>;
+} {
+  const raw = String(formData.get("customFieldsJson") ?? "");
+  const fields = parseCustomFieldsFromFormField(raw);
+  return { ok: true, value: serializeCustomFieldsJson(fields), fields };
 }
 
 function parseTagsField(formData: FormData): { ok: true; value: string } {
@@ -117,8 +116,8 @@ export async function createProduct(
   }
   const imgs = parseImageUrls(formData);
   if (!imgs.ok) return { error: imgs.error };
-  const sizesField = parseSizesField(formData);
-  const optionsLabelField = parseOptionsLabelField(formData);
+  const customFieldsField = parseCustomFieldsField(formData);
+  const legacyFields = legacyFieldsFromCustomFields(customFieldsField.fields);
   const tagsField = parseTagsField(formData);
   const descNorm = normalizeDescription(parsed.data.description);
   if (!descNorm.ok) return { error: descNorm.error };
@@ -134,8 +133,9 @@ export async function createProduct(
         description: descNorm.value,
         priceCents,
         imageUrls: serializeImageUrls(imgs.value),
-        sizesJson: sizesField.value,
-        optionsLabel: optionsLabelField.value,
+        customFieldsJson: customFieldsField.value,
+        sizesJson: legacyFields.sizesJson,
+        optionsLabel: legacyFields.optionsLabel,
         tagsJson: tagsField.value,
         categorySlug,
         published,
@@ -165,8 +165,8 @@ export async function updateProduct(
   }
   const imgs = parseImageUrls(formData);
   if (!imgs.ok) return { error: imgs.error };
-  const sizesField = parseSizesField(formData);
-  const optionsLabelField = parseOptionsLabelField(formData);
+  const customFieldsField = parseCustomFieldsField(formData);
+  const legacyFields = legacyFieldsFromCustomFields(customFieldsField.fields);
   const tagsField = parseTagsField(formData);
   const descNorm = normalizeDescription(parsed.data.description);
   if (!descNorm.ok) return { error: descNorm.error };
@@ -183,8 +183,9 @@ export async function updateProduct(
         description: descNorm.value,
         priceCents,
         imageUrls: serializeImageUrls(imgs.value),
-        sizesJson: sizesField.value,
-        optionsLabel: optionsLabelField.value,
+        customFieldsJson: customFieldsField.value,
+        sizesJson: legacyFields.sizesJson,
+        optionsLabel: legacyFields.optionsLabel,
         tagsJson: tagsField.value,
         categorySlug,
         published,

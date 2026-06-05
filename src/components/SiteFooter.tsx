@@ -22,39 +22,41 @@ export function SiteFooter({ copy }: { copy: Record<string, string> }) {
   return (
     <footer className="mt-auto border-t border-[#19371E]/20 bg-[#142a18] text-[#E8F5D4]">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
-        <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="lg:col-span-1">
+        <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:justify-between">
+          <div className="max-w-sm">
             <SiteLogo alt={brandTitle} onDark className={SITE_LOGO_SIZE_CLASS} />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-[#C5E6A6]/85">{brandBlurb}</p>
           </div>
-          <div>
-            <p className="text-xs font-semibold tracking-wider text-[#C5E6A6]/60">
-              {sectionPages}
-            </p>
-            <ul className="mt-4 space-y-2.5 text-sm">
-              {pageHrefs.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="-mx-1 block rounded-md px-1 py-2 text-[#E8F5D4]/90 transition hover:bg-white/5 hover:text-white"
-                  >
-                    {siteCopyGet(copy, item.key)}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <p className="text-xs font-semibold tracking-wider text-[#C5E6A6]/60">
-              {sectionCatalog}
-            </p>
-            <p className="mt-4 text-sm leading-relaxed text-[#C5E6A6]/85">{catalogBlurb}</p>
-            <Link
-              href="/catalog"
-              className="mt-4 inline-flex min-h-11 items-center text-sm font-semibold text-[#C5E6A6] underline-offset-4 hover:underline touch-manipulation"
-            >
-              {catalogCta}
-            </Link>
+          <div className="grid gap-12 sm:grid-cols-2 sm:gap-16 lg:gap-20">
+            <div>
+              <p className="text-xs font-semibold tracking-wider text-[#C5E6A6]/60">
+                {sectionPages}
+              </p>
+              <ul className="mt-4 space-y-2.5 text-sm">
+                {pageHrefs.map((item) => (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      className="-mx-1 block rounded-md px-1 py-2 text-[#E8F5D4]/90 transition hover:bg-white/5 hover:text-white"
+                    >
+                      {siteCopyGet(copy, item.key)}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <p className="text-xs font-semibold tracking-wider text-[#C5E6A6]/60">
+                {sectionCatalog}
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-[#C5E6A6]/85">{catalogBlurb}</p>
+              <Link
+                href="/catalog"
+                className="mt-4 inline-flex min-h-11 items-center text-sm font-semibold text-[#C5E6A6] underline-offset-4 hover:underline touch-manipulation"
+              >
+                {catalogCta}
+              </Link>
+            </div>
           </div>
         </div>
       </div>

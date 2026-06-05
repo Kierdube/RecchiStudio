@@ -1,9 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { useCart } from "@/contexts/CartContext";
+import {
+  formatOptionsSummary,
+  initialOptionSelections,
+  type ProductCustomField,
+  type ProductOptionSelections,
+  validateProductOptionSelections,
+} from "@/lib/product-custom-fields";
 
 export function ProductPurchaseActions({
   productId,
@@ -11,37 +18,59 @@ export function ProductPurchaseActions({
   name,
   priceCents,
   imageUrl,
-  sizes = [],
-  optionsLabel = "Option",
+  customFields = [],
 }: {
   productId: string;
   slug: string;
   name: string;
   priceCents: number;
   imageUrl: string | null;
-  sizes?: string[];
-  optionsLabel?: string;
+  customFields?: ProductCustomField[];
 }) {
   const { addItem, justAdded, clearJustAdded } = useCart();
-  const [selectedSize, setSelectedSize] = useState(sizes[0] ?? "");
+  const [selections, setSelections] = useState<ProductOptionSelections>(() =>
+    initialOptionSelections(customFields),
+  );
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const selectionKey = useMemo(
+    () => customFields.map((field) => field.label).join("\0"),
+    [customFields],
+  );
+
+  function updateSelection(label: string, value: string) {
+    setSelections((current) => ({ ...current, [label]: value }));
+  }
+
+  function validatedSelections(): ProductOptionSelections | null {
+    const validationError = validateProductOptionSelections(customFields, selections);
+    if (validationError) {
+      setError(validationError);
+      return null;
+    }
+    if (customFields.length === 0) return null;
+    const out: ProductOptionSelections = {};
+    for (const field of customFields) {
+      out[field.label] = selections[field.label]!.trim();
+    }
+    return out;
+  }
 
   function onAddToCart() {
     setError(null);
     clearJustAdded();
-    const size = sizes.length > 0 ? selectedSize : null;
-    if (sizes.length > 0 && !size) {
-      setError(`Please select ${optionsLabel.toLowerCase()}`);
-      return;
-    }
+    const options = validatedSelections();
+    if (customFields.length > 0 && !options) return;
+
     addItem({
       productId,
       slug,
       name,
       priceCents,
       imageUrl,
-      size,
+      options,
+      size: options ? formatOptionsSummary(options) : null,
       quantity: 1,
     });
   }
@@ -50,17 +79,14 @@ export function ProductPurchaseActions({
     setCheckoutLoading(true);
     setError(null);
     try {
-      const size = sizes.length > 0 ? selectedSize : undefined;
-      if (sizes.length > 0 && !size) {
-        setError(`Please select ${optionsLabel.toLowerCase()}`);
-        return;
-      }
+      const options = validatedSelections();
+      if (customFields.length > 0 && !options) return;
 
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          items: [{ productId, size, quantity: 1 }],
+          items: [{ productId, options: options ?? undefined, quantity: 1 }],
         }),
       });
       const data = (await res.json()) as { url?: string; error?: string };
@@ -81,28 +107,32 @@ export function ProductPurchaseActions({
   }
 
   return (
-    <div>
-      {sizes.length > 0 ? (
-        <div className="mb-6">
-          <label
-            htmlFor="size-select"
-            className="text-xs font-semibold tracking-[0.12em] text-[#2d5a36]/80"
-          >
-            {optionsLabel}
-          </label>
-          <select
-            id="size-select"
-            name="size"
-            value={selectedSize}
-            onChange={(e) => setSelectedSize(e.target.value)}
-            className="mt-3 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-white px-3 py-2 text-sm font-semibold text-[#19371E] shadow-sm outline-none transition focus:border-[#19371E]/25 focus:ring-2 focus:ring-[#C5E6A6]/80"
-          >
-            {sizes.map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
+    <div key={selectionKey}>
+      {customFields.length > 0 ? (
+        <div className="mb-6 space-y-5">
+          {customFields.map((field) => (
+            <div key={field.label}>
+              <label
+                htmlFor={`option-${field.label}`}
+                className="text-xs font-semibold tracking-[0.12em] text-[#2d5a36]/80"
+              >
+                {field.label}
+              </label>
+              <select
+                id={`option-${field.label}`}
+                name={`option-${field.label}`}
+                value={selections[field.label] ?? ""}
+                onChange={(e) => updateSelection(field.label, e.target.value)}
+                className="mt-3 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-white px-3 py-2 text-sm font-semibold text-[#19371E] shadow-sm outline-none transition focus:border-[#19371E]/25 focus:ring-2 focus:ring-[#C5E6A6]/80"
+              >
+                {field.options.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ))}
         </div>
       ) : null}
 

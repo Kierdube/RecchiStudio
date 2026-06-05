@@ -7,12 +7,13 @@ import type { Product } from "@prisma/client";
 import { SHOP_CATEGORIES } from "@/lib/catalog";
 
 import { ProductDescriptionEditor } from "@/components/admin/ProductDescriptionEditor";
+import { resolveProductCustomFields } from "@/lib/product-custom-fields";
 import { productImageUrls } from "@/lib/product-images";
 
 import { adminPriceLabel } from "@/lib/admin-pricing";
 
 import { ImageUrlsField } from "./ImageUrlsField";
-import { ProductSizesField } from "./ProductSizesField";
+import { ProductCustomFieldsField } from "./ProductCustomFieldsField";
 import { ProductTagsField } from "./ProductTagsField";
 import { updateProduct, type ProductActionState } from "./actions";
 
@@ -105,9 +106,8 @@ export function EditProductForm({
         />
       </div>
       <ImageUrlsField defaultUrls={productImageUrls(product.imageUrls)} />
-      <ProductSizesField
-        defaultSizesJson={product.sizesJson}
-        defaultOptionsLabel={product.optionsLabel}
+      <ProductCustomFieldsField
+        defaultFields={resolveProductCustomFields(product)}
       />
       <div className="flex items-center gap-2">
         <input

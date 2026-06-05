@@ -1,3 +1,9 @@
+import {
+  formatOptionsSummary,
+  optionsCartKey,
+  type ProductOptionSelections,
+} from "@/lib/product-custom-fields";
+
 export const CART_STORAGE_KEY = "rs_cart_v1";
 
 export const MAX_CART_LINE_QUANTITY = 99;
@@ -10,18 +16,36 @@ export type CartItem = {
   name: string;
   priceCents: number;
   imageUrl: string | null;
+  /** Formatted summary for display and order records, e.g. "Size: M · Colour: Forest". */
   size: string | null;
+  options: ProductOptionSelections | null;
   quantity: number;
 };
 
 export type CartCheckoutItem = {
   productId: string;
+  options?: ProductOptionSelections;
+  /** Legacy single-option checkout payloads. */
   size?: string;
   quantity: number;
 };
 
-export function cartItemKey(productId: string, size: string | null | undefined): string {
-  return `${productId}:${(size ?? "").trim()}`;
+export function cartItemKey(
+  productId: string,
+  options: ProductOptionSelections | null | undefined,
+): string {
+  return `${productId}:${optionsCartKey(options)}`;
+}
+
+function parseOptionsRaw(raw: unknown): ProductOptionSelections | null {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
+  const out: ProductOptionSelections = {};
+  for (const [key, value] of Object.entries(raw)) {
+    if (typeof value === "string" && value.trim()) {
+      out[key] = value.trim();
+    }
+  }
+  return Object.keys(out).length > 0 ? out : null;
 }
 
 export function parseCartItems(raw: unknown): CartItem[] {
@@ -29,7 +53,7 @@ export function parseCartItems(raw: unknown): CartItem[] {
   const out: CartItem[] = [];
   for (const entry of raw) {
     if (!entry || typeof entry !== "object") continue;
-    const o = entry as Partial<CartItem>;
+    const o = entry as Partial<CartItem> & { options?: unknown };
     if (
       typeof o.productId !== "string" ||
       typeof o.slug !== "string" ||
@@ -39,8 +63,18 @@ export function parseCartItems(raw: unknown): CartItem[] {
     ) {
       continue;
     }
-    const size = o.size == null ? null : String(o.size);
-    const key = cartItemKey(o.productId, size);
+
+    let options = parseOptionsRaw(o.options);
+    let size = o.size == null ? null : String(o.size).trim() || null;
+
+    if (!options && size) {
+      options = { Option: size };
+      size = formatOptionsSummary(options);
+    } else if (options) {
+      size = formatOptionsSummary(options);
+    }
+
+    const key = cartItemKey(o.productId, options);
     out.push({
       key,
       productId: o.productId,
@@ -49,6 +83,7 @@ export function parseCartItems(raw: unknown): CartItem[] {
       priceCents: o.priceCents,
       imageUrl: typeof o.imageUrl === "string" ? o.imageUrl : null,
       size,
+      options,
       quantity: Math.min(MAX_CART_LINE_QUANTITY, Math.max(1, Math.floor(o.quantity))),
     });
   }

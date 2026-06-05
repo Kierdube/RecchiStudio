@@ -1,6 +1,13 @@
 import { STRIPE_CHECKOUT_CURRENCY } from "@/lib/currency";
+import {
+  formatOptionsSummary,
+  normalizeOptionSelections,
+  parseOptionSelectionsFromLegacySize,
+  resolveProductCustomFields,
+  validateProductOptionSelections,
+  type ProductOptionSelections,
+} from "@/lib/product-custom-fields";
 import { productImageUrls } from "@/lib/product-images";
-import { parseSizesJson } from "@/lib/product-sizes";
 import { prisma } from "@/lib/prisma";
 import {
   plainTextFromProductDescriptionHtml,
@@ -9,6 +16,7 @@ import {
 
 export type CheckoutRequestItem = {
   productId: string;
+  options?: ProductOptionSelections;
   size?: string;
   quantity: number;
 };
@@ -35,6 +43,15 @@ export type ResolvedCheckoutLine = {
   };
 };
 
+function resolveRequestOptions(
+  item: CheckoutRequestItem,
+  fields: ReturnType<typeof resolveProductCustomFields>,
+): ProductOptionSelections | null {
+  const fromOptions = normalizeOptionSelections(fields, item.options);
+  if (fromOptions) return fromOptions;
+  return parseOptionSelectionsFromLegacySize(fields, item.size);
+}
+
 export async function resolveCheckoutLines(
   items: CheckoutRequestItem[],
 ): Promise<{ ok: true; lines: ResolvedCheckoutLine[] } | { ok: false; error: string }> {
@@ -52,14 +69,14 @@ export async function resolveCheckoutLines(
       return { ok: false, error: "A product in your cart is no longer available" };
     }
 
-    const sizes = parseSizesJson(product.sizesJson);
-    const size = item.size?.trim() || null;
-    if (sizes.length > 0) {
-      if (!size || !sizes.includes(size)) {
-        return { ok: false, error: `Please select a valid size for ${product.name}` };
-      }
+    const fields = resolveProductCustomFields(product);
+    const selections = resolveRequestOptions(item, fields);
+    const validationError = validateProductOptionSelections(fields, selections);
+    if (validationError) {
+      return { ok: false, error: `${validationError} for ${product.name}` };
     }
 
+    const summary = selections ? formatOptionsSummary(selections) : null;
     const checkoutImages = productImageUrls(product.imageUrls).slice(0, 8);
     const stripeDescription = product.description
       ? plainTextFromProductDescriptionHtml(
@@ -67,13 +84,13 @@ export async function resolveCheckoutLines(
         ).slice(0, 500)
       : undefined;
 
-    const lineItemName = size ? `${product.name} (${size})` : product.name;
+    const lineItemName = summary ? `${product.name} (${summary})` : product.name;
 
     lines.push({
       productId: product.id,
       slug: product.slug,
       name: product.name,
-      size,
+      size: summary,
       quantity: item.quantity,
       priceCents: product.priceCents,
       stripeLineItem: {
@@ -88,7 +105,7 @@ export async function resolveCheckoutLines(
             metadata: {
               productId: product.id,
               slug: product.slug,
-              size: size ?? "",
+              size: summary ?? "",
             },
           },
         },

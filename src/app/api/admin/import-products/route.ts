@@ -4,7 +4,8 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { assertAdminSession } from "@/lib/verify-admin-session";
 import { serializeImageUrls } from "@/lib/product-images";
-import { parseSizesFromSheet, serializeSizesJson } from "@/lib/product-sizes";
+import { legacyFieldsFromCustomFields, serializeCustomFieldsJson } from "@/lib/product-custom-fields";
+import { parseSizesFromSheet } from "@/lib/product-sizes";
 import { sanitizeProductDescriptionHtml } from "@/lib/sanitize-product-description";
 
 function requiredEnv(name: string): string {
@@ -280,6 +281,10 @@ export async function POST() {
           : sanitizeProductDescriptionHtml(`<p>${escapeHtml(descriptionRaw)}</p>`);
 
     const sizes = parseSizesFromSheet(parsed.data.sizeOption);
+    const customFields =
+      sizes.length > 0 ? [{ label: "Option", options: sizes }] : [];
+    const legacyFields = legacyFieldsFromCustomFields(customFields);
+    const customFieldsJson = serializeCustomFieldsJson(customFields);
 
     try {
       const existing = await prisma.product.findUnique({
@@ -297,7 +302,9 @@ export async function POST() {
             categorySlug: "other",
             published: true,
             imageUrls: serializeImageUrls(imageUrls),
-            sizesJson: serializeSizesJson(sizes),
+            customFieldsJson,
+            sizesJson: legacyFields.sizesJson,
+            optionsLabel: legacyFields.optionsLabel,
           },
         });
         created++;
@@ -311,7 +318,9 @@ export async function POST() {
             categorySlug: "other",
             published: true,
             imageUrls: serializeImageUrls(imageUrls),
-            sizesJson: serializeSizesJson(sizes),
+            customFieldsJson,
+            sizesJson: legacyFields.sizesJson,
+            optionsLabel: legacyFields.optionsLabel,
           },
         });
         updated++;

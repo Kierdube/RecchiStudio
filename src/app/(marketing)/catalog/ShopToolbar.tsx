@@ -83,60 +83,62 @@ export function ShopToolbar(props: ToolbarProps) {
       <form
         method="get"
         action="/catalog"
-        className="w-fit max-w-full rounded-2xl border border-[#19371E]/10 bg-white/90 p-4 shadow-sm ring-1 ring-black/[0.02] sm:p-5"
+        className="w-fit max-w-full rounded-2xl border border-[#19371E]/10 bg-white/90 p-4 pl-4 pr-3 shadow-sm ring-1 ring-black/[0.02] sm:py-5 sm:pl-5 sm:pr-4"
       >
         <input type="hidden" name="page" value="1" />
         <input type="hidden" name="currency" value={currency} />
-        <div className="flex flex-wrap items-end gap-4">
-          <div className="min-w-[min(100%,14rem)] flex-1 sm:min-w-[16rem] sm:flex-none">
-            <label htmlFor="shop-q" className="block text-xs font-semibold tracking-wide text-[#19371E]/55">
-              Search
-            </label>
-            <input
-              id="shop-q"
-              name="q"
-              type="search"
-              defaultValue={state.q ?? ""}
-              placeholder={placeholder}
-              className="mt-1.5 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-[#FDFCF8] px-3 py-2.5 text-base text-[#19371E] outline-none ring-[#C5E6A6]/80 placeholder:text-[#19371E]/35 focus:border-[#19371E]/25 focus:ring-2"
-            />
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-wrap items-end gap-x-4 gap-y-3">
+            <div className="min-w-[min(100%,14rem)] sm:w-56">
+              <label htmlFor="shop-q" className="block text-xs font-semibold tracking-wide text-[#19371E]/55">
+                Search
+              </label>
+              <input
+                id="shop-q"
+                name="q"
+                type="search"
+                defaultValue={state.q ?? ""}
+                placeholder={placeholder}
+                className="mt-1.5 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-[#FDFCF8] px-3 py-2.5 text-base text-[#19371E] outline-none ring-[#C5E6A6]/80 placeholder:text-[#19371E]/35 focus:border-[#19371E]/25 focus:ring-2"
+              />
+            </div>
+            <div className="min-w-[min(100%,10rem)] sm:w-40">
+              <label htmlFor="shop-category" className="block text-xs font-semibold tracking-wide text-[#19371E]/55">
+                Category
+              </label>
+              <select
+                id="shop-category"
+                name="category"
+                defaultValue={state.category ?? ""}
+                className="mt-1.5 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-[#FDFCF8] px-3 py-2.5 text-base text-[#19371E] outline-none focus:border-[#19371E]/25 focus:ring-2 focus:ring-[#C5E6A6]/80"
+              >
+                <option value="">All categories</option>
+                {SHOP_CATEGORIES.map((c) => (
+                  <option key={c.slug} value={c.slug}>
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="min-w-[min(100%,10rem)] sm:w-36">
+              <label htmlFor="shop-sort" className="block text-xs font-semibold tracking-wide text-[#19371E]/55">
+                Sort
+              </label>
+              <select
+                id="shop-sort"
+                name="sort"
+                defaultValue={state.sort}
+                className="mt-1.5 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-[#FDFCF8] px-3 py-2.5 text-base text-[#19371E] outline-none focus:border-[#19371E]/25 focus:ring-2 focus:ring-[#C5E6A6]/80"
+              >
+                {SHOP_SORTS.map((s) => (
+                  <option key={s.value} value={s.value}>
+                    {s.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-          <div className="min-w-[min(100%,10rem)] sm:w-40">
-            <label htmlFor="shop-category" className="block text-xs font-semibold tracking-wide text-[#19371E]/55">
-              Category
-            </label>
-            <select
-              id="shop-category"
-              name="category"
-              defaultValue={state.category ?? ""}
-              className="mt-1.5 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-[#FDFCF8] px-3 py-2.5 text-base text-[#19371E] outline-none focus:border-[#19371E]/25 focus:ring-2 focus:ring-[#C5E6A6]/80"
-            >
-              <option value="">All categories</option>
-              {SHOP_CATEGORIES.map((c) => (
-                <option key={c.slug} value={c.slug}>
-                  {c.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="min-w-[min(100%,10rem)] sm:w-36">
-            <label htmlFor="shop-sort" className="block text-xs font-semibold tracking-wide text-[#19371E]/55">
-              Sort
-            </label>
-            <select
-              id="shop-sort"
-              name="sort"
-              defaultValue={state.sort}
-              className="mt-1.5 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-[#FDFCF8] px-3 py-2.5 text-base text-[#19371E] outline-none focus:border-[#19371E]/25 focus:ring-2 focus:ring-[#C5E6A6]/80"
-            >
-              {SHOP_SORTS.map((s) => (
-                <option key={s.value} value={s.value}>
-                  {s.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap justify-end gap-2">
             <button
               type="submit"
               className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#19371E] px-6 text-sm font-semibold text-[#C5E6A6] shadow-sm transition hover:bg-[#2d5a36]"
