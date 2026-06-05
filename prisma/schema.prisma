@@ -45,6 +45,8 @@ model Product {
   published    Boolean  @default(false)
   /// birds | flamingos | cats | abstract | other — shop filters
   categorySlug String   @default("other")
+  /// JSON array of display tags, e.g. [{"label":"Sweater","color":"mint"}].
+  tagsJson     String   @default("[]")
 
   @@index([published, categorySlug])
   @@index([published, priceCents])

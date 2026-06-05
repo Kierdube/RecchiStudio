@@ -19,6 +19,7 @@ import {
   parseSizesFromFormField,
   serializeSizesJson,
 } from "@/lib/product-sizes";
+import { parseTagsFromFormField, serializeTagsJson } from "@/lib/product-tags";
 
 const productFields = z.object({
   name: z.string().trim().min(1, "Name is required").max(200),
@@ -92,6 +93,12 @@ function parseSizesField(formData: FormData): { ok: true; value: string } {
   return { ok: true, value: serializeSizesJson(sizes) };
 }
 
+function parseTagsField(formData: FormData): { ok: true; value: string } {
+  const raw = String(formData.get("tagsJson") ?? "");
+  const tags = parseTagsFromFormField(raw);
+  return { ok: true, value: serializeTagsJson(tags) };
+}
+
 export type ProductActionState = { error: string } | null;
 
 export async function createProduct(
@@ -105,6 +112,7 @@ export async function createProduct(
   const imgs = parseImageUrls(formData);
   if (!imgs.ok) return { error: imgs.error };
   const sizesField = parseSizesField(formData);
+  const tagsField = parseTagsField(formData);
   const descNorm = normalizeDescription(parsed.data.description);
   if (!descNorm.ok) return { error: descNorm.error };
   const { name, slug, priceDollars, categorySlug } = parsed.data;
@@ -120,6 +128,7 @@ export async function createProduct(
         priceCents,
         imageUrls: serializeImageUrls(imgs.value),
         sizesJson: sizesField.value,
+        tagsJson: tagsField.value,
         categorySlug,
         published,
       },
@@ -149,6 +158,7 @@ export async function updateProduct(
   const imgs = parseImageUrls(formData);
   if (!imgs.ok) return { error: imgs.error };
   const sizesField = parseSizesField(formData);
+  const tagsField = parseTagsField(formData);
   const descNorm = normalizeDescription(parsed.data.description);
   if (!descNorm.ok) return { error: descNorm.error };
   const { name, slug, priceDollars, categorySlug } = parsed.data;
@@ -165,6 +175,7 @@ export async function updateProduct(
         priceCents,
         imageUrls: serializeImageUrls(imgs.value),
         sizesJson: sizesField.value,
+        tagsJson: tagsField.value,
         categorySlug,
         published,
       },

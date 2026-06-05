@@ -8,6 +8,7 @@ import { SHOP_CATEGORIES } from "@/lib/catalog";
 
 import { ImageUrlsField } from "./ImageUrlsField";
 import { ProductSizesField } from "./ProductSizesField";
+import { ProductTagsField } from "./ProductTagsField";
 import { createProduct, type ProductActionState } from "./actions";
 
 export function NewProductForm() {
@@ -73,6 +74,7 @@ export function NewProductForm() {
         </select>
         <p className="mt-1 text-xs text-zinc-500">Used for filters on the public catalog.</p>
       </div>
+      <ProductTagsField />
       <div>
         <label className="block text-sm font-medium text-zinc-700" htmlFor="priceDollars">
           {adminPriceLabel()}

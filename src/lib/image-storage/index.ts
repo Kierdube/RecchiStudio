@@ -3,6 +3,7 @@ import { createGcsImageStorage } from "@/lib/image-storage/gcs";
 import { createLocalImageStorage } from "@/lib/image-storage/local";
 import { createS3ImageStorage } from "@/lib/image-storage/s3";
 import type { ImageStorageBackend } from "@/lib/image-storage/types";
+import { isCloudinaryUploadConfigured } from "@/lib/cloudinary-env";
 
 function env(name: string): string | undefined {
   return process.env[name]?.trim() || undefined;
@@ -20,7 +21,7 @@ export function resolveImageStorageBackend(): ImageStorageBackend {
   if (env("GCS_BUCKET") && env("GOOGLE_SERVICE_ACCOUNT_JSON")) {
     return createGcsImageStorage();
   }
-  if (env("CLOUDINARY_CLOUD_NAME") && (env("CLOUDINARY_UPLOAD_PRESET") || env("CLOUDINARY_API_SECRET"))) {
+  if (isCloudinaryUploadConfigured()) {
     return createCloudinaryImageStorage();
   }
   if (env("S3_BUCKET") && env("S3_ACCESS_KEY_ID") && env("S3_SECRET_ACCESS_KEY")) {
@@ -32,7 +33,8 @@ export function resolveImageStorageBackend(): ImageStorageBackend {
   }
 
   throw new Error(
-    "Image uploads are not configured. Set GCS_BUCKET + GOOGLE_SERVICE_ACCOUNT_JSON (Google Cloud), " +
-      "CLOUDINARY_CLOUD_NAME + CLOUDINARY_UPLOAD_PRESET (free Cloudinary), or S3_* for Cloudflare R2 / AWS.",
+    "Image uploads are not configured. On Vercel, add NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME and " +
+      "NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET (free Cloudinary), or set GCS_BUCKET + GOOGLE_SERVICE_ACCOUNT_JSON, " +
+      "or S3_* for Cloudflare R2 / AWS. You can also paste an image URL below instead.",
   );
 }

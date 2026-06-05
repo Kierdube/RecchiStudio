@@ -1,8 +1,12 @@
 import type { ImageStorageBackend } from "@/lib/image-storage/types";
+import {
+  cloudinaryCloudName,
+  cloudinaryUploadPreset,
+} from "@/lib/cloudinary-env";
 
 export function createCloudinaryImageStorage(): ImageStorageBackend {
-  const cloudName = process.env.CLOUDINARY_CLOUD_NAME?.trim();
-  const uploadPreset = process.env.CLOUDINARY_UPLOAD_PRESET?.trim();
+  const cloudName = cloudinaryCloudName();
+  const uploadPreset = cloudinaryUploadPreset();
   const apiKey = process.env.CLOUDINARY_API_KEY?.trim();
   const apiSecret = process.env.CLOUDINARY_API_SECRET?.trim();
 

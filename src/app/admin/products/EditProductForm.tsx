@@ -13,6 +13,7 @@ import { adminPriceLabel } from "@/lib/admin-pricing";
 
 import { ImageUrlsField } from "./ImageUrlsField";
 import { ProductSizesField } from "./ProductSizesField";
+import { ProductTagsField } from "./ProductTagsField";
 import { updateProduct, type ProductActionState } from "./actions";
 
 export function EditProductForm({
@@ -85,7 +86,9 @@ export function EditProductForm({
             </option>
           ))}
         </select>
+        <p className="mt-1 text-xs text-zinc-500">Used for catalog filters only — not shown as a link on the product page.</p>
       </div>
+      <ProductTagsField defaultTagsJson={product.tagsJson} />
       <div>
         <label className="block text-sm font-medium text-zinc-700" htmlFor="priceDollars">
           {adminPriceLabel()}

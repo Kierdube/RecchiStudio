@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { FeatureIcon } from "@/components/FeatureIcon";
+import { MarketingFramedImage, MARKETING_IMAGE_GRID_CLASS } from "@/components/MarketingFramedImage";
 import { ProductCard } from "@/components/ProductCard";
 import { RotatingHeadline } from "@/components/RotatingHeadline";
 import { SectionWave } from "@/components/SectionWave";
@@ -53,9 +54,7 @@ export default async function HomePage() {
         <div className="mx-auto max-w-6xl">
           <div
             className={
-              heroImageUrl
-                ? "grid items-center gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-14 xl:gap-16"
-                : ""
+              heroImageUrl ? MARKETING_IMAGE_GRID_CLASS : ""
             }
           >
             <div className="min-w-0">
@@ -83,16 +82,7 @@ export default async function HomePage() {
               </div>
             </div>
             {heroImageUrl ? (
-              <div className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none lg:justify-self-stretch">
-                <div className="overflow-hidden rounded-[2rem] bg-gradient-to-b from-[#F4F9EF] to-[#E8F0DD] shadow-[0_28px_80px_-40px_rgba(25,55,30,0.45)] ring-1 ring-[#19371E]/10">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={heroImageUrl}
-                    alt={heroImageAlt}
-                    className="aspect-square w-full object-cover"
-                  />
-                </div>
-              </div>
+              <MarketingFramedImage src={heroImageUrl} alt={heroImageAlt} />
             ) : null}
           </div>
         </div>

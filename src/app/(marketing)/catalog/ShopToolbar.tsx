@@ -10,7 +10,6 @@ import {
   shopHref,
   type ShopSearchState,
 } from "@/lib/catalog";
-import { priceFilterLabel, priceFilterMaxLabel } from "@/lib/currency";
 
 function Pill({
   href,
@@ -84,101 +83,73 @@ export function ShopToolbar(props: ToolbarProps) {
       <form
         method="get"
         action="/catalog"
-        className="grid min-w-0 gap-4 rounded-2xl border border-[#19371E]/10 bg-white/90 p-4 shadow-sm ring-1 ring-black/[0.02] sm:p-5 sm:grid-cols-2 lg:grid-cols-12 lg:items-end"
+        className="w-fit max-w-full rounded-2xl border border-[#19371E]/10 bg-white/90 p-4 shadow-sm ring-1 ring-black/[0.02] sm:p-5"
       >
         <input type="hidden" name="page" value="1" />
         <input type="hidden" name="currency" value={currency} />
-        <div className="sm:col-span-2 lg:col-span-4">
-          <label htmlFor="shop-q" className="block text-xs font-semibold uppercase tracking-wide text-[#19371E]/55">
-            Search
-          </label>
-          <input
-            id="shop-q"
-            name="q"
-            type="search"
-            defaultValue={state.q ?? ""}
-            placeholder={placeholder}
-            className="mt-1.5 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-[#FDFCF8] px-3 py-2.5 text-base text-[#19371E] outline-none ring-[#C5E6A6]/80 placeholder:text-[#19371E]/35 focus:border-[#19371E]/25 focus:ring-2"
-          />
-        </div>
-        <div className="lg:col-span-2">
-          <label htmlFor="shop-category" className="block text-xs font-semibold uppercase tracking-wide text-[#19371E]/55">
-            Category
-          </label>
-          <select
-            id="shop-category"
-            name="category"
-            defaultValue={state.category ?? ""}
-            className="mt-1.5 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-[#FDFCF8] px-3 py-2.5 text-base text-[#19371E] outline-none focus:border-[#19371E]/25 focus:ring-2 focus:ring-[#C5E6A6]/80"
-          >
-            <option value="">All categories</option>
-            {SHOP_CATEGORIES.map((c) => (
-              <option key={c.slug} value={c.slug}>
-                {c.label}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="lg:col-span-2">
-          <label htmlFor="shop-sort" className="block text-xs font-semibold uppercase tracking-wide text-[#19371E]/55">
-            Sort
-          </label>
-          <select
-            id="shop-sort"
-            name="sort"
-            defaultValue={state.sort}
-            className="mt-1.5 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-[#FDFCF8] px-3 py-2.5 text-base text-[#19371E] outline-none focus:border-[#19371E]/25 focus:ring-2 focus:ring-[#C5E6A6]/80"
-          >
-            {SHOP_SORTS.map((s) => (
-              <option key={s.value} value={s.value}>
-                {s.label}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="lg:col-span-2">
-          <label htmlFor="shop-min" className="block text-xs font-semibold uppercase tracking-wide text-[#19371E]/55">
-            {priceFilterLabel(currency)}
-          </label>
-          <input
-            id="shop-min"
-            name="min"
-            type="number"
-            min={0}
-            step={1}
-            defaultValue={state.minDollars ?? ""}
-            placeholder="0"
-            className="mt-1.5 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-[#FDFCF8] px-3 py-2.5 text-base text-[#19371E] outline-none focus:border-[#19371E]/25 focus:ring-2 focus:ring-[#C5E6A6]/80"
-          />
-        </div>
-        <div className="lg:col-span-2">
-          <label htmlFor="shop-max" className="block text-xs font-semibold uppercase tracking-wide text-[#19371E]/55">
-            {priceFilterMaxLabel(currency)}
-          </label>
-          <input
-            id="shop-max"
-            name="max"
-            type="number"
-            min={0}
-            step={1}
-            defaultValue={state.maxDollars ?? ""}
-            placeholder="Any"
-            className="mt-1.5 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-[#FDFCF8] px-3 py-2.5 text-base text-[#19371E] outline-none focus:border-[#19371E]/25 focus:ring-2 focus:ring-[#C5E6A6]/80"
-          />
-        </div>
-        <div className="flex flex-wrap gap-2 sm:col-span-2 lg:col-span-12">
-          <button
-            type="submit"
-            className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#19371E] px-6 text-sm font-semibold text-[#C5E6A6] shadow-sm transition hover:bg-[#2d5a36]"
-          >
-            Apply filters
-          </button>
-          <Link
-            href="/catalog"
-            className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#19371E]/15 bg-white px-5 text-sm font-semibold text-[#19371E] transition hover:bg-[#F4F9EF]"
-          >
-            Clear all
-          </Link>
+        <div className="flex flex-wrap items-end gap-4">
+          <div className="min-w-[min(100%,14rem)] flex-1 sm:min-w-[16rem] sm:flex-none">
+            <label htmlFor="shop-q" className="block text-xs font-semibold uppercase tracking-wide text-[#19371E]/55">
+              Search
+            </label>
+            <input
+              id="shop-q"
+              name="q"
+              type="search"
+              defaultValue={state.q ?? ""}
+              placeholder={placeholder}
+              className="mt-1.5 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-[#FDFCF8] px-3 py-2.5 text-base text-[#19371E] outline-none ring-[#C5E6A6]/80 placeholder:text-[#19371E]/35 focus:border-[#19371E]/25 focus:ring-2"
+            />
+          </div>
+          <div className="min-w-[min(100%,10rem)] sm:w-40">
+            <label htmlFor="shop-category" className="block text-xs font-semibold uppercase tracking-wide text-[#19371E]/55">
+              Category
+            </label>
+            <select
+              id="shop-category"
+              name="category"
+              defaultValue={state.category ?? ""}
+              className="mt-1.5 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-[#FDFCF8] px-3 py-2.5 text-base text-[#19371E] outline-none focus:border-[#19371E]/25 focus:ring-2 focus:ring-[#C5E6A6]/80"
+            >
+              <option value="">All categories</option>
+              {SHOP_CATEGORIES.map((c) => (
+                <option key={c.slug} value={c.slug}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="min-w-[min(100%,10rem)] sm:w-36">
+            <label htmlFor="shop-sort" className="block text-xs font-semibold uppercase tracking-wide text-[#19371E]/55">
+              Sort
+            </label>
+            <select
+              id="shop-sort"
+              name="sort"
+              defaultValue={state.sort}
+              className="mt-1.5 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-[#FDFCF8] px-3 py-2.5 text-base text-[#19371E] outline-none focus:border-[#19371E]/25 focus:ring-2 focus:ring-[#C5E6A6]/80"
+            >
+              {SHOP_SORTS.map((s) => (
+                <option key={s.value} value={s.value}>
+                  {s.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="submit"
+              className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-[#19371E] px-6 text-sm font-semibold text-[#C5E6A6] shadow-sm transition hover:bg-[#2d5a36]"
+            >
+              Apply filters
+            </button>
+            <Link
+              href="/catalog"
+              className="inline-flex min-h-[44px] items-center justify-center rounded-full border border-[#19371E]/15 bg-white px-5 text-sm font-semibold text-[#19371E] transition hover:bg-[#F4F9EF]"
+            >
+              Clear all
+            </Link>
+          </div>
         </div>
       </form>
     </div>

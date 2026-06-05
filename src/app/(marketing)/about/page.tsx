@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { AboutParrotDecoration } from "@/components/AboutParrotDecoration";
 import { FeatureIcon } from "@/components/FeatureIcon";
+import { MarketingFramedImage, MARKETING_IMAGE_GRID_CLASS } from "@/components/MarketingFramedImage";
 import { SiteCopyText } from "@/components/SiteCopyText";
 import { MarketingShell } from "@/components/MarketingShell";
 import { PageIntro } from "@/components/PageIntro";
@@ -34,22 +35,23 @@ export default async function AboutPage() {
         description={siteCopyGet(copy, "about.intro.description")}
       />
 
-      <div className="mt-10 grid items-center gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-14 xl:gap-16">
-        <SiteCopyHtml
-          html={siteCopyGet(copy, "about.body_html")}
-          className="space-y-6 text-base leading-relaxed text-[#19371E]/82 [&_p]:m-0"
-        />
-        {storyImageUrl ? (
-          <div className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none lg:justify-self-stretch">
-            <div className="overflow-hidden rounded-[2rem] bg-gradient-to-b from-[#F4F9EF] to-[#E8F0DD] shadow-[0_28px_80px_-40px_rgba(25,55,30,0.45)] ring-1 ring-[#19371E]/10">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={storyImageUrl}
-                alt={storyImageAlt}
-                className="aspect-square w-full object-cover"
-              />
-            </div>
+      <div className={`mt-10 ${MARKETING_IMAGE_GRID_CLASS}`}>
+        <div>
+          <SiteCopyHtml
+            html={siteCopyGet(copy, "about.body_html")}
+            className="space-y-6 text-base leading-relaxed text-[#19371E]/82 [&_p]:m-0"
+          />
+          <div className="mt-8">
+            <Link
+              href="/catalog"
+              className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-[#19371E] px-6 text-sm font-semibold text-[#C5E6A6] shadow-md transition hover:bg-[#2d5a36]"
+            >
+              {siteCopyGet(copy, "about.cta_catalog")}
+            </Link>
           </div>
+        </div>
+        {storyImageUrl ? (
+          <MarketingFramedImage src={storyImageUrl} alt={storyImageAlt} aspect="portrait" />
         ) : null}
       </div>
 
@@ -72,21 +74,6 @@ export default async function AboutPage() {
           );
         })}
       </ul>
-
-      <div className="mt-14 flex flex-wrap gap-3">
-        <Link
-          href="/catalog"
-          className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-[#19371E] px-6 text-sm font-semibold text-[#C5E6A6] shadow-md transition hover:bg-[#2d5a36]"
-        >
-          {siteCopyGet(copy, "about.cta_catalog")}
-        </Link>
-        <Link
-          href="/contact"
-          className="inline-flex min-h-[48px] items-center justify-center rounded-full border border-[#19371E]/18 bg-white px-6 text-sm font-semibold text-[#19371E] transition hover:bg-[#F4F9EF]"
-        >
-          {siteCopyGet(copy, "about.cta_contact")}
-        </Link>
-      </div>
     </MarketingShell>
   );
 }

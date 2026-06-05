@@ -1,6 +1,9 @@
 import { randomUUID } from "crypto";
 
 import { resolveImageStorageBackend } from "@/lib/image-storage";
+import { sanitizeStoredImageUrl } from "@/lib/sanitize-image-url";
+
+export { sanitizeStoredImageUrl };
 
 const MAX_BYTES = 8 * 1024 * 1024;
 const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
@@ -33,12 +36,4 @@ export async function storeUploadedImage(file: File): Promise<{ url: string }> {
   const bytes = Buffer.from(await file.arrayBuffer());
   const backend = resolveImageStorageBackend();
   return backend.store(bytes, file.type, filename);
-}
-
-/** Accept HTTPS URLs or site paths served from /images or /uploads. */
-export function sanitizeStoredImageUrl(raw: string): string {
-  const value = raw.trim().slice(0, 2000);
-  if (/^https?:\/\//i.test(value)) return value;
-  if (/^\/(images|uploads)\/[\w./-]+$/.test(value)) return value;
-  return "";
 }

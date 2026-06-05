@@ -5,6 +5,7 @@ import { CheckoutCurrencyNote } from "@/components/CheckoutCurrencyNote";
 import { ProductPurchaseActions } from "@/components/ProductPurchaseActions";
 import { DisplayPrice } from "@/components/DisplayPrice";
 import { ProductCard } from "@/components/ProductCard";
+import { ProductTags } from "@/components/ProductTags";
 import {
   type CategorySlug,
   categoryLabelForSlug,
@@ -15,6 +16,7 @@ import { ProductImageGallery } from "@/components/ProductImageGallery";
 import { primaryProductImage } from "@/lib/product-images";
 import { prisma } from "@/lib/prisma";
 import { parseSizesJson } from "@/lib/product-sizes";
+import { resolveProductTags } from "@/lib/product-tags";
 import { isRichTextHtmlEmpty } from "@/lib/rich-text-sanitize";
 import { productOpenGraph } from "@/lib/seo";
 import {
@@ -81,6 +83,7 @@ export default async function ProductPage({ params }: Props) {
     page: 1,
   });
   const sizes = parseSizesJson(product.sizesJson);
+  const tags = resolveProductTags(product.tagsJson, product.categorySlug);
 
   return (
     <main className="border-b border-[#19371E]/8">
@@ -93,22 +96,10 @@ export default async function ProductPage({ params }: Props) {
           </div>
 
           <div>
-            {categoryLabel ? (
-              <div className="flex flex-wrap items-center gap-2">
-                <Link
-                  href={categoryHref}
-                  className="inline-flex rounded-full border border-[#19371E]/12 bg-white px-3 py-1 text-xs font-semibold tracking-wide text-[#2d5a36] shadow-sm transition hover:border-[#19371E]/25 hover:bg-[#F4F9EF]"
-                >
-                  {categoryLabel}
-                </Link>
-              </div>
-            ) : null}
-
-            <h1
-              className={`text-balance break-words text-3xl font-semibold tracking-tight text-[#19371E] sm:text-4xl lg:text-[2.5rem] lg:leading-tight ${categoryLabel ? "mt-5" : "mt-0"}`}
-            >
+            <h1 className="text-balance break-words text-3xl font-semibold tracking-tight text-[#19371E] sm:text-4xl lg:text-[2.5rem] lg:leading-tight">
               {product.name}
             </h1>
+            <ProductTags tags={tags} />
             <p className="mt-5 text-3xl font-semibold tabular-nums tracking-tight text-[#2d5a36]">
               <DisplayPrice priceCents={product.priceCents} />
             </p>

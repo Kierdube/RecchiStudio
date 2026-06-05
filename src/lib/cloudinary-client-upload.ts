@@ -1,14 +1,16 @@
 /** Browser-only direct upload to Cloudinary (free tier, no Vercel storage). */
+import {
+  cloudinaryCloudName,
+  cloudinaryUploadPreset,
+} from "@/lib/cloudinary-env";
+
 export function canUploadViaCloudinaryClient(): boolean {
-  return Boolean(
-    process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME?.trim() &&
-      process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET?.trim(),
-  );
+  return Boolean(cloudinaryCloudName() && cloudinaryUploadPreset());
 }
 
 export async function uploadImageToCloudinaryClient(file: File): Promise<string> {
-  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME?.trim();
-  const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET?.trim();
+  const cloudName = cloudinaryCloudName();
+  const uploadPreset = cloudinaryUploadPreset();
   if (!cloudName || !uploadPreset) {
     throw new Error("Cloudinary is not configured for client uploads.");
   }
