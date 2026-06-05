@@ -88,8 +88,8 @@ export function ShopToolbar(props: ToolbarProps) {
         <input type="hidden" name="page" value="1" />
         <input type="hidden" name="currency" value={currency} />
         <div className="flex flex-col gap-4">
-          <div className="flex flex-wrap items-end gap-x-4 gap-y-3">
-            <div className="min-w-[min(100%,14rem)] sm:w-56">
+          <div className="flex flex-nowrap items-end gap-x-3 sm:gap-x-4">
+            <div className="w-44 shrink-0 sm:w-52">
               <label htmlFor="shop-q" className="block text-xs font-semibold tracking-wide text-[#19371E]/55">
                 Search
               </label>
@@ -102,7 +102,7 @@ export function ShopToolbar(props: ToolbarProps) {
                 className="mt-1.5 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-[#FDFCF8] px-3 py-2.5 text-base text-[#19371E] outline-none ring-[#C5E6A6]/80 placeholder:text-[#19371E]/35 focus:border-[#19371E]/25 focus:ring-2"
               />
             </div>
-            <div className="min-w-[min(100%,10rem)] sm:w-40">
+            <div className="w-36 shrink-0 sm:w-40">
               <label htmlFor="shop-category" className="block text-xs font-semibold tracking-wide text-[#19371E]/55">
                 Category
               </label>
@@ -120,7 +120,7 @@ export function ShopToolbar(props: ToolbarProps) {
                 ))}
               </select>
             </div>
-            <div className="min-w-[min(100%,10rem)] sm:w-36">
+            <div className="w-32 shrink-0 sm:w-36">
               <label htmlFor="shop-sort" className="block text-xs font-semibold tracking-wide text-[#19371E]/55">
                 Sort
               </label>
