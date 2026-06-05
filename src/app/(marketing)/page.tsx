@@ -186,20 +186,13 @@ export default async function HomePage() {
       </section>
 
       <section className="border-t border-[#19371E]/8 px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-8 sm:gap-10 lg:flex-row lg:items-center lg:gap-12 xl:gap-16">
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 text-center sm:gap-8">
           {closingImageUrl ? (
-            <div className="w-full max-w-[8.75rem] shrink-0 sm:max-w-[9.5rem] lg:max-w-[10rem]">
-              <div className="overflow-hidden rounded-[2rem] bg-gradient-to-b from-[#F4F9EF] to-[#E8F0DD] shadow-[0_28px_80px_-40px_rgba(25,55,30,0.45)] ring-1 ring-[#19371E]/10">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={closingImageUrl}
-                  alt={closingImageAlt}
-                  className="aspect-square w-full object-cover"
-                />
-              </div>
+            <div className="w-full max-w-[8.75rem] sm:max-w-[9.5rem]">
+              <MarketingFramedImage src={closingImageUrl} alt={closingImageAlt} aspect="square" />
             </div>
           ) : null}
-          <p className="min-w-0 flex-1 text-center text-base leading-relaxed text-[#19371E]/82 sm:text-lg lg:text-left">
+          <p className="max-w-xl text-base leading-relaxed text-[#19371E]/82 sm:text-lg">
             <SiteCopyText value={siteCopyGet(copy, "home.closing")} inline />
           </p>
         </div>
