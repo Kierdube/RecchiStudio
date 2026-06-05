@@ -28,7 +28,7 @@ export function SiteFooter({ copy }: { copy: Record<string, string> }) {
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-[#C5E6A6]/85">{brandBlurb}</p>
           </div>
           <div className="flex flex-col gap-12 sm:flex-row sm:items-start sm:gap-14 lg:ml-auto lg:gap-16 xl:gap-20">
-            <div className="text-right">
+            <div>
               <p className="text-xs font-semibold tracking-wider text-[#C5E6A6]/60">
                 {sectionPages}
               </p>
@@ -37,7 +37,7 @@ export function SiteFooter({ copy }: { copy: Record<string, string> }) {
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className="-mx-1 inline-block rounded-md px-1 py-2 text-[#E8F5D4]/90 transition hover:bg-white/5 hover:text-white"
+                      className="-mx-1 block rounded-md px-1 py-2 text-[#E8F5D4]/90 transition hover:bg-white/5 hover:text-white"
                     >
                       {siteCopyGet(copy, item.key)}
                     </Link>
