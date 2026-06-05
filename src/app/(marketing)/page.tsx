@@ -186,13 +186,13 @@ export default async function HomePage() {
       </section>
 
       <section className="border-t border-[#19371E]/8 px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-6 text-center sm:gap-8">
+        <div className="mx-auto flex max-w-6xl flex-row items-center justify-center gap-5 sm:gap-8">
           {closingImageUrl ? (
-            <div className="w-full max-w-[8.75rem] sm:max-w-[9.5rem]">
+            <div className="w-full max-w-[8.75rem] shrink-0 sm:max-w-[9.5rem]">
               <MarketingFramedImage src={closingImageUrl} alt={closingImageAlt} aspect="square" />
             </div>
           ) : null}
-          <p className="max-w-xl text-base leading-relaxed text-[#19371E]/82 sm:text-lg">
+          <p className="max-w-md text-base leading-relaxed text-[#19371E]/82 sm:text-lg">
             <SiteCopyText value={siteCopyGet(copy, "home.closing")} inline />
           </p>
         </div>
