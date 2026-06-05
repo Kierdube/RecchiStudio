@@ -25,3 +25,7 @@ export function MarketingFramedImage({
 
 export const MARKETING_IMAGE_GRID_CLASS =
   "grid items-center gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-14 xl:gap-16";
+
+/** Same grid as marketing hero, but top-aligned (better with portrait side images). */
+export const MARKETING_IMAGE_GRID_START_CLASS =
+  "grid items-start gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-14 xl:gap-16";

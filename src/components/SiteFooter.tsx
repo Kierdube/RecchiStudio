@@ -29,18 +29,6 @@ export function SiteFooter({ copy }: { copy: Record<string, string> }) {
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-[#C5E6A6]/60">
-              {sectionCatalog}
-            </p>
-            <p className="mt-4 text-sm leading-relaxed text-[#C5E6A6]/85">{catalogBlurb}</p>
-            <Link
-              href="/catalog"
-              className="mt-4 inline-flex min-h-11 items-center text-sm font-semibold text-[#C5E6A6] underline-offset-4 hover:underline touch-manipulation"
-            >
-              {catalogCta}
-            </Link>
-          </div>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#C5E6A6]/60">
               {sectionPages}
             </p>
             <ul className="mt-4 space-y-2.5 text-sm">
@@ -55,6 +43,18 @@ export function SiteFooter({ copy }: { copy: Record<string, string> }) {
                 </li>
               ))}
             </ul>
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#C5E6A6]/60">
+              {sectionCatalog}
+            </p>
+            <p className="mt-4 text-sm leading-relaxed text-[#C5E6A6]/85">{catalogBlurb}</p>
+            <Link
+              href="/catalog"
+              className="mt-4 inline-flex min-h-11 items-center text-sm font-semibold text-[#C5E6A6] underline-offset-4 hover:underline touch-manipulation"
+            >
+              {catalogCta}
+            </Link>
           </div>
         </div>
       </div>

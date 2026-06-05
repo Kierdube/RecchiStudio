@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { AboutParrotDecoration } from "@/components/AboutParrotDecoration";
 import { FeatureIcon } from "@/components/FeatureIcon";
-import { MarketingFramedImage, MARKETING_IMAGE_GRID_CLASS } from "@/components/MarketingFramedImage";
+import { MarketingFramedImage, MARKETING_IMAGE_GRID_START_CLASS } from "@/components/MarketingFramedImage";
 import { SiteCopyText } from "@/components/SiteCopyText";
 import { MarketingShell } from "@/components/MarketingShell";
 import { PageIntro } from "@/components/PageIntro";
@@ -32,16 +32,18 @@ export default async function AboutPage() {
         eyebrow={siteCopyGet(copy, "about.intro.eyebrow")}
         eyebrowUppercase={false}
         title={siteCopyGet(copy, "about.intro.title")}
-        description={siteCopyGet(copy, "about.intro.description")}
       />
 
-      <div className={`mt-10 ${MARKETING_IMAGE_GRID_CLASS}`}>
-        <div>
+      <div className={`mt-8 ${MARKETING_IMAGE_GRID_START_CLASS}`}>
+        <div className="space-y-6 text-base leading-relaxed text-[#19371E]/82">
+          <p className="m-0">
+            <SiteCopyText value={siteCopyGet(copy, "about.intro.description")} inline />
+          </p>
           <SiteCopyHtml
             html={siteCopyGet(copy, "about.body_html")}
-            className="space-y-6 text-base leading-relaxed text-[#19371E]/82 [&_p]:m-0"
+            className="space-y-6 [&_p]:m-0"
           />
-          <div className="mt-8">
+          <div>
             <Link
               href="/catalog"
               className="inline-flex min-h-[48px] items-center justify-center rounded-full bg-[#19371E] px-6 text-sm font-semibold text-[#C5E6A6] shadow-md transition hover:bg-[#2d5a36]"
