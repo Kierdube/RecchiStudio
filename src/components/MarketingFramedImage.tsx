@@ -1,4 +1,4 @@
-/** Marketing photo with shared frame styling (portrait 4:5 or square). */
+/** Marketing photo with shared frame styling (portrait or square). */
 export function MarketingFramedImage({
   src,
   alt,
@@ -6,15 +6,21 @@ export function MarketingFramedImage({
 }: {
   src: string;
   alt: string;
-  /** Portrait 4:5 for hero/about sidebar; square when omitted. */
-  aspect?: "square" | "portrait";
+  /** `portrait` for homepage hero; `about` matches the about-page Figma frame (1288×2248, 80px radius). */
+  aspect?: "square" | "portrait" | "about";
 }) {
-  const aspectClass = aspect === "portrait" ? "aspect-[4/5]" : "aspect-square";
+  const aspectClass =
+    aspect === "about"
+      ? "aspect-[1288/2248]"
+      : aspect === "portrait"
+        ? "aspect-[8/11]"
+        : "aspect-square";
+  const radiusClass = aspect === "about" ? "rounded-[80px]" : "rounded-[2rem]";
 
   return (
     <div className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none lg:justify-self-stretch">
       <div
-        className={`overflow-hidden rounded-[2rem] bg-gradient-to-b from-[#F4F9EF] to-[#E8F0DD] shadow-[0_28px_80px_-40px_rgba(25,55,30,0.45)] ring-1 ring-[#19371E]/10 ${aspectClass}`}
+        className={`overflow-hidden bg-gradient-to-b from-[#F4F9EF] to-[#E8F0DD] shadow-[0_28px_80px_-40px_rgba(25,55,30,0.45)] ring-1 ring-[#19371E]/10 ${radiusClass} ${aspectClass}`}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={src} alt={alt} className="h-full w-full object-cover" />

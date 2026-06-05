@@ -52,7 +52,7 @@ export default async function AboutPage() {
           </div>
         </div>
         {storyImageUrl ? (
-          <MarketingFramedImage src={storyImageUrl} alt={storyImageAlt} aspect="portrait" />
+          <MarketingFramedImage src={storyImageUrl} alt={storyImageAlt} aspect="about" />
         ) : null}
       </div>
 

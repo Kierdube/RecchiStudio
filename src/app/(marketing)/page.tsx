@@ -58,19 +58,19 @@ export default async function HomePage() {
             }
           >
             <div className="min-w-0">
-              <p className="recchi-eyebrow text-xs font-semibold tracking-[0.2em] text-[#2d5a36]/90">
-                <SiteCopyText value={siteCopyGet(copy, "home.hero.eyebrow")} inline />
-              </p>
-              <div className="mt-4 max-w-3xl">
+              <div className="max-w-3xl">
                 <RotatingHeadline
                   key={siteCopyGet(copy, "home.hero.rotate_words")}
                   prefix={siteCopyGet(copy, "home.hero.rotate_prefix")}
                   words={parseRotatingWords(siteCopyGet(copy, "home.hero.rotate_words"))}
                 />
               </div>
+              <p className="recchi-eyebrow mt-8 text-xs font-semibold tracking-[0.2em] text-[#2d5a36]/90">
+                <SiteCopyText value={siteCopyGet(copy, "home.hero.eyebrow")} inline />
+              </p>
               <SiteCopyHtml
                 html={siteCopyGet(copy, "home.hero.body_html")}
-                className="mt-8 max-w-xl text-lg leading-relaxed text-[#19371E]/82 [&_p]:m-0"
+                className="mt-6 max-w-xl text-lg leading-relaxed text-[#19371E]/82 [&_p]:m-0"
               />
               <div className="mt-10">
                 <Link
