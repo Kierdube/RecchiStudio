@@ -14,6 +14,8 @@ import { adminPriceLabel } from "@/lib/admin-pricing";
 
 import { ImageUrlsField } from "./ImageUrlsField";
 import { ProductCustomFieldsField } from "./ProductCustomFieldsField";
+import { ProductPreviewLink } from "./ProductPreviewLink";
+import { ProductSeoFields } from "./ProductSeoFields";
 import { ProductTagsField } from "./ProductTagsField";
 import { updateProduct, type ProductActionState } from "./actions";
 
@@ -33,6 +35,12 @@ export function EditProductForm({
 
   return (
     <form action={formAction} className="mx-auto max-w-2xl space-y-6">
+      <ProductPreviewLink
+        productId={product.id}
+        slug={product.slug}
+        previewToken={product.previewToken}
+        published={product.published}
+      />
       <input type="hidden" name="id" value={product.id} />
       <div>
         <label className="block text-sm font-medium text-zinc-700" htmlFor="name">
@@ -108,6 +116,10 @@ export function EditProductForm({
       <ImageUrlsField defaultUrls={productImageUrls(product.imageUrls)} />
       <ProductCustomFieldsField
         defaultFields={resolveProductCustomFields(product)}
+      />
+      <ProductSeoFields
+        defaultMetaTitle={product.metaTitle}
+        defaultMetaDescription={product.metaDescription}
       />
       <div className="flex items-center gap-2">
         <input

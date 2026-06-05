@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 
 import { prisma } from "@/lib/prisma";
+import { generatePreviewToken } from "@/lib/product-preview";
 import { serializeImageUrls } from "@/lib/product-images";
 import { isRichTextHtmlEmpty } from "@/lib/rich-text-sanitize";
 import {
@@ -34,6 +35,8 @@ const productFields = z.object({
   priceDollars: z.coerce.number().min(0.01, "Price must be at least 0.01").max(99999),
   categorySlug: z.enum(["birds", "flamingos", "cats", "abstract", "other"]),
   published: z.enum(["on", "off"]).optional(),
+  metaTitle: z.string().trim().max(120).optional(),
+  metaDescription: z.string().trim().max(320).optional(),
 });
 
 function readProductForm(formData: FormData) {
@@ -47,6 +50,8 @@ function readProductForm(formData: FormData) {
     priceDollars: formData.get("priceDollars"),
     categorySlug: formData.get("categorySlug"),
     published,
+    metaTitle: String(formData.get("metaTitle") ?? "").trim() || undefined,
+    metaDescription: String(formData.get("metaDescription") ?? "").trim() || undefined,
   });
 }
 
@@ -124,6 +129,8 @@ export async function createProduct(
   const { name, slug, priceDollars, categorySlug } = parsed.data;
   const published = parsed.data.published === "on";
   const priceCents = adminDollarsToCatalogCents(priceDollars);
+  const metaTitle = parsed.data.metaTitle?.trim() || null;
+  const metaDescription = parsed.data.metaDescription?.trim() || null;
 
   try {
     await prisma.product.create({
@@ -139,6 +146,9 @@ export async function createProduct(
         tagsJson: tagsField.value,
         categorySlug,
         published,
+        metaTitle,
+        metaDescription,
+        previewToken: generatePreviewToken(),
       },
     });
   } catch {
@@ -173,6 +183,8 @@ export async function updateProduct(
   const { name, slug, priceDollars, categorySlug } = parsed.data;
   const published = parsed.data.published === "on";
   const priceCents = adminDollarsToCatalogCents(priceDollars);
+  const metaTitle = parsed.data.metaTitle?.trim() || null;
+  const metaDescription = parsed.data.metaDescription?.trim() || null;
 
   try {
     await prisma.product.update({
@@ -189,6 +201,8 @@ export async function updateProduct(
         tagsJson: tagsField.value,
         categorySlug,
         published,
+        metaTitle,
+        metaDescription,
       },
     });
   } catch {
@@ -211,4 +225,59 @@ export async function deleteProduct(formData: FormData) {
   revalidatePath("/");
   revalidatePath("/catalog");
   revalidatePath("/admin/products");
+}
+
+async function uniqueCopySlug(baseSlug: string): Promise<string> {
+  let candidate = `${baseSlug}-copy`;
+  let n = 2;
+  while (await prisma.product.findUnique({ where: { slug: candidate }, select: { id: true } })) {
+    candidate = `${baseSlug}-copy-${n}`;
+    n += 1;
+  }
+  return candidate;
+}
+
+export async function duplicateProduct(formData: FormData) {
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+
+  const source = await prisma.product.findUnique({ where: { id } });
+  if (!source) return;
+
+  const slug = await uniqueCopySlug(source.slug);
+  const name = source.name.endsWith(" (copy)") ? source.name : `${source.name} (copy)`;
+
+  const created = await prisma.product.create({
+    data: {
+      name,
+      slug,
+      description: source.description,
+      priceCents: source.priceCents,
+      imageUrls: source.imageUrls,
+      sizesJson: source.sizesJson,
+      optionsLabel: source.optionsLabel,
+      customFieldsJson: source.customFieldsJson,
+      tagsJson: source.tagsJson,
+      categorySlug: source.categorySlug,
+      metaTitle: source.metaTitle,
+      metaDescription: source.metaDescription,
+      published: false,
+      previewToken: generatePreviewToken(),
+    },
+  });
+
+  revalidatePath("/admin/products");
+  redirect(`/admin/products/${created.id}`);
+}
+
+export async function regeneratePreviewToken(formData: FormData) {
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+
+  await prisma.product.update({
+    where: { id },
+    data: { previewToken: generatePreviewToken() },
+  });
+
+  revalidatePath(`/admin/products/${id}`);
 }

@@ -1,16 +1,30 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { ProductPageContent } from "@/components/ProductPageContent";
 import { prisma } from "@/lib/prisma";
 import { resolveProductSeo } from "@/lib/product-seo";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ token?: string | string[] }>;
+};
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const product = await prisma.product.findUnique({ where: { slug } });
-  if (!product || !product.published) return { title: "Product" };
-  return resolveProductSeo(product);
+  const sp = await searchParams;
+  const token = typeof sp.token === "string" ? sp.token : undefined;
+  if (!token) return { title: "Preview", robots: { index: false, follow: false } };
+
+  const product = await prisma.product.findFirst({
+    where: { slug, previewToken: token, published: false },
+  });
+  if (!product) return { title: "Preview", robots: { index: false, follow: false } };
+
+  return {
+    ...resolveProductSeo(product),
+    robots: { index: false, follow: false },
+  };
 }
 
 async function loadRelatedProducts(product: { id: string; categorySlug: string }) {
@@ -41,14 +55,18 @@ async function loadRelatedProducts(product: { id: string; categorySlug: string }
   return related;
 }
 
-export default async function ProductPage({ params }: Props) {
+export default async function ProductPreviewPage({ params, searchParams }: Props) {
   const { slug } = await params;
+  const sp = await searchParams;
+  const token = typeof sp.token === "string" ? sp.token.trim() : "";
+  if (!token) notFound();
+
   const product = await prisma.product.findFirst({
-    where: { slug, published: true },
+    where: { slug, previewToken: token, published: false },
   });
   if (!product) notFound();
 
   const related = await loadRelatedProducts(product);
 
-  return <ProductPageContent product={product} related={related} />;
+  return <ProductPageContent product={product} related={related} isPreview />;
 }

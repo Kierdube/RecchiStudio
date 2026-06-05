@@ -13,10 +13,22 @@ datasource db {
 model ContactSubmission {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   name      String
   email     String
   topic     String   @default("Other")
   message   String
+  /// Custom / bulk order fields (optional for other topics).
+  garmentType         String?
+  quantity            String?
+  deadline            String?
+  /// JSON array of HTTPS reference image URLs.
+  referenceImagesJson String   @default("[]")
+  /// inbox | quote_draft | quote_sent | closed
+  status              String   @default("inbox")
+  quoteNotes          String?
+  quoteAmountCents    Int?
+  quoteSentAt         DateTime?
 }
 
 /// Editable marketing / legal copy (see `/admin/site-copy`).
@@ -51,6 +63,11 @@ model Product {
   categorySlug String   @default("other")
   /// JSON array of display tags, e.g. [{"label":"Sweater","color":"mint"}].
   tagsJson     String   @default("[]")
+  /// Optional SEO override; falls back to name / description on the storefront.
+  metaTitle       String?
+  metaDescription String?
+  /// Secret token for draft preview URLs (unpublished products only).
+  previewToken    String?  @unique
 
   @@index([published, categorySlug])
   @@index([published, priceCents])

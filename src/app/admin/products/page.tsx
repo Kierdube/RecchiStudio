@@ -8,6 +8,7 @@ import {
   formatCatalogCentsForAdmin,
 } from "@/lib/admin-pricing";
 
+import { DuplicateProductForm } from "./DuplicateProductForm";
 import { DeleteProductForm } from "./DeleteProductForm";
 import { ImportProductsButton } from "./ImportProductsButton";
 
@@ -101,6 +102,7 @@ export default async function AdminProductsPage() {
                       >
                         Edit
                       </Link>
+                      <DuplicateProductForm id={p.id} name={p.name} />
                       <DeleteProductForm id={p.id} name={p.name} />
                     </div>
                   </td>

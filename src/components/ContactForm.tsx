@@ -1,15 +1,20 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 
 import { submitContact, type ContactState } from "@/lib/contact-actions";
 import { CONTACT_TOPICS } from "@/lib/contact-topics";
+import { isOrderQuoteTopic } from "@/lib/order-quote-topics";
+
+import { ContactReferenceImagesField } from "@/components/ContactReferenceImagesField";
 
 const fieldClassName =
   "mt-1.5 min-h-11 w-full rounded-xl border border-[#19371E]/15 bg-white px-3 py-2.5 text-base text-[#19371E] outline-none ring-[#C5E6A6]/80 focus:border-[#19371E]/25 focus:ring-2";
 
 export function ContactForm() {
   const [state, formAction, pending] = useActionState<ContactState, FormData>(submitContact, null);
+  const [topic, setTopic] = useState("");
+  const showOrderFields = isOrderQuoteTopic(topic);
 
   if (state?.ok) {
     return (
@@ -21,6 +26,9 @@ export function ContactForm() {
         <p className="mt-2 text-sm text-emerald-900/80">
           Thanks — we have your note. If email notifications are configured, we will get a copy in
           the inbox too.
+          {showOrderFields
+            ? " We will follow up with a quote once we have reviewed your request."
+            : null}
         </p>
       </div>
     );
@@ -80,18 +88,72 @@ export function ContactForm() {
           name="topic"
           required
           defaultValue=""
+          onChange={(e) => setTopic(e.target.value)}
           className={`${fieldClassName} cursor-pointer`}
         >
           <option value="" disabled>
             Select a topic
           </option>
-          {CONTACT_TOPICS.map((topic) => (
-            <option key={topic} value={topic}>
-              {topic}
+          {CONTACT_TOPICS.map((t) => (
+            <option key={t} value={t}>
+              {t}
             </option>
           ))}
         </select>
       </div>
+
+      {showOrderFields ? (
+        <div className="space-y-5 rounded-2xl border border-[#19371E]/10 bg-[#F4F9EF]/50 p-4">
+          <p className="text-sm font-medium text-[#19371E]">Order details</p>
+          <div>
+            <label
+              htmlFor="garmentType"
+              className="block text-xs font-semibold tracking-wide text-[#19371E]/50"
+            >
+              Garment type
+            </label>
+            <input
+              id="garmentType"
+              name="garmentType"
+              required={showOrderFields}
+              placeholder="e.g. crewneck sweater, tote bag, custom tee"
+              className={fieldClassName}
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="quantity"
+              className="block text-xs font-semibold tracking-wide text-[#19371E]/50"
+            >
+              Quantity
+            </label>
+            <input
+              id="quantity"
+              name="quantity"
+              required={showOrderFields}
+              placeholder="e.g. 1, 12, 25–50"
+              className={fieldClassName}
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="deadline"
+              className="block text-xs font-semibold tracking-wide text-[#19371E]/50"
+            >
+              Deadline or event date
+            </label>
+            <input
+              id="deadline"
+              name="deadline"
+              required={showOrderFields}
+              placeholder="e.g. June 15, flexible, wedding in September"
+              className={fieldClassName}
+            />
+          </div>
+          <ContactReferenceImagesField />
+        </div>
+      ) : null}
+
       <div>
         <label
           htmlFor="contact-message"
@@ -115,7 +177,7 @@ export function ContactForm() {
         disabled={pending}
         className="min-h-12 w-full touch-manipulation rounded-full bg-[#19371E] py-3.5 text-base font-semibold text-[#C5E6A6] shadow-md transition hover:bg-[#2d5a36] disabled:opacity-60"
       >
-        {pending ? "Sending…" : "Send message"}
+        {pending ? "Sending…" : showOrderFields ? "Submit order request" : "Send message"}
       </button>
       <p className="text-center text-xs text-[#19371E]/50">We usually reply within 1-2 business days.</p>
     </form>
