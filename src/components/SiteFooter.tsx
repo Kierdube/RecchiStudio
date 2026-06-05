@@ -22,13 +22,13 @@ export function SiteFooter({ copy }: { copy: Record<string, string> }) {
   return (
     <footer className="mt-auto border-t border-[#19371E]/20 bg-[#142a18] text-[#E8F5D4]">
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
-        <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:justify-between">
-          <div className="max-w-sm">
+        <div className="flex flex-col gap-12 lg:flex-row lg:items-start">
+          <div className="max-w-sm shrink-0">
             <SiteLogo alt={brandTitle} onDark className={SITE_LOGO_SIZE_CLASS} />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-[#C5E6A6]/85">{brandBlurb}</p>
           </div>
-          <div className="grid gap-12 sm:grid-cols-2 sm:gap-16 lg:gap-20">
-            <div>
+          <div className="flex flex-col gap-12 sm:flex-row sm:items-start sm:gap-14 lg:ml-auto lg:gap-16 xl:gap-20">
+            <div className="text-right">
               <p className="text-xs font-semibold tracking-wider text-[#C5E6A6]/60">
                 {sectionPages}
               </p>
@@ -37,7 +37,7 @@ export function SiteFooter({ copy }: { copy: Record<string, string> }) {
                   <li key={item.href}>
                     <Link
                       href={item.href}
-                      className="-mx-1 block rounded-md px-1 py-2 text-[#E8F5D4]/90 transition hover:bg-white/5 hover:text-white"
+                      className="-mx-1 inline-block rounded-md px-1 py-2 text-[#E8F5D4]/90 transition hover:bg-white/5 hover:text-white"
                     >
                       {siteCopyGet(copy, item.key)}
                     </Link>
