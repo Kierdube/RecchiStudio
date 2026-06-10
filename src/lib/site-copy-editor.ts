@@ -12,6 +12,7 @@ const PLAIN_ONLY_PATTERNS = [
   /menu_button$/,
   /^legal\./,
   /^global\.type\./,
+  /^email\./,
 ];
 
 export function isPlainOnlySiteCopyKey(key: string): boolean {

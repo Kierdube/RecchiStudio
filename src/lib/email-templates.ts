@@ -148,10 +148,21 @@ export function contactNotificationEmail(
   },
   copy: Record<string, string> = {},
 ): { subject: string; text: string; html: string } {
+  const garmentLabel = emailCopyGet(copy, "email.contact.garment_label", "Garment");
+  const quantityLabel = emailCopyGet(copy, "email.contact.quantity_label", "Quantity");
+  const deadlineLabel = emailCopyGet(copy, "email.contact.deadline_label", "Deadline");
+  const referenceImagesLabel = emailCopyGet(
+    copy,
+    "email.contact.reference_images_label",
+    "Reference images",
+  );
+  const fromLabel = emailCopyGet(copy, "email.contact.from_label", "From");
+  const topicLabel = emailCopyGet(copy, "email.contact.topic_label", "Topic");
+
   const orderRows: { label: string; value: string }[] = [];
-  if (input.garmentType) orderRows.push({ label: "Garment", value: input.garmentType });
-  if (input.quantity) orderRows.push({ label: "Quantity", value: input.quantity });
-  if (input.deadline) orderRows.push({ label: "Deadline", value: input.deadline });
+  if (input.garmentType) orderRows.push({ label: garmentLabel, value: input.garmentType });
+  if (input.quantity) orderRows.push({ label: quantityLabel, value: input.quantity });
+  if (input.deadline) orderRows.push({ label: deadlineLabel, value: input.deadline });
 
   const refImagesText =
     input.referenceImageUrls && input.referenceImageUrls.length > 0
@@ -191,9 +202,9 @@ export function contactNotificationEmail(
     .join("\n");
 
   const rows = [
-    { label: "From", value: `${input.name} <${input.email}>` },
+    { label: fromLabel, value: `${input.name} <${input.email}>` },
     {
-      label: "Topic",
+      label: topicLabel,
       value: topicBadge(input.topic),
       valueIsHtml: true,
     },
@@ -209,7 +220,7 @@ export function contactNotificationEmail(
       )
       .join("");
     refHtml = `<div style="margin:16px 0 0;">
-      <p style="margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:${COLORS.textMuted};">Reference images</p>
+      <p style="margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:${COLORS.textMuted};">${escapeHtml(referenceImagesLabel)}</p>
       <ul style="margin:0;padding-left:18px;color:${COLORS.forest};">${links}</ul>
     </div>`;
   }
@@ -251,6 +262,14 @@ export function orderNotificationEmail(
   );
   const eyebrow = emailCopyGet(copy, "email.order.eyebrow", "New order");
   const title = emailCopyGet(copy, "email.order.title", "You have a new order");
+  const itemLabel = emailCopyGet(copy, "email.order.item_label", "Item");
+  const qtyLabel = emailCopyGet(copy, "email.order.qty_label", "Qty");
+  const amountLabel = emailCopyGet(copy, "email.order.amount_label", "Amount");
+  const totalLabel = emailCopyGet(copy, "email.order.total_label", "Total");
+  const customerLabel = emailCopyGet(copy, "email.order.customer_label", "Customer");
+  const orderEmailLabel = emailCopyGet(copy, "email.order.email_label", "Email");
+  const shippingLabel = emailCopyGet(copy, "email.order.shipping_label", "Shipping");
+  const stripeLabel = emailCopyGet(copy, "email.order.stripe_label", "Stripe session");
 
   const text = [
     "New order — Recchi Studio",
@@ -285,13 +304,13 @@ export function orderNotificationEmail(
 
   const itemsTable = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 20px;border:1px solid ${COLORS.border};border-radius:14px;overflow:hidden;">
     <tr style="background-color:${COLORS.cream};">
-      <th style="padding:10px 14px;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;text-align:left;color:${COLORS.textMuted};">Item</th>
-      <th style="padding:10px 14px;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;text-align:center;color:${COLORS.textMuted};">Qty</th>
-      <th style="padding:10px 14px;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;text-align:right;color:${COLORS.textMuted};">Amount</th>
+      <th style="padding:10px 14px;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;text-align:left;color:${COLORS.textMuted};">${escapeHtml(itemLabel)}</th>
+      <th style="padding:10px 14px;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;text-align:center;color:${COLORS.textMuted};">${escapeHtml(qtyLabel)}</th>
+      <th style="padding:10px 14px;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;text-align:right;color:${COLORS.textMuted};">${escapeHtml(amountLabel)}</th>
     </tr>
     ${itemRows}
     <tr>
-      <td colspan="2" style="padding:14px;font-size:14px;font-weight:600;color:${COLORS.forest};text-align:right;">Total</td>
+      <td colspan="2" style="padding:14px;font-size:14px;font-weight:600;color:${COLORS.forest};text-align:right;">${escapeHtml(totalLabel)}</td>
       <td style="padding:14px;font-size:16px;font-weight:700;color:${COLORS.sage};text-align:right;">${escapeHtml(input.totalLabel)}</td>
     </tr>
   </table>`;
@@ -301,10 +320,10 @@ export function orderNotificationEmail(
     eyebrow,
     title,
     bodyHtml: `${itemsTable}${fieldTable([
-      { label: "Customer", value: input.customerName ?? "—" },
-      { label: "Email", value: input.customerEmail ?? "—" },
-      { label: "Shipping", value: input.shipping },
-    ])}<p style="margin:16px 0 0;font-size:12px;color:${COLORS.textMuted};">Stripe session: <span style="font-family:ui-monospace,monospace;">${escapeHtml(input.stripeSessionId)}</span></p>`,
+      { label: customerLabel, value: input.customerName ?? "—" },
+      { label: orderEmailLabel, value: input.customerEmail ?? "—" },
+      { label: shippingLabel, value: input.shipping },
+    ])}<p style="margin:16px 0 0;font-size:12px;color:${COLORS.textMuted};">${escapeHtml(stripeLabel)}: <span style="font-family:ui-monospace,monospace;">${escapeHtml(input.stripeSessionId)}</span></p>`,
     ...brandFromCopy(copy),
   });
 
@@ -332,6 +351,7 @@ export function quoteReadyEmail(
     { topic: input.topic.toLowerCase() },
   );
   const totalLabel = emailCopyGet(copy, "email.quote.total_label", "Quoted total");
+  const detailsLabel = emailCopyGet(copy, "email.quote.details_label", "Details");
   const followup = emailCopyGet(
     copy,
     "email.quote.followup",
@@ -360,7 +380,7 @@ export function quoteReadyEmail(
 
   const notesHtml = input.quoteNotes?.trim()
     ? `<div style="margin:20px 0 0;">
-        <p style="margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:${COLORS.textMuted};">Details</p>
+        <p style="margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:${COLORS.textMuted};">${escapeHtml(detailsLabel)}</p>
         <div style="padding:16px 18px;background-color:${COLORS.cream};border-radius:14px;border:1px solid ${COLORS.border};font-size:15px;line-height:1.65;color:${COLORS.forest};">${nl2br(input.quoteNotes.trim())}</div>
       </div>`
     : "";
