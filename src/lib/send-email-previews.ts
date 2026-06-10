@@ -6,6 +6,7 @@ import {
   quoteReadyEmail,
 } from "@/lib/email-templates";
 import { siteUrl } from "@/lib/seo";
+import { getSiteCopyRecord } from "@/lib/site-copy";
 
 export type EmailPreviewResult = {
   label: string;
@@ -14,17 +15,28 @@ export type EmailPreviewResult = {
   error?: string;
 };
 
+export type EmailPreviewId = "contact" | "order" | "quote";
+
+export type EmailPreviewDocument = {
+  id: EmailPreviewId;
+  label: string;
+  subject: string;
+  html: string;
+};
+
 function resendFromAddress(): string {
   return process.env.RESEND_FROM_EMAIL?.trim() || "Recchi Studio <onboarding@resend.dev>";
 }
 
-export function emailPreviewSamples() {
+export function emailPreviewSamples(copy: Record<string, string>) {
   const contactUrl = `${siteUrl().replace(/\/$/, "")}/contact`;
 
   return [
     {
+      id: "contact" as const,
       label: "Contact notification",
-      ...contactNotificationEmail({
+      ...contactNotificationEmail(
+        {
         name: "Alex Preview",
         email: "customer@example.com",
         topic: "Custom Order Request",
@@ -34,11 +46,15 @@ export function emailPreviewSamples() {
         quantity: "8",
         deadline: "September 15",
         referenceImageUrls: ["https://recchistudio.com/icon.png"],
-      }),
+        },
+        copy,
+      ),
     },
     {
+      id: "order" as const,
       label: "Order notification (admin)",
-      ...orderNotificationEmail({
+      ...orderNotificationEmail(
+        {
         productName: "Flamingo Garden Tee",
         lineItems: [
           {
@@ -59,20 +75,36 @@ export function emailPreviewSamples() {
         customerEmail: "jordan@example.com",
         shipping: "Jordan Preview\n123 Queen St W\nToronto, ON M5H 2M9\nCA",
         stripeSessionId: "cs_test_preview_12345",
-      }),
+        },
+        copy,
+      ),
     },
     {
+      id: "quote" as const,
       label: "Quote ready (customer)",
-      ...quoteReadyEmail({
+      ...quoteReadyEmail(
+        {
         customerName: "Alex Preview",
         topic: "Custom Order Request",
         amountLabel: "$640.00",
         quoteNotes:
           "Eight crewneck sweaters with your custom flamingo colourway.\nEstimated turnaround: 3–4 weeks after approval.\n50% deposit to start; balance before shipping.",
         contactUrl,
-      }),
+        },
+        copy,
+      ),
     },
   ];
+}
+
+export async function getEmailPreviewDocuments(): Promise<EmailPreviewDocument[]> {
+  const copy = await getSiteCopyRecord();
+  return emailPreviewSamples(copy).map(({ id, label, subject, html }) => ({
+    id,
+    label,
+    subject,
+    html,
+  }));
 }
 
 export async function sendEmailPreviews(to?: string): Promise<{
@@ -92,9 +124,10 @@ export async function sendEmailPreviews(to?: string): Promise<{
 
   const resend = new Resend(resendKey);
   const from = resendFromAddress();
+  const copy = await getSiteCopyRecord();
   const results: EmailPreviewResult[] = [];
 
-  for (const preview of emailPreviewSamples()) {
+  for (const preview of emailPreviewSamples(copy)) {
     const subject = `[Preview] ${preview.subject}`;
     const { data, error } = await resend.emails.send({
       from,

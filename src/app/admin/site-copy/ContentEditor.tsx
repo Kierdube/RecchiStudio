@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import type { SiteCopyPageId, SiteCopyPagePayload } from "@/lib/site-copy-admin-structure";
 
+import { EmailPreviewPanel } from "./EmailPreviewPanel";
 import { SiteCopyBlockForm } from "./SiteCopyBlockForm";
 
 export function ContentEditor({ pages }: { pages: SiteCopyPagePayload[] }) {
@@ -57,6 +58,21 @@ export function ContentEditor({ pages }: { pages: SiteCopyPagePayload[] }) {
           ))}
         </select>
       </div>
+
+      {pageId === "emails" ? (
+        <div className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-4 sm:px-5">
+          <p className="text-sm text-zinc-700">
+            Edit subject lines, headlines, and body copy for transactional emails. Fields with curly
+            braces are placeholders — e.g. <span className="font-medium text-zinc-900">{"{name}"}</span>,{" "}
+            <span className="font-medium text-zinc-900">{"{topic}"}</span>,{" "}
+            <span className="font-medium text-zinc-900">{"{customerName}"}</span> — filled in when
+            each email is sent.
+          </p>
+          <div className="mt-4">
+            <EmailPreviewPanel />
+          </div>
+        </div>
+      ) : null}
 
       <div className="space-y-3">
         {activePage.sections.map((section) => {

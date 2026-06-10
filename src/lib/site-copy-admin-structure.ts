@@ -6,6 +6,7 @@ import {
 
 export type SiteCopyPageId =
   | "styles"
+  | "emails"
   | "home"
   | "catalog"
   | "about"
@@ -37,6 +38,7 @@ export type SiteCopyPagePayload = {
 
 const PAGE_META: { id: SiteCopyPageId; label: string }[] = [
   { id: "styles", label: "Global styles" },
+  { id: "emails", label: "Emails" },
   { id: "home", label: "Home" },
   { id: "catalog", label: "Catalog" },
   { id: "about", label: "About" },
@@ -63,10 +65,15 @@ const SECTION_LABELS: Record<string, string> = {
   "Legal — shipping page": "Page settings",
   "Site header": "Navigation & menu",
   Footer: "Footer content",
+  "Emails — shared header": "Shared header",
+  "Emails — contact alert (to you)": "Contact form alert",
+  "Emails — new order (to you)": "New order alert",
+  "Emails — quote ready (to customer)": "Quote ready email",
 };
 
 function pageIdForDefinition(def: SiteCopyDefinition): SiteCopyPageId {
   if (def.key.startsWith("global.type.")) return "styles";
+  if (def.key.startsWith("email.")) return "emails";
   if (def.key === "legal.policies_mdx" || def.key.startsWith("policies.")) return "policies";
   if (def.key === "legal.shipping_mdx" || def.key.startsWith("shipping.")) return "shipping";
   if (def.key.startsWith("home.")) return "home";

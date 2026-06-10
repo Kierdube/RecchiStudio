@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { CONTACT_TOPIC_SET } from "@/lib/contact-topics";
 import { isOrderQuoteTopic } from "@/lib/order-quote-topics";
 import { contactNotificationEmail } from "@/lib/email-templates";
+import { getSiteCopyRecord } from "@/lib/site-copy";
 import {
   parseReferenceImageUrls,
   serializeReferenceImagesJson,
@@ -107,16 +108,20 @@ async function submitContactInner(formData: FormData): Promise<ContactState> {
   if (resendKey && to) {
     try {
       const resend = new Resend(resendKey);
-      const mail = contactNotificationEmail({
-        name,
-        email,
-        topic,
-        message,
-        garmentType: isOrderQuote ? parsed.data.garmentType : undefined,
-        quantity: isOrderQuote ? parsed.data.quantity : undefined,
-        deadline: isOrderQuote ? parsed.data.deadline : undefined,
-        referenceImageUrls: referenceImages.length > 0 ? referenceImages : undefined,
-      });
+      const copy = await getSiteCopyRecord();
+      const mail = contactNotificationEmail(
+        {
+          name,
+          email,
+          topic,
+          message,
+          garmentType: isOrderQuote ? parsed.data.garmentType : undefined,
+          quantity: isOrderQuote ? parsed.data.quantity : undefined,
+          deadline: isOrderQuote ? parsed.data.deadline : undefined,
+          referenceImageUrls: referenceImages.length > 0 ? referenceImages : undefined,
+        },
+        copy,
+      );
 
       const { error } = await resend.emails.send({
         from,

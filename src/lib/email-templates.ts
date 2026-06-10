@@ -1,3 +1,4 @@
+import { applyEmailTemplate, emailCopyGet } from "@/lib/email-copy";
 import { siteUrl } from "@/lib/seo";
 
 /** Recchi Studio brand palette (matches storefront). */
@@ -29,11 +30,15 @@ function emailLayout({
   eyebrow,
   title,
   bodyHtml,
+  brandTitle,
+  brandTagline,
 }: {
   preheader?: string;
   eyebrow?: string;
   title: string;
   bodyHtml: string;
+  brandTitle: string;
+  brandTagline: string;
 }): string {
   const hiddenPreheader = preheader
     ? `<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">${escapeHtml(preheader)}</div>`
@@ -59,8 +64,8 @@ function emailLayout({
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
           <tr>
             <td style="padding:28px 32px;background:linear-gradient(135deg,${COLORS.forest} 0%,${COLORS.forestDark} 100%);border-radius:20px 20px 0 0;">
-              <p style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.02em;color:${COLORS.mint};">Recchi Studio</p>
-              <p style="margin:6px 0 0;font-size:13px;color:${COLORS.mint};opacity:0.85;">Nature-inspired patterns &amp; apparel</p>
+              <p style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.02em;color:${COLORS.mint};">${escapeHtml(brandTitle)}</p>
+              <p style="margin:6px 0 0;font-size:13px;color:${COLORS.mint};opacity:0.85;">${escapeHtml(brandTagline)}</p>
             </td>
           </tr>
           <tr>
@@ -119,16 +124,30 @@ function ctaButton(href: string, label: string): string {
   </table>`;
 }
 
-export function contactNotificationEmail(input: {
-  name: string;
-  email: string;
-  topic: string;
-  message: string;
-  garmentType?: string;
-  quantity?: string;
-  deadline?: string;
-  referenceImageUrls?: string[];
-}): { subject: string; text: string; html: string } {
+function brandFromCopy(copy: Record<string, string>) {
+  return {
+    brandTitle: emailCopyGet(copy, "email.brand.title", "Recchi Studio"),
+    brandTagline: emailCopyGet(
+      copy,
+      "email.brand.tagline",
+      "Nature-inspired patterns & apparel",
+    ),
+  };
+}
+
+export function contactNotificationEmail(
+  input: {
+    name: string;
+    email: string;
+    topic: string;
+    message: string;
+    garmentType?: string;
+    quantity?: string;
+    deadline?: string;
+    referenceImageUrls?: string[];
+  },
+  copy: Record<string, string> = {},
+): { subject: string; text: string; html: string } {
   const orderRows: { label: string; value: string }[] = [];
   if (input.garmentType) orderRows.push({ label: "Garment", value: input.garmentType });
   if (input.quantity) orderRows.push({ label: "Quantity", value: input.quantity });
@@ -150,6 +169,14 @@ export function contactNotificationEmail(input: {
           .filter(Boolean)
           .join("\n")
       : "";
+
+  const subject = applyEmailTemplate(
+    emailCopyGet(copy, "email.contact.subject", "Recchi Studio contact ({topic}): {name}"),
+    { topic: input.topic, name: input.name },
+  );
+  const eyebrow = emailCopyGet(copy, "email.contact.eyebrow", "Contact form");
+  const title = emailCopyGet(copy, "email.contact.title", "New message");
+  const messageLabel = emailCopyGet(copy, "email.contact.message_label", "Message");
 
   const text = [
     `New contact message — ${input.topic}`,
@@ -189,27 +216,27 @@ export function contactNotificationEmail(input: {
 
   const html = emailLayout({
     preheader: `New ${input.topic} from ${input.name}`,
-    eyebrow: "Contact form",
-    title: "New message",
-    bodyHtml: `${fieldTable(rows)}${refHtml}${messageCard("Message", input.message)}`,
+    eyebrow,
+    title,
+    bodyHtml: `${fieldTable(rows)}${refHtml}${messageCard(messageLabel, input.message)}`,
+    ...brandFromCopy(copy),
   });
 
-  return {
-    subject: `Recchi Studio contact (${input.topic}): ${input.name}`,
-    text,
-    html,
-  };
+  return { subject, text, html };
 }
 
-export function orderNotificationEmail(input: {
-  productName: string;
-  lineItems: { productName: string; size: string | null; quantity: number; amountLabel: string }[];
-  totalLabel: string;
-  customerName: string | null;
-  customerEmail: string | null;
-  shipping: string;
-  stripeSessionId: string;
-}): { subject: string; text: string; html: string } {
+export function orderNotificationEmail(
+  input: {
+    productName: string;
+    lineItems: { productName: string; size: string | null; quantity: number; amountLabel: string }[];
+    totalLabel: string;
+    customerName: string | null;
+    customerEmail: string | null;
+    shipping: string;
+    stripeSessionId: string;
+  },
+  copy: Record<string, string> = {},
+): { subject: string; text: string; html: string } {
   const itemLines =
     input.lineItems.length > 0
       ? input.lineItems.map((item) => {
@@ -217,6 +244,13 @@ export function orderNotificationEmail(input: {
           return `- ${item.productName}${size} × ${item.quantity} — ${item.amountLabel}`;
         })
       : [`- ${input.productName}`];
+
+  const subject = applyEmailTemplate(
+    emailCopyGet(copy, "email.order.subject", "New order: {productName}"),
+    { productName: input.productName },
+  );
+  const eyebrow = emailCopyGet(copy, "email.order.eyebrow", "New order");
+  const title = emailCopyGet(copy, "email.order.title", "You have a new order");
 
   const text = [
     "New order — Recchi Studio",
@@ -264,43 +298,60 @@ export function orderNotificationEmail(input: {
 
   const html = emailLayout({
     preheader: `New order: ${input.totalLabel}`,
-    eyebrow: "New order",
-    title: "You have a new order",
+    eyebrow,
+    title,
     bodyHtml: `${itemsTable}${fieldTable([
       { label: "Customer", value: input.customerName ?? "—" },
       { label: "Email", value: input.customerEmail ?? "—" },
       { label: "Shipping", value: input.shipping },
     ])}<p style="margin:16px 0 0;font-size:12px;color:${COLORS.textMuted};">Stripe session: <span style="font-family:ui-monospace,monospace;">${escapeHtml(input.stripeSessionId)}</span></p>`,
+    ...brandFromCopy(copy),
   });
 
-  return {
-    subject: `New order: ${input.productName}`,
-    text,
-    html,
-  };
+  return { subject, text, html };
 }
 
-export function quoteReadyEmail(input: {
-  customerName: string;
-  topic: string;
-  amountLabel: string;
-  quoteNotes: string | null;
-  contactUrl: string;
-}): { subject: string; text: string; html: string } {
+export function quoteReadyEmail(
+  input: {
+    customerName: string;
+    topic: string;
+    amountLabel: string;
+    quoteNotes: string | null;
+    contactUrl: string;
+  },
+  copy: Record<string, string> = {},
+): { subject: string; text: string; html: string } {
+  const subject = emailCopyGet(copy, "email.quote.subject", "Your Recchi Studio quote is ready");
+  const eyebrow = emailCopyGet(copy, "email.quote.eyebrow", "Quote ready");
+  const greeting = applyEmailTemplate(
+    emailCopyGet(copy, "email.quote.greeting", "Hi {customerName},"),
+    { customerName: input.customerName },
+  );
+  const intro = applyEmailTemplate(
+    emailCopyGet(copy, "email.quote.intro", "Your {topic} quote from Recchi Studio is ready."),
+    { topic: input.topic.toLowerCase() },
+  );
+  const totalLabel = emailCopyGet(copy, "email.quote.total_label", "Quoted total");
+  const followup = emailCopyGet(
+    copy,
+    "email.quote.followup",
+    "Reply to this email or get in touch if you would like to proceed or have any questions.",
+  );
+  const ctaLabel = emailCopyGet(copy, "email.quote.cta_label", "Contact us");
+
   const notesBlock = input.quoteNotes?.trim()
     ? `\n\nDetails:\n${input.quoteNotes.trim()}`
     : "";
 
   const text = [
-    `Hi ${input.customerName},`,
+    greeting,
     "",
-    `Your ${input.topic.toLowerCase()} quote from Recchi Studio is ready.`,
+    intro,
     "",
-    `Quoted total: ${input.amountLabel} CAD`,
+    `${totalLabel}: ${input.amountLabel} CAD`,
     notesBlock,
     "",
-    "Reply to this email or visit our contact page if you would like to proceed or have questions:",
-    input.contactUrl,
+    `${followup} ${input.contactUrl}`,
     "",
     "— Recchi Studio",
   ]
@@ -316,21 +367,18 @@ export function quoteReadyEmail(input: {
 
   const html = emailLayout({
     preheader: `Your quote is ready — ${input.amountLabel} CAD`,
-    eyebrow: "Quote ready",
-    title: `Hi ${input.customerName},`,
-    bodyHtml: `<p style="margin:0 0 16px;font-size:16px;line-height:1.65;color:${COLORS.textMuted};">Your <strong style="color:${COLORS.forest};">${escapeHtml(input.topic.toLowerCase())}</strong> quote from Recchi Studio is ready.</p>
+    eyebrow,
+    title: greeting,
+    bodyHtml: `<p style="margin:0 0 16px;font-size:16px;line-height:1.65;color:${COLORS.textMuted};">${escapeHtml(intro)}</p>
       <div style="margin:20px 0;padding:20px 22px;background:linear-gradient(135deg,${COLORS.cream} 0%,#E8F0DD 100%);border-radius:16px;border:1px solid ${COLORS.border};text-align:center;">
-        <p style="margin:0 0 4px;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:${COLORS.textMuted};">Quoted total</p>
+        <p style="margin:0 0 4px;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:${COLORS.textMuted};">${escapeHtml(totalLabel)}</p>
         <p style="margin:0;font-size:32px;font-weight:700;letter-spacing:-0.02em;color:${COLORS.sage};">${escapeHtml(input.amountLabel)} <span style="font-size:16px;font-weight:600;">CAD</span></p>
       </div>
       ${notesHtml}
-      <p style="margin:20px 0 0;font-size:15px;line-height:1.65;color:${COLORS.textMuted};">Reply to this email or get in touch if you would like to proceed or have any questions.</p>
-      ${ctaButton(input.contactUrl, "Contact us")}`,
+      <p style="margin:20px 0 0;font-size:15px;line-height:1.65;color:${COLORS.textMuted};">${escapeHtml(followup)}</p>
+      ${ctaButton(input.contactUrl, ctaLabel)}`,
+    ...brandFromCopy(copy),
   });
 
-  return {
-    subject: "Your Recchi Studio quote is ready",
-    text,
-    html,
-  };
+  return { subject, text, html };
 }

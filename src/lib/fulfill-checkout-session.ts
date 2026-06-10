@@ -7,6 +7,7 @@ import {
 } from "@/lib/cart";
 import { orderNotificationEmail } from "@/lib/email-templates";
 import { prisma } from "@/lib/prisma";
+import { getSiteCopyRecord } from "@/lib/site-copy";
 
 function formatMoney(cents: number, currency: string): string {
   const code = currency.toUpperCase();
@@ -117,15 +118,19 @@ async function sendOrderNotificationEmail(order: {
           },
         ];
 
-  const mail = orderNotificationEmail({
-    productName: order.productName,
-    lineItems: lineItemsForMail,
-    totalLabel: formatMoney(order.amountCents, order.currency),
-    customerName: order.customerName,
-    customerEmail: order.customerEmail,
-    shipping,
-    stripeSessionId: order.stripeSessionId,
-  });
+  const copy = await getSiteCopyRecord();
+  const mail = orderNotificationEmail(
+    {
+      productName: order.productName,
+      lineItems: lineItemsForMail,
+      totalLabel: formatMoney(order.amountCents, order.currency),
+      customerName: order.customerName,
+      customerEmail: order.customerEmail,
+      shipping,
+      stripeSessionId: order.stripeSessionId,
+    },
+    copy,
+  );
 
   try {
     const resend = new Resend(resendKey);

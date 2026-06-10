@@ -1,3 +1,4 @@
+import { EMAIL_COPY_DEFINITIONS } from "@/lib/email-copy-definitions";
 import { globalTypographyDefinitions } from "@/lib/global-typography";
 
 export type SiteCopyFormat = "plain" | "html" | "mdx" | "choice";
@@ -642,6 +643,8 @@ export const SITE_COPY_DEFINITIONS: SiteCopyDefinition[] = [
     format: "mdx",
     defaultValue: "",
   },
+
+  ...EMAIL_COPY_DEFINITIONS,
 
   ...globalTypographyDefinitions().map(
     (d) =>

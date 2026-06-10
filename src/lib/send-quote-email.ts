@@ -3,6 +3,7 @@ import { Resend } from "resend";
 import { formatCatalogCentsForAdmin } from "@/lib/admin-pricing";
 import { quoteReadyEmail } from "@/lib/email-templates";
 import { siteUrl } from "@/lib/seo";
+import { getSiteCopyRecord } from "@/lib/site-copy";
 
 export async function sendQuoteReadyEmail(input: {
   customerEmail: string;
@@ -21,13 +22,17 @@ export async function sendQuoteReadyEmail(input: {
 
   const contactUrl = `${siteUrl().replace(/\/$/, "")}/contact`;
   const amountLabel = formatCatalogCentsForAdmin(input.quoteAmountCents);
-  const mail = quoteReadyEmail({
-    customerName: input.customerName,
-    topic: input.topic,
-    amountLabel,
-    quoteNotes: input.quoteNotes,
-    contactUrl,
-  });
+  const copy = await getSiteCopyRecord();
+  const mail = quoteReadyEmail(
+    {
+      customerName: input.customerName,
+      topic: input.topic,
+      amountLabel,
+      quoteNotes: input.quoteNotes,
+      contactUrl,
+    },
+    copy,
+  );
 
   try {
     const resend = new Resend(resendKey);

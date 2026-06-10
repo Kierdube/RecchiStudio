@@ -14,7 +14,7 @@ export default async function AdminSiteCopyPage() {
   const pages = buildSiteCopyAdminPages(map);
 
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+    <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <Link href="/admin" className="text-sm font-medium text-zinc-600 hover:text-zinc-900">
         ← Dashboard
       </Link>
@@ -22,7 +22,8 @@ export default async function AdminSiteCopyPage() {
       <p className="mt-1.5 max-w-xl text-sm text-zinc-600">
         Choose a page, open a section, edit the text, and click <span className="font-medium text-zinc-800">Save</span>
         . Use the toolbar for bold, italic, underline, links, and fonts. Open{" "}
-        <span className="font-medium text-zinc-800">Global styles</span> for site-wide heading and paragraph styling.
+        <span className="font-medium text-zinc-800">Global styles</span> for site-wide heading and paragraph styling, or{" "}
+        <span className="font-medium text-zinc-800">Emails</span> for contact, order, and quote message copy.
       </p>
 
       <ContentEditor pages={pages} />
