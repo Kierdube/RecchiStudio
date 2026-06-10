@@ -5,6 +5,7 @@ import {
   type OrderLineItem,
   serializeOrderLineItems,
 } from "@/lib/cart";
+import { orderNotificationEmail } from "@/lib/email-templates";
 import { prisma } from "@/lib/prisma";
 
 function formatMoney(cents: number, currency: string): string {
@@ -99,42 +100,48 @@ async function sendOrderNotificationEmail(order: {
     }
   }
 
-  const itemLines =
+  const lineItemsForMail =
     order.lineItems.length > 0
-      ? order.lineItems.map((item) => {
-          const size = item.size ? `, size ${item.size}` : "";
-          return `- ${item.productName}${size} × ${item.quantity} — ${formatMoney(item.amountCents, order.currency)}`;
-        })
-      : [`- ${order.productName}`];
+      ? order.lineItems.map((item) => ({
+          productName: item.productName,
+          size: item.size,
+          quantity: item.quantity,
+          amountLabel: formatMoney(item.amountCents, order.currency),
+        }))
+      : [
+          {
+            productName: order.productName,
+            size: null as string | null,
+            quantity: 1,
+            amountLabel: formatMoney(order.amountCents, order.currency),
+          },
+        ];
 
-  const text = [
-    "New order — Recchi Studio",
-    "",
-    "Items:",
-    ...itemLines,
-    "",
-    `Total: ${formatMoney(order.amountCents, order.currency)}`,
-    "",
-    `Customer: ${order.customerName ?? "—"}`,
-    `Email: ${order.customerEmail ?? "—"}`,
-    "",
-    "Shipping:",
+  const mail = orderNotificationEmail({
+    productName: order.productName,
+    lineItems: lineItemsForMail,
+    totalLabel: formatMoney(order.amountCents, order.currency),
+    customerName: order.customerName,
+    customerEmail: order.customerEmail,
     shipping,
-    "",
-    `Stripe session: ${order.stripeSessionId}`,
-  ].join("\n");
+    stripeSessionId: order.stripeSessionId,
+  });
 
   try {
     const resend = new Resend(resendKey);
-    await resend.emails.send({
+    const { error } = await resend.emails.send({
       from,
       to: [to],
       replyTo: order.customerEmail ?? undefined,
-      subject: `New order: ${order.productName}`,
-      text,
+      subject: mail.subject,
+      text: mail.text,
+      html: mail.html,
     });
-  } catch {
-    // Order is saved; email is best-effort
+    if (error) {
+      console.error("Order notification email failed:", error);
+    }
+  } catch (err) {
+    console.error("Order notification email failed:", err);
   }
 }
 

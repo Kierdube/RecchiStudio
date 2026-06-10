@@ -6,6 +6,7 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { CONTACT_TOPIC_SET } from "@/lib/contact-topics";
 import { isOrderQuoteTopic } from "@/lib/order-quote-topics";
+import { contactNotificationEmail } from "@/lib/email-templates";
 import {
   parseReferenceImageUrls,
   serializeReferenceImagesJson,
@@ -31,6 +32,14 @@ export type ContactState =
   | null;
 
 export async function submitContact(_prev: ContactState, formData: FormData): Promise<ContactState> {
+  try {
+    return await submitContactInner(formData);
+  } catch {
+    return { ok: false, error: "Something went wrong. Please try again in a moment." };
+  }
+}
+
+async function submitContactInner(formData: FormData): Promise<ContactState> {
   const honeypot = String(formData.get("company") ?? "").trim();
   if (honeypot.length > 0) {
     return { ok: true };
@@ -98,30 +107,31 @@ export async function submitContact(_prev: ContactState, formData: FormData): Pr
   if (resendKey && to) {
     try {
       const resend = new Resend(resendKey);
-      const orderDetails = isOrderQuote
-        ? [
-            "",
-            "Order details:",
-            `Garment: ${parsed.data.garmentType}`,
-            `Quantity: ${parsed.data.quantity}`,
-            `Deadline: ${parsed.data.deadline}`,
-            referenceImages.length > 0
-              ? `Reference images:\n${referenceImages.map((u) => `- ${u}`).join("\n")}`
-              : null,
-          ]
-            .filter(Boolean)
-            .join("\n")
-        : "";
+      const mail = contactNotificationEmail({
+        name,
+        email,
+        topic,
+        message,
+        garmentType: isOrderQuote ? parsed.data.garmentType : undefined,
+        quantity: isOrderQuote ? parsed.data.quantity : undefined,
+        deadline: isOrderQuote ? parsed.data.deadline : undefined,
+        referenceImageUrls: referenceImages.length > 0 ? referenceImages : undefined,
+      });
 
-      await resend.emails.send({
+      const { error } = await resend.emails.send({
         from,
         to: [to],
         replyTo: email,
-        subject: `Recchi Studio contact (${topic}): ${name}`,
-        text: `From: ${name} <${email}>\nTopic: ${topic}${orderDetails}\n\n${message}`,
+        subject: mail.subject,
+        text: mail.text,
+        html: mail.html,
       });
-    } catch {
-      // Saved to DB; email is best-effort
+      if (error) {
+        // Saved to DB; email is best-effort (e.g. sandbox / unverified domain).
+        console.error("Contact notification email failed:", error);
+      }
+    } catch (err) {
+      console.error("Contact notification email failed:", err);
     }
   }
 

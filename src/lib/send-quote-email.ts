@@ -1,11 +1,8 @@
 import { Resend } from "resend";
 
 import { formatCatalogCentsForAdmin } from "@/lib/admin-pricing";
+import { quoteReadyEmail } from "@/lib/email-templates";
 import { siteUrl } from "@/lib/seo";
-
-function formatQuoteMoney(cents: number): string {
-  return formatCatalogCentsForAdmin(cents);
-}
 
 export async function sendQuoteReadyEmail(input: {
   customerEmail: string;
@@ -23,35 +20,27 @@ export async function sendQuoteReadyEmail(input: {
   }
 
   const contactUrl = `${siteUrl().replace(/\/$/, "")}/contact`;
-  const amount = formatQuoteMoney(input.quoteAmountCents);
-  const notesBlock = input.quoteNotes?.trim()
-    ? `\n\nDetails:\n${input.quoteNotes.trim()}`
-    : "";
-
-  const text = [
-    `Hi ${input.customerName},`,
-    "",
-    `Your ${input.topic.toLowerCase()} quote from Recchi Studio is ready.`,
-    "",
-    `Quoted total: ${amount} CAD`,
-    notesBlock,
-    "",
-    "Reply to this email or use our contact page if you would like to proceed or have questions:",
+  const amountLabel = formatCatalogCentsForAdmin(input.quoteAmountCents);
+  const mail = quoteReadyEmail({
+    customerName: input.customerName,
+    topic: input.topic,
+    amountLabel,
+    quoteNotes: input.quoteNotes,
     contactUrl,
-    "",
-    "— Recchi Studio",
-  ]
-    .filter(Boolean)
-    .join("\n");
+  });
 
   try {
     const resend = new Resend(resendKey);
-    await resend.emails.send({
+    const { error } = await resend.emails.send({
       from,
       to: [input.customerEmail],
-      subject: `Your Recchi Studio quote is ready`,
-      text,
+      subject: mail.subject,
+      text: mail.text,
+      html: mail.html,
     });
+    if (error) {
+      return { ok: false, error: "Could not send email. Check Resend configuration." };
+    }
     return { ok: true };
   } catch {
     return { ok: false, error: "Could not send email. Check Resend configuration." };

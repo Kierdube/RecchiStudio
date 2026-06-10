@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "test:webhook": "node scripts/send-test-webhook.mjs",
+    "test:resend": "node scripts/test-resend.mjs",
+    "test:emails": "tsx scripts/test-all-emails.ts",
     "dev": "next dev",
     "build": "node scripts/vercel-build.mjs",
     "db:migrate": "node scripts/migrate-deploy.mjs",
