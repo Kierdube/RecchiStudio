@@ -7,6 +7,7 @@ import type { SiteCopyPageId, SiteCopyPagePayload } from "@/lib/site-copy-admin-
 
 import { EmailCopyEditor } from "./EmailCopyEditor";
 import { EmailPreviewPanel } from "./EmailPreviewPanel";
+import { EmailTokenGlossary } from "./EmailTokenGlossary";
 import { SiteCopyBlockForm } from "./SiteCopyBlockForm";
 
 export function ContentEditor({ pages }: { pages: SiteCopyPagePayload[] }) {
@@ -62,10 +63,12 @@ export function ContentEditor({ pages }: { pages: SiteCopyPagePayload[] }) {
 
       {pageId === "emails" ? (
         <>
+          <EmailTokenGlossary />
           <div className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-4 sm:px-5">
             <p className="text-sm text-zinc-700">
-              Each section shows an <span className="font-medium text-zinc-900">email layout map</span> that
-              matches the preview. Edit the text fields below each map, save, then refresh the preview to confirm.
+              Each email is one editable template. Tokens like{" "}
+              <span className="font-mono font-medium text-zinc-900">{"{name}"}</span> are replaced with real
+              data when the email sends. Save, then refresh the preview to confirm.
             </p>
             <div className="mt-4">
               <EmailPreviewPanel />

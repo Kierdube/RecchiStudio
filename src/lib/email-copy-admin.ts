@@ -1,228 +1,128 @@
 import { EMAIL_COPY_DEFINITIONS } from "@/lib/email-copy-definitions";
 import type { SiteCopyDefinition } from "@/lib/site-copy-definitions";
 
-export type EmailAdminSectionId = "shared" | "contact" | "order" | "quote";
+export type EmailAdminSectionId = "contact" | "order" | "quote";
 
-export type EmailAdminField = {
-  key: string;
-  label: string;
-  hint?: string;
+export type EmailTokenHelp = {
+  token: string;
+  description: string;
 };
 
 export type EmailAdminSection = {
   id: EmailAdminSectionId;
   title: string;
   description: string;
-  outline: string;
-  dynamicTokens: string[];
-  fields: EmailAdminField[];
+  templateKey: string;
+  tokenHelp: EmailTokenHelp[];
 };
 
 const DEF_BY_KEY = new Map(EMAIL_COPY_DEFINITIONS.map((def) => [def.key, def]));
 
-function field(key: string, hint?: string): EmailAdminField {
-  const def = DEF_BY_KEY.get(key);
-  return { key, label: def?.label ?? key, hint };
-}
-
-/** Visual map of each email — matches the preview layout. */
 export const EMAIL_ADMIN_SECTIONS: EmailAdminSection[] = [
-  {
-    id: "shared",
-    title: "Shared header",
-    description: "Appears at the top of every email.",
-    outline: `{brandTitle}
-{brandTagline}`,
-    dynamicTokens: [],
-    fields: [field("email.brand.title"), field("email.brand.tagline")],
-  },
   {
     id: "contact",
     title: "Contact form alert",
     description: "Sent to your inbox when someone submits the contact form.",
-    outline: `Subject: {subject}
-
-{brandTitle}
-{brandTagline}
-
-{eyebrow}
-{title}
-
-{fromLabel}: {name} <{email}>
-{topicLabel}: {topic}
-{garmentLabel}: {garmentType}
-{quantityLabel}: {quantity}
-{deadlineLabel}: {deadline}
-
-{referenceImagesLabel}:
-{referenceImages}
-
-{messageLabel}
-{message}`,
-    dynamicTokens: [
-      "{name}",
-      "{email}",
-      "{topic}",
-      "{message}",
-      "{garmentType}",
-      "{quantity}",
-      "{deadline}",
-      "{referenceImages}",
-    ],
-    fields: [
-      field("email.contact.subject", "Use {topic} and {name}"),
-      field("email.contact.eyebrow"),
-      field("email.contact.title"),
-      field("email.contact.from_label"),
-      field("email.contact.topic_label"),
-      field("email.contact.garment_label", "Custom/bulk orders only"),
-      field("email.contact.quantity_label", "Custom/bulk orders only"),
-      field("email.contact.deadline_label", "Custom/bulk orders only"),
-      field("email.contact.reference_images_label"),
-      field("email.contact.message_label"),
+    templateKey: "email.contact.template",
+    tokenHelp: [
+      { token: "{name}", description: "Customer's name from the form" },
+      { token: "{email}", description: "Customer's email address" },
+      { token: "{topic}", description: "Topic they selected (e.g. Custom Order Request)" },
+      { token: "{message}", description: "The message they wrote" },
+      { token: "{garmentType}", description: "Garment type — custom/bulk orders only" },
+      { token: "{quantity}", description: "Quantity requested — custom/bulk orders only" },
+      { token: "{deadline}", description: "Deadline or event date — custom/bulk orders only" },
+      {
+        token: "{referenceImages}",
+        description:
+          "Links to photos the customer uploaded as inspiration on the contact form (custom/bulk orders). Each image appears as a clickable URL in the email.",
+      },
     ],
   },
   {
     id: "order",
     title: "New order alert",
     description: "Sent to your inbox when a customer completes checkout.",
-    outline: `Subject: {subject}
-
-{brandTitle}
-{brandTagline}
-
-{eyebrow}
-{title}
-
-{itemLabel}    {qtyLabel}    {amountLabel}
-{lineItems}
-
-{totalLabel}: {orderTotal}
-
-{customerLabel}: {customerName}
-{emailLabel}: {customerEmail}
-{shippingLabel}:
-{shippingAddress}
-
-{stripeLabel}: {stripeSessionId}`,
-    dynamicTokens: [
-      "{productName}",
-      "{lineItems}",
-      "{orderTotal}",
-      "{customerName}",
-      "{customerEmail}",
-      "{shippingAddress}",
-      "{stripeSessionId}",
-    ],
-    fields: [
-      field("email.order.subject", "Use {productName}"),
-      field("email.order.eyebrow"),
-      field("email.order.title"),
-      field("email.order.item_label"),
-      field("email.order.qty_label"),
-      field("email.order.amount_label"),
-      field("email.order.total_label"),
-      field("email.order.customer_label"),
-      field("email.order.email_label"),
-      field("email.order.shipping_label"),
-      field("email.order.stripe_label"),
+    templateKey: "email.order.template",
+    tokenHelp: [
+      { token: "{productName}", description: "First product name in the order" },
+      { token: "{lineItems}", description: "Order line items table (auto-generated)" },
+      { token: "{orderTotal}", description: "Order total amount" },
+      { token: "{customerName}", description: "Customer name from Stripe checkout" },
+      { token: "{customerEmail}", description: "Customer email from Stripe checkout" },
+      { token: "{shippingAddress}", description: "Formatted shipping address" },
+      { token: "{stripeSessionId}", description: "Stripe checkout session ID" },
     ],
   },
   {
     id: "quote",
     title: "Quote ready email",
     description: "Sent to the customer when you send a quote from Messages.",
-    outline: `Subject: {subject}
-
-{brandTitle}
-{brandTagline}
-
-{eyebrow}
-{greeting}
-
-{intro}
-
-{totalLabel}
-{quoteAmount} CAD
-
-{detailsLabel}
-{quoteNotes}
-
-{followup}
-
-[{ctaLabel}]`,
-    dynamicTokens: ["{customerName}", "{topic}", "{quoteAmount}", "{quoteNotes}"],
-    fields: [
-      field("email.quote.subject"),
-      field("email.quote.eyebrow"),
-      field("email.quote.greeting", "Use {customerName}"),
-      field("email.quote.intro", "Use {topic}"),
-      field("email.quote.total_label"),
-      field("email.quote.details_label"),
-      field("email.quote.followup"),
-      field("email.quote.cta_label"),
+    templateKey: "email.quote.template",
+    tokenHelp: [
+      { token: "{customerName}", description: "Customer name from the message thread" },
+      { token: "{topic}", description: "Original inquiry topic (e.g. custom order request)" },
+      { token: "{quoteAmount}", description: "Quoted price you entered in admin" },
+      { token: "{quoteNotes}", description: "Quote details/notes you entered in admin" },
     ],
   },
 ];
 
-export function emailCopyDefinitionForKey(key: string): SiteCopyDefinition | undefined {
-  return DEF_BY_KEY.get(key);
+export type EmailGlossaryEntry = {
+  token: string;
+  description: string;
+  usedIn: string[];
+};
+
+export type EmailTemplateTip = {
+  label: string;
+  description: string;
+};
+
+/** Collapsible glossary on the Emails content page. */
+export const EMAIL_TEMPLATE_TIPS: EmailTemplateTip[] = [
+  {
+    label: "Subject:",
+    description: "First line must start with Subject: — the rest is the email subject (tokens allowed).",
+  },
+  {
+    label: "[Button label]",
+    description: "Quote email only. A line in square brackets becomes the CTA button (e.g. [Contact us]).",
+  },
+  {
+    label: "Item | Qty | Amount",
+    description:
+      "Order email only. The line before {lineItems} sets the table column headers (separate with |).",
+  },
+];
+
+export function buildEmailTokenGlossary(): EmailGlossaryEntry[] {
+  const map = new Map<string, { descriptions: string[]; usedIn: Set<string> }>();
+
+  for (const section of EMAIL_ADMIN_SECTIONS) {
+    for (const item of section.tokenHelp) {
+      const existing = map.get(item.token);
+      if (existing) {
+        existing.descriptions.push(item.description);
+        existing.usedIn.add(section.title);
+      } else {
+        map.set(item.token, {
+          descriptions: [item.description],
+          usedIn: new Set([section.title]),
+        });
+      }
+    }
+  }
+
+  return Array.from(map.entries())
+    .map(([token, { descriptions, usedIn }]) => ({
+      token,
+      description: [...new Set(descriptions)].join(" "),
+      usedIn: [...usedIn],
+    }))
+    .sort((a, b) => a.token.localeCompare(b.token));
 }
 
-/** Fill outline placeholders with saved copy so the map matches the preview. */
-export function renderEmailOutline(sectionId: EmailAdminSectionId, values: Record<string, string>): string {
-  const section = EMAIL_ADMIN_SECTIONS.find((s) => s.id === sectionId);
-  if (!section) return "";
-
-  const v = (key: string, fallback: string) => values[key]?.trim() || fallback;
-
-  const replacements: Record<string, string> = {
-    subject:
-      sectionId === "contact"
-        ? v("email.contact.subject", "Recchi Studio contact ({topic}): {name}")
-        : sectionId === "order"
-          ? v("email.order.subject", "New order: {productName}")
-          : sectionId === "quote"
-            ? v("email.quote.subject", "Your Recchi Studio quote is ready")
-            : "",
-    brandTitle: v("email.brand.title", "Recchi Studio"),
-    brandTagline: v("email.brand.tagline", "Nature-inspired patterns & apparel"),
-    eyebrow:
-      sectionId === "shared"
-        ? ""
-        : v(`email.${sectionId}.eyebrow`, ""),
-    title: sectionId === "contact" ? v("email.contact.title", "New message") : v("email.order.title", "You have a new order"),
-    fromLabel: v("email.contact.from_label", "From"),
-    topicLabel: v("email.contact.topic_label", "Topic"),
-    garmentLabel: v("email.contact.garment_label", "Garment"),
-    quantityLabel: v("email.contact.quantity_label", "Quantity"),
-    deadlineLabel: v("email.contact.deadline_label", "Deadline"),
-    referenceImagesLabel: v("email.contact.reference_images_label", "Reference images"),
-    messageLabel: v("email.contact.message_label", "Message"),
-    itemLabel: v("email.order.item_label", "Item"),
-    qtyLabel: v("email.order.qty_label", "Qty"),
-    amountLabel: v("email.order.amount_label", "Amount"),
-    totalLabel:
-      sectionId === "order"
-        ? v("email.order.total_label", "Total")
-        : v("email.quote.total_label", "Quoted total"),
-    customerLabel: v("email.order.customer_label", "Customer"),
-    emailLabel: v("email.order.email_label", "Email"),
-    shippingLabel: v("email.order.shipping_label", "Shipping"),
-    stripeLabel: v("email.order.stripe_label", "Stripe session"),
-    greeting: v("email.quote.greeting", "Hi {customerName},"),
-    intro: v("email.quote.intro", "Your {topic} quote from Recchi Studio is ready."),
-    detailsLabel: v("email.quote.details_label", "Details"),
-    followup: v(
-      "email.quote.followup",
-      "Reply to this email or get in touch if you would like to proceed or have any questions.",
-    ),
-    ctaLabel: v("email.quote.cta_label", "Contact us"),
-  };
-
-  let text = section.outline;
-  for (const [token, value] of Object.entries(replacements)) {
-    text = text.replaceAll(`{${token}}`, value);
-  }
-  return text;
+export function emailCopyDefinitionForKey(key: string): SiteCopyDefinition | undefined {
+  return DEF_BY_KEY.get(key);
 }

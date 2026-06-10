@@ -1,4 +1,15 @@
 import { applyEmailTemplate, emailCopyGet } from "@/lib/email-copy";
+import {
+  EMAIL_CONTACT_TEMPLATE_DEFAULT,
+  EMAIL_ORDER_TEMPLATE_DEFAULT,
+  EMAIL_QUOTE_TEMPLATE_DEFAULT,
+} from "@/lib/email-template-defaults";
+import {
+  parseEmailTemplate,
+  renderTemplatePlainText,
+  substituteTemplateValue,
+  type TemplateBodyLine,
+} from "@/lib/email-template-parser";
 import { siteUrl } from "@/lib/seo";
 
 /** Recchi Studio brand palette (matches storefront). */
@@ -91,6 +102,7 @@ function emailLayout({
 }
 
 function fieldTable(rows: { label: string; value: string; valueIsHtml?: boolean }[]): string {
+  if (rows.length === 0) return "";
   const trs = rows
     .map(
       (row) => `<tr>
@@ -124,15 +136,189 @@ function ctaButton(href: string, label: string): string {
   </table>`;
 }
 
-function brandFromCopy(copy: Record<string, string>) {
-  return {
-    brandTitle: emailCopyGet(copy, "email.brand.title", "Recchi Studio"),
-    brandTagline: emailCopyGet(
-      copy,
-      "email.brand.tagline",
-      "Nature-inspired patterns & apparel",
-    ),
-  };
+function getTemplate(copy: Record<string, string>, key: string, fallback: string): string {
+  return emailCopyGet(copy, key, fallback);
+}
+
+function rowValueVisible(value: string): boolean {
+  return value.trim().length > 0 && !/^\{[a-zA-Z]+\}$/.test(value.trim());
+}
+
+function renderContactBodyHtml(
+  body: TemplateBodyLine[],
+  vars: Record<string, string>,
+  input: { topic: string; message: string; referenceImageUrls?: string[] },
+): string {
+  const tableRows: { label: string; value: string; valueIsHtml?: boolean }[] = [];
+  let html = "";
+
+  for (const line of body) {
+    if (line.type === "row") {
+      const value = substituteTemplateValue(line.valueTemplate, vars);
+      if (!rowValueVisible(value)) continue;
+      if (line.label.toLowerCase() === "topic") {
+        tableRows.push({ label: line.label, value: topicBadge(input.topic), valueIsHtml: true });
+      } else {
+        tableRows.push({ label: line.label, value });
+      }
+      continue;
+    }
+
+    if (line.type === "block") {
+      if (line.token === "referenceImages") {
+        if (input.referenceImageUrls && input.referenceImageUrls.length > 0) {
+          const links = input.referenceImageUrls
+            .map(
+              (url) =>
+                `<li style="margin:4px 0;"><a href="${escapeHtml(url)}" style="color:${COLORS.sage};font-size:13px;word-break:break-all;">${escapeHtml(url)}</a></li>`,
+            )
+            .join("");
+          html += `<div style="margin:16px 0 0;">
+            <p style="margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:${COLORS.textMuted};">${escapeHtml(line.label)}</p>
+            <ul style="margin:0;padding-left:18px;color:${COLORS.forest};">${links}</ul>
+          </div>`;
+        }
+        continue;
+      }
+      if (line.token === "message") {
+        html += messageCard(line.label, input.message);
+      }
+      continue;
+    }
+
+    if (line.type === "text") {
+      const content = substituteTemplateValue(line.content, vars);
+      if (content.trim()) {
+        html += `<p style="margin:0 0 16px;font-size:16px;line-height:1.65;color:${COLORS.textMuted};">${escapeHtml(content)}</p>`;
+      }
+    }
+  }
+
+  return `${fieldTable(tableRows)}${html}`;
+}
+
+function renderOrderItemsTable(
+  lineItems: { productName: string; size: string | null; quantity: number; amountLabel: string }[],
+  totalLabel: string,
+  headers: [string, string, string],
+  totalRowLabel: string,
+): string {
+  const itemRows = lineItems
+    .map(
+      (item) => `<tr>
+        <td style="padding:12px 14px;font-size:14px;color:${COLORS.forest};border-bottom:1px solid ${COLORS.border};">${escapeHtml(item.productName)}${item.size ? `<br /><span style="font-size:12px;color:${COLORS.textMuted};">${escapeHtml(item.size)}</span>` : ""}</td>
+        <td style="padding:12px 14px;font-size:14px;color:${COLORS.forest};border-bottom:1px solid ${COLORS.border};text-align:center;">${item.quantity}</td>
+        <td style="padding:12px 14px;font-size:14px;font-weight:600;color:${COLORS.sage};border-bottom:1px solid ${COLORS.border};text-align:right;white-space:nowrap;">${escapeHtml(item.amountLabel)}</td>
+      </tr>`,
+    )
+    .join("");
+
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 20px;border:1px solid ${COLORS.border};border-radius:14px;overflow:hidden;">
+    <tr style="background-color:${COLORS.cream};">
+      <th style="padding:10px 14px;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;text-align:left;color:${COLORS.textMuted};">${escapeHtml(headers[0])}</th>
+      <th style="padding:10px 14px;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;text-align:center;color:${COLORS.textMuted};">${escapeHtml(headers[1])}</th>
+      <th style="padding:10px 14px;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;text-align:right;color:${COLORS.textMuted};">${escapeHtml(headers[2])}</th>
+    </tr>
+    ${itemRows}
+    <tr>
+      <td colspan="2" style="padding:14px;font-size:14px;font-weight:600;color:${COLORS.forest};text-align:right;">${escapeHtml(totalRowLabel)}</td>
+      <td style="padding:14px;font-size:16px;font-weight:700;color:${COLORS.sage};text-align:right;">${escapeHtml(totalLabel)}</td>
+    </tr>
+  </table>`;
+}
+
+function renderOrderBodyHtml(
+  body: TemplateBodyLine[],
+  vars: Record<string, string>,
+  input: {
+    lineItems: { productName: string; size: string | null; quantity: number; amountLabel: string }[];
+    totalLabel: string;
+    shipping: string;
+    stripeSessionId: string;
+    customerName: string | null;
+    customerEmail: string | null;
+  },
+): string {
+  let html = "";
+  const tableRows: { label: string; value: string }[] = [];
+
+  for (const line of body) {
+    if (line.type === "embed" && line.token === "lineItems") {
+      const headers = line.tableHeaders ?? ["Item", "Qty", "Amount"];
+      const totalRow = body.find(
+        (item): item is Extract<TemplateBodyLine, { type: "row" }> =>
+          item.type === "row" && item.valueTemplate.includes("{orderTotal}"),
+      );
+      const totalRowLabel = totalRow?.label ?? "Total";
+      html += renderOrderItemsTable(input.lineItems, input.totalLabel, headers, totalRowLabel);
+      continue;
+    }
+
+    if (line.type === "row") {
+      const value = substituteTemplateValue(line.valueTemplate, {
+        ...vars,
+        shippingAddress: input.shipping,
+        stripeSessionId: input.stripeSessionId,
+        customerName: input.customerName ?? "—",
+        customerEmail: input.customerEmail ?? "—",
+      });
+      if (!rowValueVisible(value)) continue;
+      if (line.label.toLowerCase() === "shipping") {
+        tableRows.push({ label: line.label, value: input.shipping });
+      } else if (line.valueTemplate.includes("{stripeSessionId}")) {
+        html += `<p style="margin:16px 0 0;font-size:12px;color:${COLORS.textMuted};">${escapeHtml(line.label)}: <span style="font-family:ui-monospace,monospace;">${escapeHtml(input.stripeSessionId)}</span></p>`;
+      } else {
+        tableRows.push({ label: line.label, value });
+      }
+      continue;
+    }
+
+    if (line.type === "block" && line.token === "shippingAddress") {
+      tableRows.push({ label: line.label, value: input.shipping });
+    }
+  }
+
+  return `${html}${fieldTable(tableRows)}`;
+}
+
+function renderQuoteBodyHtml(
+  body: TemplateBodyLine[],
+  vars: Record<string, string>,
+  input: { amountLabel: string; quoteNotes: string | null; contactUrl: string },
+): string {
+  let html = "";
+
+  for (const line of body) {
+    if (line.type === "text") {
+      const content = substituteTemplateValue(line.content, vars);
+      if (content.trim()) {
+        html += `<p style="margin:0 0 16px;font-size:16px;line-height:1.65;color:${COLORS.textMuted};">${escapeHtml(content)}</p>`;
+      }
+      continue;
+    }
+
+    if (line.type === "block" && line.token === "quoteAmount") {
+      html += `<div style="margin:20px 0;padding:20px 22px;background:linear-gradient(135deg,${COLORS.cream} 0%,#E8F0DD 100%);border-radius:16px;border:1px solid ${COLORS.border};text-align:center;">
+        <p style="margin:0 0 4px;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:${COLORS.textMuted};">${escapeHtml(line.label)}</p>
+        <p style="margin:0;font-size:32px;font-weight:700;letter-spacing:-0.02em;color:${COLORS.sage};">${escapeHtml(input.amountLabel)} <span style="font-size:16px;font-weight:600;">${escapeHtml(line.suffix ?? "CAD")}</span></p>
+      </div>`;
+      continue;
+    }
+
+    if (line.type === "block" && line.token === "quoteNotes" && input.quoteNotes?.trim()) {
+      html += `<div style="margin:20px 0 0;">
+        <p style="margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:${COLORS.textMuted};">${escapeHtml(line.label)}</p>
+        <div style="padding:16px 18px;background-color:${COLORS.cream};border-radius:14px;border:1px solid ${COLORS.border};font-size:15px;line-height:1.65;color:${COLORS.forest};">${nl2br(input.quoteNotes.trim())}</div>
+      </div>`;
+      continue;
+    }
+
+    if (line.type === "cta") {
+      html += ctaButton(input.contactUrl, line.label);
+    }
+  }
+
+  return html;
 }
 
 export function contactNotificationEmail(
@@ -148,89 +334,35 @@ export function contactNotificationEmail(
   },
   copy: Record<string, string> = {},
 ): { subject: string; text: string; html: string } {
-  const garmentLabel = emailCopyGet(copy, "email.contact.garment_label", "Garment");
-  const quantityLabel = emailCopyGet(copy, "email.contact.quantity_label", "Quantity");
-  const deadlineLabel = emailCopyGet(copy, "email.contact.deadline_label", "Deadline");
-  const referenceImagesLabel = emailCopyGet(
-    copy,
-    "email.contact.reference_images_label",
-    "Reference images",
-  );
-  const fromLabel = emailCopyGet(copy, "email.contact.from_label", "From");
-  const topicLabel = emailCopyGet(copy, "email.contact.topic_label", "Topic");
+  const template = getTemplate(copy, "email.contact.template", EMAIL_CONTACT_TEMPLATE_DEFAULT);
+  const parsed = parseEmailTemplate(template);
 
-  const orderRows: { label: string; value: string }[] = [];
-  if (input.garmentType) orderRows.push({ label: garmentLabel, value: input.garmentType });
-  if (input.quantity) orderRows.push({ label: quantityLabel, value: input.quantity });
-  if (input.deadline) orderRows.push({ label: deadlineLabel, value: input.deadline });
-
-  const refImagesText =
+  const referenceImages =
     input.referenceImageUrls && input.referenceImageUrls.length > 0
-      ? input.referenceImageUrls.map((u) => `- ${u}`).join("\n")
+      ? input.referenceImageUrls.map((url) => `- ${url}`).join("\n")
       : "";
 
-  const orderDetailsText =
-    orderRows.length > 0
-      ? [
-          "",
-          "Order details:",
-          ...orderRows.map((r) => `${r.label}: ${r.value}`),
-          refImagesText ? `Reference images:\n${refImagesText}` : null,
-        ]
-          .filter(Boolean)
-          .join("\n")
-      : "";
+  const vars = {
+    name: input.name,
+    email: input.email,
+    topic: input.topic,
+    message: input.message,
+    garmentType: input.garmentType ?? "",
+    quantity: input.quantity ?? "",
+    deadline: input.deadline ?? "",
+    referenceImages,
+  };
 
-  const subject = applyEmailTemplate(
-    emailCopyGet(copy, "email.contact.subject", "Recchi Studio contact ({topic}): {name}"),
-    { topic: input.topic, name: input.name },
-  );
-  const eyebrow = emailCopyGet(copy, "email.contact.eyebrow", "Contact form");
-  const title = emailCopyGet(copy, "email.contact.title", "New message");
-  const messageLabel = emailCopyGet(copy, "email.contact.message_label", "Message");
-
-  const text = [
-    `New contact message — ${input.topic}`,
-    "",
-    `From: ${input.name} <${input.email}>`,
-    `Topic: ${input.topic}`,
-    orderDetailsText,
-    "",
-    input.message,
-  ]
-    .filter(Boolean)
-    .join("\n");
-
-  const rows = [
-    { label: fromLabel, value: `${input.name} <${input.email}>` },
-    {
-      label: topicLabel,
-      value: topicBadge(input.topic),
-      valueIsHtml: true,
-    },
-    ...(orderRows.length > 0 ? orderRows : []),
-  ];
-
-  let refHtml = "";
-  if (input.referenceImageUrls && input.referenceImageUrls.length > 0) {
-    const links = input.referenceImageUrls
-      .map(
-        (url) =>
-          `<li style="margin:4px 0;"><a href="${escapeHtml(url)}" style="color:${COLORS.sage};font-size:13px;word-break:break-all;">${escapeHtml(url)}</a></li>`,
-      )
-      .join("");
-    refHtml = `<div style="margin:16px 0 0;">
-      <p style="margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:${COLORS.textMuted};">${escapeHtml(referenceImagesLabel)}</p>
-      <ul style="margin:0;padding-left:18px;color:${COLORS.forest};">${links}</ul>
-    </div>`;
-  }
-
+  const subject = applyEmailTemplate(parsed.subject, vars);
+  const headline = applyEmailTemplate(parsed.headline, vars);
+  const text = renderTemplatePlainText(template, vars);
   const html = emailLayout({
     preheader: `New ${input.topic} from ${input.name}`,
-    eyebrow,
-    title,
-    bodyHtml: `${fieldTable(rows)}${refHtml}${messageCard(messageLabel, input.message)}`,
-    ...brandFromCopy(copy),
+    eyebrow: parsed.eyebrow,
+    title: headline,
+    bodyHtml: renderContactBodyHtml(parsed.body, vars, input),
+    brandTitle: parsed.brandTitle,
+    brandTagline: parsed.brandTagline,
   });
 
   return { subject, text, html };
@@ -248,86 +380,41 @@ export function orderNotificationEmail(
   },
   copy: Record<string, string> = {},
 ): { subject: string; text: string; html: string } {
-  const itemLines =
-    input.lineItems.length > 0
-      ? input.lineItems.map((item) => {
-          const size = item.size ? `, ${item.size}` : "";
-          return `- ${item.productName}${size} × ${item.quantity} — ${item.amountLabel}`;
-        })
-      : [`- ${input.productName}`];
+  const template = getTemplate(copy, "email.order.template", EMAIL_ORDER_TEMPLATE_DEFAULT);
+  const parsed = parseEmailTemplate(template);
 
-  const subject = applyEmailTemplate(
-    emailCopyGet(copy, "email.order.subject", "New order: {productName}"),
-    { productName: input.productName },
-  );
-  const eyebrow = emailCopyGet(copy, "email.order.eyebrow", "New order");
-  const title = emailCopyGet(copy, "email.order.title", "You have a new order");
-  const itemLabel = emailCopyGet(copy, "email.order.item_label", "Item");
-  const qtyLabel = emailCopyGet(copy, "email.order.qty_label", "Qty");
-  const amountLabel = emailCopyGet(copy, "email.order.amount_label", "Amount");
-  const totalLabel = emailCopyGet(copy, "email.order.total_label", "Total");
-  const customerLabel = emailCopyGet(copy, "email.order.customer_label", "Customer");
-  const orderEmailLabel = emailCopyGet(copy, "email.order.email_label", "Email");
-  const shippingLabel = emailCopyGet(copy, "email.order.shipping_label", "Shipping");
-  const stripeLabel = emailCopyGet(copy, "email.order.stripe_label", "Stripe session");
-
-  const text = [
-    "New order — Recchi Studio",
-    "",
-    "Items:",
-    ...itemLines,
-    "",
-    `Total: ${input.totalLabel}`,
-    "",
-    `Customer: ${input.customerName ?? "—"}`,
-    `Email: ${input.customerEmail ?? "—"}`,
-    "",
-    "Shipping:",
-    input.shipping,
-    "",
-    `Stripe session: ${input.stripeSessionId}`,
-  ].join("\n");
-
-  const itemRows = (
+  const lineItemsText = (
     input.lineItems.length > 0
       ? input.lineItems
       : [{ productName: input.productName, size: null, quantity: 1, amountLabel: input.totalLabel }]
   )
-    .map(
-      (item) => `<tr>
-        <td style="padding:12px 14px;font-size:14px;color:${COLORS.forest};border-bottom:1px solid ${COLORS.border};">${escapeHtml(item.productName)}${item.size ? `<br /><span style="font-size:12px;color:${COLORS.textMuted};">${escapeHtml(item.size)}</span>` : ""}</td>
-        <td style="padding:12px 14px;font-size:14px;color:${COLORS.forest};border-bottom:1px solid ${COLORS.border};text-align:center;">${item.quantity}</td>
-        <td style="padding:12px 14px;font-size:14px;font-weight:600;color:${COLORS.sage};border-bottom:1px solid ${COLORS.border};text-align:right;white-space:nowrap;">${escapeHtml(item.amountLabel)}</td>
-      </tr>`,
-    )
-    .join("");
+    .map((item) => {
+      const size = item.size ? `, ${item.size}` : "";
+      return `- ${item.productName}${size} × ${item.quantity} — ${item.amountLabel}`;
+    })
+    .join("\n");
 
-  const itemsTable = `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 20px;border:1px solid ${COLORS.border};border-radius:14px;overflow:hidden;">
-    <tr style="background-color:${COLORS.cream};">
-      <th style="padding:10px 14px;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;text-align:left;color:${COLORS.textMuted};">${escapeHtml(itemLabel)}</th>
-      <th style="padding:10px 14px;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;text-align:center;color:${COLORS.textMuted};">${escapeHtml(qtyLabel)}</th>
-      <th style="padding:10px 14px;font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;text-align:right;color:${COLORS.textMuted};">${escapeHtml(amountLabel)}</th>
-    </tr>
-    ${itemRows}
-    <tr>
-      <td colspan="2" style="padding:14px;font-size:14px;font-weight:600;color:${COLORS.forest};text-align:right;">${escapeHtml(totalLabel)}</td>
-      <td style="padding:14px;font-size:16px;font-weight:700;color:${COLORS.sage};text-align:right;">${escapeHtml(input.totalLabel)}</td>
-    </tr>
-  </table>`;
+  const vars = {
+    productName: input.productName,
+    lineItems: lineItemsText,
+    orderTotal: input.totalLabel,
+    customerName: input.customerName ?? "—",
+    customerEmail: input.customerEmail ?? "—",
+    shippingAddress: input.shipping,
+    stripeSessionId: input.stripeSessionId,
+  };
 
+  const subject = applyEmailTemplate(parsed.subject, vars);
   const html = emailLayout({
     preheader: `New order: ${input.totalLabel}`,
-    eyebrow,
-    title,
-    bodyHtml: `${itemsTable}${fieldTable([
-      { label: customerLabel, value: input.customerName ?? "—" },
-      { label: orderEmailLabel, value: input.customerEmail ?? "—" },
-      { label: shippingLabel, value: input.shipping },
-    ])}<p style="margin:16px 0 0;font-size:12px;color:${COLORS.textMuted};">${escapeHtml(stripeLabel)}: <span style="font-family:ui-monospace,monospace;">${escapeHtml(input.stripeSessionId)}</span></p>`,
-    ...brandFromCopy(copy),
+    eyebrow: parsed.eyebrow,
+    title: parsed.headline,
+    bodyHtml: renderOrderBodyHtml(parsed.body, vars, input),
+    brandTitle: parsed.brandTitle,
+    brandTagline: parsed.brandTagline,
   });
 
-  return { subject, text, html };
+  return { subject, text: renderTemplatePlainText(template, vars), html };
 }
 
 export function quoteReadyEmail(
@@ -340,65 +427,31 @@ export function quoteReadyEmail(
   },
   copy: Record<string, string> = {},
 ): { subject: string; text: string; html: string } {
-  const subject = emailCopyGet(copy, "email.quote.subject", "Your Recchi Studio quote is ready");
-  const eyebrow = emailCopyGet(copy, "email.quote.eyebrow", "Quote ready");
-  const greeting = applyEmailTemplate(
-    emailCopyGet(copy, "email.quote.greeting", "Hi {customerName},"),
-    { customerName: input.customerName },
-  );
-  const intro = applyEmailTemplate(
-    emailCopyGet(copy, "email.quote.intro", "Your {topic} quote from Recchi Studio is ready."),
-    { topic: input.topic.toLowerCase() },
-  );
-  const totalLabel = emailCopyGet(copy, "email.quote.total_label", "Quoted total");
-  const detailsLabel = emailCopyGet(copy, "email.quote.details_label", "Details");
-  const followup = emailCopyGet(
-    copy,
-    "email.quote.followup",
-    "Reply to this email or get in touch if you would like to proceed or have any questions.",
-  );
-  const ctaLabel = emailCopyGet(copy, "email.quote.cta_label", "Contact us");
+  const actualTemplate = getTemplate(copy, "email.quote.template", EMAIL_QUOTE_TEMPLATE_DEFAULT);
+  const parsed = parseEmailTemplate(actualTemplate);
 
-  const notesBlock = input.quoteNotes?.trim()
-    ? `\n\nDetails:\n${input.quoteNotes.trim()}`
-    : "";
+  const vars = {
+    customerName: input.customerName,
+    topic: input.topic.toLowerCase(),
+    quoteAmount: input.amountLabel,
+    quoteNotes: input.quoteNotes?.trim() ?? "",
+  };
 
-  const text = [
-    greeting,
-    "",
-    intro,
-    "",
-    `${totalLabel}: ${input.amountLabel} CAD`,
-    notesBlock,
-    "",
-    `${followup} ${input.contactUrl}`,
-    "",
-    "— Recchi Studio",
-  ]
-    .filter(Boolean)
-    .join("\n");
-
-  const notesHtml = input.quoteNotes?.trim()
-    ? `<div style="margin:20px 0 0;">
-        <p style="margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:${COLORS.textMuted};">${escapeHtml(detailsLabel)}</p>
-        <div style="padding:16px 18px;background-color:${COLORS.cream};border-radius:14px;border:1px solid ${COLORS.border};font-size:15px;line-height:1.65;color:${COLORS.forest};">${nl2br(input.quoteNotes.trim())}</div>
-      </div>`
-    : "";
-
+  const subject = applyEmailTemplate(parsed.subject, vars);
+  const headline = applyEmailTemplate(parsed.headline, vars);
   const html = emailLayout({
     preheader: `Your quote is ready — ${input.amountLabel} CAD`,
-    eyebrow,
-    title: greeting,
-    bodyHtml: `<p style="margin:0 0 16px;font-size:16px;line-height:1.65;color:${COLORS.textMuted};">${escapeHtml(intro)}</p>
-      <div style="margin:20px 0;padding:20px 22px;background:linear-gradient(135deg,${COLORS.cream} 0%,#E8F0DD 100%);border-radius:16px;border:1px solid ${COLORS.border};text-align:center;">
-        <p style="margin:0 0 4px;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:${COLORS.textMuted};">${escapeHtml(totalLabel)}</p>
-        <p style="margin:0;font-size:32px;font-weight:700;letter-spacing:-0.02em;color:${COLORS.sage};">${escapeHtml(input.amountLabel)} <span style="font-size:16px;font-weight:600;">CAD</span></p>
-      </div>
-      ${notesHtml}
-      <p style="margin:20px 0 0;font-size:15px;line-height:1.65;color:${COLORS.textMuted};">${escapeHtml(followup)}</p>
-      ${ctaButton(input.contactUrl, ctaLabel)}`,
-    ...brandFromCopy(copy),
+    eyebrow: parsed.eyebrow,
+    title: headline,
+    bodyHtml: renderQuoteBodyHtml(parsed.body, vars, input),
+    brandTitle: parsed.brandTitle,
+    brandTagline: parsed.brandTagline,
   });
+
+  const text = [
+    renderTemplatePlainText(actualTemplate, vars),
+    input.contactUrl,
+  ].join("\n\n");
 
   return { subject, text, html };
 }

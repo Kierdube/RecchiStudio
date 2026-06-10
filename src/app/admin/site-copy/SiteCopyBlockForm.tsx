@@ -12,7 +12,15 @@ import { saveSiteCopyBlock, type SiteCopyActionState } from "./actions";
 const HTML_TEXT_LIMIT = 12000;
 const INLINE_TEXT_LIMIT = 4000;
 
-export function SiteCopyBlockForm({ def, value }: { def: SiteCopyDefinition; value: string }) {
+export function SiteCopyBlockForm({
+  def,
+  value,
+  textareaRows,
+}: {
+  def: SiteCopyDefinition;
+  value: string;
+  textareaRows?: number;
+}) {
   const [state, formAction, pending] = useActionState<SiteCopyActionState, FormData>(
     saveSiteCopyBlock,
     null,
@@ -35,9 +43,14 @@ export function SiteCopyBlockForm({ def, value }: { def: SiteCopyDefinition; val
       {editorMode === "plain" ? (
         <textarea
           name="value"
-          rows={def.key.includes("rotate_words") ? 5 : 3}
+          rows={textareaRows ?? (def.key.includes("rotate_words") ? 5 : def.key.includes(".template") ? 18 : 3)}
           defaultValue={value}
-          className="min-h-[5rem] w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 font-sans text-base text-zinc-900 outline-none ring-zinc-400 focus:ring-2"
+          spellCheck={def.key.includes(".template") ? false : undefined}
+          className={`w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 outline-none ring-zinc-400 focus:ring-2 ${
+            def.key.includes(".template")
+              ? "min-h-[20rem] font-mono text-sm leading-relaxed text-zinc-900"
+              : "min-h-[5rem] font-sans text-base text-zinc-900"
+          }`}
         />
       ) : null}
       {editorMode === "rich-inline" ? (

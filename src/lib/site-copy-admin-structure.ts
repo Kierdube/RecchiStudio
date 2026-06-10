@@ -65,7 +65,6 @@ const SECTION_LABELS: Record<string, string> = {
   "Legal — shipping page": "Page settings",
   "Site header": "Navigation & menu",
   Footer: "Footer content",
-  "Emails — shared header": "Shared header",
   "Emails — contact alert (to you)": "Contact form alert",
   "Emails — new order (to you)": "New order alert",
   "Emails — quote ready (to customer)": "Quote ready email",
